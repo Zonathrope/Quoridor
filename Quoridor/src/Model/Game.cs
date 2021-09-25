@@ -38,17 +38,17 @@ class Field
     }
 
     private const int FieldSize = 9;
-    private static readonly Vector2 Player1DefaultPosition = new Vector2(4, 0);
-    private static readonly Vector2 Player2DefaultPosition = new Vector2(4, 8);
+    private static readonly CellPosition Player1DefaultPosition = new CellPosition(4, 0);
+    private static readonly CellPosition Player2DefaultPosition = new CellPosition(4, 8);
     
     private FieldCell[,] _fieldMatrix = new FieldCell[FieldSize,FieldSize];
-    private Vector2 _player1Position;
-    private Vector2 _player2Position;
+    public CellPosition Player1Position { set; get; }
+    public CellPosition Player2Position { set; get; }
     public Field()
     {
         InitMatrix();
-        _player1Position = Player1DefaultPosition;
-        _player2Position = Player2DefaultPosition;
+        Player1Position = Player1DefaultPosition;
+        Player2Position = Player2DefaultPosition;
     }
 
     private void InitMatrix()
