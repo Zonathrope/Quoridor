@@ -89,5 +89,34 @@ namespace Quoridor.Model
         {
             return _fieldMatrix[cellPosition.Y, cellPosition.X];
         }
+
+        public void MovePlayer(PlayerNumber playerNumber, CellPosition position)
+        {
+            if (!IsInFieldCoordinatesRange(position.X) || !IsInFieldCoordinatesRange(position.Y))
+            {
+                throw new IncorrectPlayerPositionException($"({position.X}, {position.Y} is not on field");
+            }
+
+            if ((playerNumber == PlayerNumber.First && position == Player2Position) ||
+                 playerNumber == PlayerNumber.Second && position == Player1Position)
+            {
+                throw new CellAlreadyTakenException(
+                    $"Player {playerNumber} can't take cell, it is already taken by other player");
+            }
+
+            if (playerNumber == PlayerNumber.First)
+            {
+                Player1Position = position;
+            }
+            else
+            {
+                Player2Position = position;
+            }
+        }
+
+        private bool IsInFieldCoordinatesRange(int value)
+        {
+            return value >= 0 && value < FieldSize;
+        }
     }
 }

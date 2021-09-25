@@ -15,5 +15,14 @@
         {
             return new CellPosition(position1.X + position2.X, position2.Y + position2.Y);
         }
+
+        public static bool operator ==(CellPosition position1, CellPosition position2)
+        {
+            return position1.X == position2.X && position1.Y == position2.Y;
+        }
+        public static bool operator !=(CellPosition position1, CellPosition position2)
+        {
+            return !(position1 == position2);
+        }
     }
 }
