@@ -23,14 +23,14 @@ namespace Quoridor.Model
         public WallPlaceTakenException(string message, Exception inner): base(message, inner){}
     }
     
-    class IncorrectPlayerPositionException : IncorrectUserInputException
+    public class IncorrectPlayerPositionException : IncorrectUserInputException
     {
         public IncorrectPlayerPositionException(){}
         public IncorrectPlayerPositionException(string message) : base(message) {}
         public IncorrectPlayerPositionException(string message, Exception inner) : base(message, inner){}
     }
     
-    class IncorrectWallPositionException : IncorrectUserInputException
+    public class IncorrectWallPositionException : IncorrectUserInputException
     {
         public IncorrectWallPositionException(){}
         public IncorrectWallPositionException(string message) : base(message){}
