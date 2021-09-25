@@ -94,14 +94,14 @@ namespace Quoridor.Model
         {
             if (!IsInFieldCoordinatesRange(position.X) || !IsInFieldCoordinatesRange(position.Y))
             {
-                throw new IncorrectPlayerPositionException($"({position.X}, {position.Y} is not on field");
+                throw new IncorrectPlayerPositionException($"({position} is not on field");
             }
 
             if ((playerNumber == PlayerNumber.First && position == Player2Position) ||
                  playerNumber == PlayerNumber.Second && position == Player1Position)
             {
                 throw new CellAlreadyTakenException(
-                    $"Player {playerNumber} can't take cell, it is already taken by other player");
+                    $"Player {playerNumber} can't take cell ${position}, it is already taken by other player");
             }
 
             if (playerNumber == PlayerNumber.First)
