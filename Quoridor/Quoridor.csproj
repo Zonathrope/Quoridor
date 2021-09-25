@@ -99,9 +99,12 @@
             <DependentUpon>MainPage.xaml</DependentUpon>
         </Compile>
         <Compile Include="Properties\AssemblyInfo.cs" />
+        <Compile Include="src\Model\CellPosition.cs" />
+        <Compile Include="src\Model\Field.cs" />
         <Compile Include="src\Model\Game.cs" />
         <Compile Include="src\Model\IGame.cs" />
         <Compile Include="src\Model\IPlayer.cs" />
+        <Compile Include="src\Model\WallPosition.cs" />
     </ItemGroup>
     <ItemGroup>
         <AppxManifest Include="Package.appxmanifest">
