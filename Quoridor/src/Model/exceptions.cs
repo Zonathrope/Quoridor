@@ -36,4 +36,11 @@ namespace Quoridor.Model
         public IncorrectWallPositionException(string message) : base(message){}
         public IncorrectWallPositionException(string message, Exception inner) : base(message, inner){}
     }
+
+    public class NoWallsLeftException : IncorrectUserInputException
+    {
+        public NoWallsLeftException(){}
+        public NoWallsLeftException(string message) : base(message){}
+        public NoWallsLeftException(string message, Exception inner) : base(message, inner){}
+    }
 }
