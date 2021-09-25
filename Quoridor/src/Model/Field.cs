@@ -92,7 +92,7 @@ namespace Quoridor.Model
 
         public void MovePlayer(PlayerNumber playerNumber, CellPosition position)
         {
-            if (!IsInFieldCoordinatesRange(position.X) || !IsInFieldCoordinatesRange(position.Y))
+            if (!IsValidCellPosition(position))
             {
                 throw new IncorrectPlayerPositionException($"({position} is not on field");
             }
@@ -114,6 +114,10 @@ namespace Quoridor.Model
             }
         }
 
+        private bool IsValidCellPosition(CellPosition position)
+        {
+            return IsInFieldCoordinatesRange(position.X) && IsInFieldCoordinatesRange(position.Y);
+        }
         private bool IsInFieldCoordinatesRange(int value)
         {
             return value >= 0 && value < FieldSize;
