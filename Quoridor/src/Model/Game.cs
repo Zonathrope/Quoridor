@@ -3,7 +3,7 @@ using System.Numerics;
 
 namespace Quoridor.Model
 {
-public class Game
+public class Game: IGame
 {
     private IPlayer _player1;
     private IPlayer _player2;
@@ -13,6 +13,21 @@ public class Game
         _player1 = player1;
         _player2 = player2;
         _field = new Field();
+    }
+
+    public void StartNewGame()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void MovePlayer(PlayerNumber playerNumber, int x, int y)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void PlaceWall(PlayerNumber playerPlacing, WallPosition position)
+    {
+        throw new System.NotImplementedException();
     }
 }
 class Field
@@ -104,7 +119,7 @@ class Field
     }
 }
 
-class CellPosition
+public class CellPosition
 {
     public int X { set; get; }
     public int Y { set; get; }
