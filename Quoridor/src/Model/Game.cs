@@ -19,14 +19,12 @@ class Field
 {
     class FieldCell
     {
-        public int X { set; get; }
-        public int Y { set; get; }
+        public CellPosition Position { get; }
         private List<FieldCell> _neighbourCells = new List<FieldCell>();
 
         public FieldCell(int x, int y)
         {
-            X = x;
-            Y = y;
+            Position = new CellPosition(x, y);
         }
         public void AddNeighbour(FieldCell neighbour)
         {
@@ -66,7 +64,7 @@ class Field
         {
             for (int x = 0; x < FieldSize; x++)
             {
-                FieldCell cell = CellByPosition(x, y);
+                FieldCell cell = CellByPosition(new CellPosition(x, y));
                 foreach (FieldCell neighbour in GetCellNeighbours(cell))
                 {
                     cell.AddNeighbour(neighbour);
@@ -79,29 +77,47 @@ class Field
     private List<FieldCell> GetCellNeighbours(FieldCell cell)
     {
         List<FieldCell> neighbours = new List<FieldCell>();
-        if (cell.Y != 0)
+        CellPosition cellPosition = cell.Position;
+        if (cellPosition.Y != 0)
         {
-            neighbours.Add(CellByPosition(cell.X, cell.Y - 1));
+            //TODO think if it is okay what cell positon can accept incorrect values
+            neighbours.Add(CellByPosition(cellPosition + new CellPosition(0, -1)));
         }
-        if (cell.X != (FieldSize - 1))
+        if (cellPosition.X != (FieldSize - 1))
         {
-            neighbours.Add(CellByPosition(cell.X + 1, cell.Y));
-
+            neighbours.Add(CellByPosition(cellPosition + new CellPosition(1, 0)));
         }
-        if (cell.Y != (FieldSize - 1))
+        if (cellPosition.Y != (FieldSize - 1))
         {
-            neighbours.Add(CellByPosition(cell.X, cell.Y + 1));
+            neighbours.Add(CellByPosition(cellPosition + new CellPosition(0, 1)));
         }
-        if (cell.X != 0)
+        if (cellPosition.X != 0)
         {
-            neighbours.Add(CellByPosition(cell.X - 1, cell.Y));
+            neighbours.Add(CellByPosition(cellPosition + new CellPosition(-1, 0)));
         }
         return neighbours;
     }
 
-    private FieldCell CellByPosition(int x, int y)
+    private FieldCell CellByPosition(CellPosition cellPosition)
     {
-        return _fieldMatrix[y, x];
+        return _fieldMatrix[cellPosition.Y, cellPosition.X];
+    }
+}
+
+class CellPosition
+{
+    public int X { set; get; }
+    public int Y { set; get; }
+
+    public CellPosition(int x, int y)
+    {
+        X = x;
+        Y = y;
+    }
+
+    public static CellPosition operator +(CellPosition position1, CellPosition position2)
+    {
+        return new CellPosition(position1.X + position2.X, position2.Y + position2.Y);
     }
 }
 }
