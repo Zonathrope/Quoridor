@@ -5,10 +5,11 @@ namespace Quoridor.Model
     class Field
     {
         private const int FieldSize = 9;
+        private const int FieldMiddleCoordinate = 4;
         private const int PlayerWallAmount = 10;
-        private static readonly CellPosition Player1DefaultPosition = new CellPosition(4, 0);
-        private static readonly CellPosition Player2DefaultPosition = new CellPosition(4, 8);
-    
+        private static readonly CellPosition Player1DefaultPosition = new CellPosition(FieldMiddleCoordinate, FieldSize - 1);
+        private static readonly CellPosition Player2DefaultPosition = new CellPosition(FieldMiddleCoordinate, 0);
+
         private FieldCell[,] _fieldMatrix = new FieldCell[FieldSize,FieldSize];
         private List<WallPosition> _placedWalls = new List<WallPosition>();
         public int Player1WallAmount { set; get; } = PlayerWallAmount;
