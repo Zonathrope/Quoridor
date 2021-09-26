@@ -102,6 +102,7 @@
         <Compile Include="src\Model\CellPosition.cs" />
         <Compile Include="src\Model\exceptions.cs" />
         <Compile Include="src\Model\Field.cs" />
+        <Compile Include="src\Model\FieldCell.cs" />
         <Compile Include="src\Model\Game.cs" />
         <Compile Include="src\Model\IGame.cs" />
         <Compile Include="src\Model\IPlayer.cs" />
