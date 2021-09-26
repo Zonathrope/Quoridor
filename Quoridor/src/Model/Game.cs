@@ -16,11 +16,15 @@ public class Game: IGame
         _field = new Field();
     }
 
+    /// <exception cref="IncorrectPlayerPositionException">Caller pass invalid position.</exception>
+    /// <exception cref="CellAlreadyTakenException">Caller tries to move to taken cell.</exception>
     public void MovePlayer(PlayerNumber playerNumber, int x, int y)
     {
         throw new System.NotImplementedException();
     }
 
+    /// <exception cref="IncorrectWallPositionException">Caller pass invalid position.</exception>
+    /// <exception cref="WallPlaceTakenException">Caller tries to place wall over existing wall.</exception>
     public void PlaceWall(PlayerNumber playerPlacing, WallPosition position)
     {
         throw new System.NotImplementedException();

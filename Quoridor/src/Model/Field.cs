@@ -75,6 +75,8 @@ namespace Quoridor.Model
             return _fieldMatrix[cellPosition.Y, cellPosition.X];
         }
 
+        /// <exception cref="IncorrectPlayerPositionException">Caller pass invalid position.</exception>
+        /// <exception cref="CellAlreadyTakenException">Caller tries to move to taken cell.</exception>
         public void MovePlayer(PlayerNumber playerNumber, CellPosition position)
         {
             if (!IsValidCellPosition(position))
@@ -108,6 +110,8 @@ namespace Quoridor.Model
             return value >= 0 && value < FieldSize;
         }
 
+        /// <exception cref="IncorrectWallPositionException">Caller pass invalid position.</exception>
+        /// <exception cref="WallPlaceTakenException">Caller tries to place wall over existing wall.</exception>
         //TODO think if it is good to call every position argument just position
         public void PlaceWall(PlayerNumber playerNumber, WallPosition position)
         {
