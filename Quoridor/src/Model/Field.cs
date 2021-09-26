@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Quoridor.Model
 {
@@ -10,6 +12,7 @@ namespace Quoridor.Model
         private static readonly CellPosition Player1DefaultPosition = new CellPosition(FieldMiddleCoordinate, FieldSize - 1);
         private static readonly CellPosition Player2DefaultPosition = new CellPosition(FieldMiddleCoordinate, 0);
 
+        public FieldCell[,] FieldMatrix => _fieldMatrix;
         private FieldCell[,] _fieldMatrix = new FieldCell[FieldSize,FieldSize];
         private List<WallPosition> _placedWalls = new List<WallPosition>();
         public int Player1WallAmount { set; get; } = PlayerWallAmount;
@@ -213,6 +216,30 @@ namespace Quoridor.Model
                    IsValidCellPosition(bottomRightCell)
                    // check if cell is really bottom right relative to top left
                    && bottomRightCell == topLeftCell + new CellPosition(1, 1);
+        }
+
+        public FieldCell[] GetPlayersWinLine(PlayerNumber playerNumber)
+        {
+            if (playerNumber == PlayerNumber.First)
+            {
+                return GetFieldRow(0);
+            }
+
+            return GetFieldRow(FieldSize - 1);
+        }
+
+        private FieldCell[] GetFieldRow(int rowNumber)
+        {
+            return Enumerable.Range(0, FieldSize - 1)
+                .Select(columnNumber => _fieldMatrix[rowNumber, columnNumber])
+                .ToArray();
+        }
+
+        public FieldCell GetPlayerCell(PlayerNumber playerNumber)
+        {
+            return playerNumber == PlayerNumber.First
+                ? CellByPosition(Player1Position)
+                : CellByPosition(Player2Position);
         }
     }
 }
