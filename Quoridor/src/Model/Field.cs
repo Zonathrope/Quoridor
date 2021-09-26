@@ -146,10 +146,17 @@ namespace Quoridor.Model
                 Player2WallAmount--;
             }
             _placedWalls.Add(position);
-            UpdateWaysBetweenCells(position);
+            BlockWaysBetweenCells(position);
         }
 
-        private void UpdateWaysBetweenCells(WallPosition newWall)
+        public void RemoveWall(WallPosition position)
+        {
+            if (!_placedWalls.Contains(position)) return;
+            _placedWalls.Remove(position);
+            RestoreWaysBetweenCells(position);
+        }
+
+        private void BlockWaysBetweenCells(WallPosition newWall)
         {
             FieldCell cell1 = CellByPosition(newWall.TopLeftCell);
             FieldCell cell3 = CellByPosition(newWall.BottomRightCell);
@@ -168,12 +175,36 @@ namespace Quoridor.Model
             BlockWayBetweenCells(cell3, cell4);
         }
 
+        private void RestoreWaysBetweenCells(WallPosition removedWall)
+        {
+            //TODO think how to reuse code
+            FieldCell cell1 = CellByPosition(removedWall.TopLeftCell);
+            FieldCell cell3 = CellByPosition(removedWall.BottomRightCell);
+            FieldCell cell2, cell4;
+            if (removedWall.Direction == WallDirection.Vertical)
+            {
+                cell2 = CellByPosition(removedWall.TopLeftCell + new CellPosition(1, 0));
+                cell4 = CellByPosition(removedWall.BottomRightCell + new CellPosition(1, 0));
+            }
+            else
+            {
+                cell2 = CellByPosition(removedWall.TopLeftCell + new CellPosition(0, 1));
+                cell4 = CellByPosition(removedWall.BottomRightCell + new CellPosition(0, 1));
+            }
+            RestoreWayBetweenCells(cell1, cell2);
+            RestoreWayBetweenCells(cell3, cell4);
+        }
         private void BlockWayBetweenCells(FieldCell cell1, FieldCell cell2)
         {
             cell1.RemoveNeighbour(cell2);
             cell2.RemoveNeighbour(cell1);
         }
 
+        private void RestoreWayBetweenCells(FieldCell cell1, FieldCell cell2)
+        {
+            cell1.AddNeighbour(cell2);
+            cell2.AddNeighbour(cell1);
+        }
         private bool IsValidWallPosition(WallPosition position)
         {
             CellPosition topLeftCell = position.TopLeftCell;
