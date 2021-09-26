@@ -2,8 +2,8 @@
 {
     public class CellPosition
     {
-        public int X { set; get; }
-        public int Y { set; get; }
+        public int X { get; }
+        public int Y { get; }
 
         public CellPosition(int x, int y)
         {
