@@ -103,9 +103,9 @@
         <Compile Include="src\Model\exceptions.cs" />
         <Compile Include="src\Model\Field.cs" />
         <Compile Include="src\Model\FieldCell.cs" />
-        <Compile Include="src\Model\Game.cs" />
+        <Compile Include="src\Model\GameModel.cs" />
         <Compile Include="src\Model\IAStar.cs" />
-        <Compile Include="src\Model\IGame.cs" />
+        <Compile Include="src\Model\IGameModel.cs" />
         <Compile Include="src\Model\IPlayer.cs" />
         <Compile Include="src\Model\WallPosition.cs" />
     </ItemGroup>

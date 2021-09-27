@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Quoridor.Model
 {
-public class Game: IGame
+public class GameModel: IGameModel
 {
     private IPlayer _player1;
     private IPlayer _player2;
@@ -11,7 +11,7 @@ public class Game: IGame
     private IAStar _aStar;
     private PlayerNumber _currentPlayer;
 
-    public Game(IPlayer player1, IPlayer player2)
+    public GameModel(IPlayer player1, IPlayer player2)
     {
         _player1 = player1;
         _player2 = player2;

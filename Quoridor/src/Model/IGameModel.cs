@@ -3,7 +3,7 @@
     public enum PlayerNumber {First, Second}
 
     //TODO rename to IModel or smth
-    public interface IGame
+    public interface IGameModel
     {
         void StartNewGame();
         void MovePlayer(PlayerNumber playerNumber, int x, int y);
