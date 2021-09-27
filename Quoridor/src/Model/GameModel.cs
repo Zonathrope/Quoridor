@@ -77,7 +77,7 @@ public class GameModel: IGameModel
         }
     }
 
-    private List<CellPosition> GetCellsAvailableForMove(PlayerNumber playerNumber)
+    public List<CellPosition> GetCellsAvailableForMove(PlayerNumber playerNumber)
     {
         CellPosition currentPosition = _field.GetPlayerPosition(playerNumber);
         List<CellPosition> result = _field.GetNeighboursPositions(currentPosition);
@@ -145,7 +145,7 @@ public class GameModel: IGameModel
         RaisePlayerWonEvent?.Invoke(this, new PlayerWonEventArgs(winner));
     }
 
-    public bool BothPlayersHaveWayToLastLine()
+    private bool BothPlayersHaveWayToLastLine()
     {
         List<FieldCell> player1WinLine = _field.GetPlayersWinLine(PlayerNumber.First).ToList<FieldCell>();
         FieldCell player1Cell = _field.GetPlayerCell(PlayerNumber.First);
@@ -156,6 +156,5 @@ public class GameModel: IGameModel
         bool player2HasAccess = player2WinLine.Any(winCell => _aStar.WayExists(player2Cell, winCell));
         return player1HasAccess && player2HasAccess;
     }
-
 }
 }
