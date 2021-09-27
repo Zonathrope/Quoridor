@@ -50,4 +50,11 @@ namespace Quoridor.Model
         public WallBlocksPathForPlayerException(string message) : base(message){}
         public WallBlocksPathForPlayerException(string message, Exception inner) : base(message, inner){}
     }
+
+    public class AnotherPlayerTurnException : IncorrectUserInputException
+    {
+        public AnotherPlayerTurnException(){}
+        public AnotherPlayerTurnException(string message) : base(message){}
+        public AnotherPlayerTurnException(string message, Exception inner) : base(message, inner){}
+    }
 }

@@ -9,28 +9,37 @@ public class Game: IGame
     private IPlayer _player2;
     private Field _field;
     private IAStar _aStar;
+    private PlayerNumber _currentPlayer;
 
     public Game(IPlayer player1, IPlayer player2)
     {
         _player1 = player1;
         _player2 = player2;
+        StartNewGame();
     }
 
     public void StartNewGame()
     {
         _field = new Field();
+        _currentPlayer = PlayerNumber.First;
     }
 
     /// <exception cref="IncorrectPlayerPositionException">Caller pass invalid position.</exception>
     /// <exception cref="CellAlreadyTakenException">Caller tries to move to taken cell.</exception>
+    /// <exception cref="AnotherPlayerTurnException">Caller tries to move to taken cell.</exception>
     public void MovePlayer(PlayerNumber playerNumber, int x, int y)
     {
+        if (playerNumber != _currentPlayer)
+        {
+            throw new AnotherPlayerTurnException($"It is player {_currentPlayer} turn");
+        }
         var cellPositon = new CellPosition(x, y);
         _field.MovePlayer(playerNumber, cellPositon);
         if (IsInOpponentsEndLine(cellPositon, positionOwner: playerNumber))
         {
             HandleWin(playerNumber);
         }
+        _currentPlayer = _currentPlayer == PlayerNumber.First ? PlayerNumber.Second : PlayerNumber.First;
     }
 
     /// <exception cref="IncorrectWallPositionException">Caller pass invalid position.</exception>
