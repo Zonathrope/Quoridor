@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Quoridor.Model
 {
+
 public class GameModel: IGameModel
 {
     private IPlayerView _player1;
@@ -11,17 +13,40 @@ public class GameModel: IGameModel
     private IAStar _aStar;
     private PlayerNumber _currentPlayer;
 
+    private event EventHandler RaiseGameStartedEvent;
+    private event EventHandler RaiseGameEndedEvent;
+    private event EventHandler<PlayerWonEventArgs> RaisePlayerWonEvent;
+    private event EventHandler<PlayerMovedEventArgs> RaisePlayerMovedEvent;
+    private event EventHandler<PlayerPlacedWallEventArgs> RaisePlayerPlacedWallEvent;
+
     public GameModel(IPlayerView player1, IPlayerView player2)
     {
         _player1 = player1;
         _player2 = player2;
+        AttachEventsToPlayer(_player1);
+        AttachEventsToPlayer(_player2);
         StartNewGame();
+    }
+
+    private void AttachEventsToPlayer(IPlayerView player)
+    {
+        this.RaiseGameStartedEvent      += player.HandleGameStartedEvent;
+        this.RaiseGameEndedEvent        += player.HandleGameEndedEvent;
+        this.RaisePlayerWonEvent        += player.HandlePlayerWonEvent;
+        this.RaisePlayerMovedEvent      += player.HandlePlayerMovedEvent;
+        this.RaisePlayerPlacedWallEvent += player.HandlePlayerPlacedWallEvent;
     }
 
     public void StartNewGame()
     {
         _field = new Field();
         _currentPlayer = PlayerNumber.First;
+        RaiseGameStartedEvent?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void EndGame()
+    {
+        RaiseGameEndedEvent?.Invoke(this, EventArgs.Empty);
     }
 
     /// <exception cref="IncorrectPlayerPositionException">Caller pass invalid position.</exception>
@@ -33,13 +58,14 @@ public class GameModel: IGameModel
         {
             throw new AnotherPlayerTurnException($"It is player {_currentPlayer} turn");
         }
-        var cellPositon = new CellPosition(x, y);
-        _field.MovePlayer(playerNumber, cellPositon);
-        if (IsInOpponentsEndLine(cellPositon, positionOwner: playerNumber))
+        var cellPosition = new CellPosition(x, y);
+        _field.MovePlayer(playerNumber, cellPosition);
+        _currentPlayer = _currentPlayer == PlayerNumber.First ? PlayerNumber.Second : PlayerNumber.First;
+        RaisePlayerMovedEvent?.Invoke(this, new PlayerMovedEventArgs(playerNumber, cellPosition));
+        if (IsInOpponentsEndLine(cellPosition, positionOwner: playerNumber))
         {
             HandleWin(playerNumber);
         }
-        _currentPlayer = _currentPlayer == PlayerNumber.First ? PlayerNumber.Second : PlayerNumber.First;
     }
 
     /// <exception cref="IncorrectWallPositionException">Caller pass invalid position.</exception>
@@ -54,6 +80,7 @@ public class GameModel: IGameModel
             throw new WallBlocksPathForPlayerException(
                 $"Wall between {position.TopLeftCell} and {position.BottomRightCell} blocks way for players");
         }
+        RaisePlayerPlacedWallEvent?.Invoke(this, new PlayerPlacedWallEventArgs(playerPlacing, position));
     }
 
     private bool IsInOpponentsEndLine(CellPosition position, PlayerNumber positionOwner)
@@ -67,7 +94,7 @@ public class GameModel: IGameModel
 
     private void HandleWin(PlayerNumber winner)
     {
-        //TODO
+        RaisePlayerWonEvent?.Invoke(this, new PlayerWonEventArgs(winner));
     }
 
     public bool BothPlayersHaveWayToLastLine()
@@ -81,5 +108,6 @@ public class GameModel: IGameModel
         bool player2HasAccess = player2WinLine.Any(winCell => _aStar.WayExists(player2Cell, winCell));
         return player1HasAccess && player2HasAccess;
     }
+
 }
 }
