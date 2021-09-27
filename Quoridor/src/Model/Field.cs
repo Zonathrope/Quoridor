@@ -84,7 +84,7 @@ namespace Quoridor.Model
         /// <exception cref="CellAlreadyTakenException">Caller tries to move to taken cell.</exception>
         public void MovePlayer(PlayerNumber playerNumber, CellPosition position)
         {
-            if (!IsValidCellPosition(position))
+            if (!IsOnField(position))
             {
                 throw new IncorrectPlayerPositionException($"({position} is not on field");
             }
@@ -106,7 +106,7 @@ namespace Quoridor.Model
             }
         }
 
-        private bool IsValidCellPosition(CellPosition position)
+        private bool IsOnField(CellPosition position)
         {
             return IsInFieldCoordinatesRange(position.X) && IsInFieldCoordinatesRange(position.Y);
         }
@@ -213,8 +213,8 @@ namespace Quoridor.Model
         {
             CellPosition topLeftCell = position.TopLeftCell;
             CellPosition bottomRightCell = position.BottomRightCell;
-            return IsValidCellPosition(topLeftCell) &&
-                   IsValidCellPosition(bottomRightCell)
+            return IsOnField(topLeftCell) &&
+                   IsOnField(bottomRightCell)
                    // check if cell is really bottom right relative to top left
                    && bottomRightCell == topLeftCell + new CellPosition(1, 1);
         }
