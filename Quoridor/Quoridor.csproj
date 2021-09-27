@@ -106,7 +106,7 @@
         <Compile Include="src\Model\GameModel.cs" />
         <Compile Include="src\Model\IAStar.cs" />
         <Compile Include="src\Model\IGameModel.cs" />
-        <Compile Include="src\Model\IPlayer.cs" />
+        <Compile Include="src\Model\IPlayerView.cs" />
         <Compile Include="src\Model\WallPosition.cs" />
     </ItemGroup>
     <ItemGroup>

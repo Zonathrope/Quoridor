@@ -5,13 +5,13 @@ namespace Quoridor.Model
 {
 public class GameModel: IGameModel
 {
-    private IPlayer _player1;
-    private IPlayer _player2;
+    private IPlayerView _player1;
+    private IPlayerView _player2;
     private Field _field;
     private IAStar _aStar;
     private PlayerNumber _currentPlayer;
 
-    public GameModel(IPlayer player1, IPlayer player2)
+    public GameModel(IPlayerView player1, IPlayerView player2)
     {
         _player1 = player1;
         _player2 = player2;

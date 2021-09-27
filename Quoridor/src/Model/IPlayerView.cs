@@ -1,6 +1,6 @@
 ﻿namespace Quoridor.Model
 {
-    public interface IPlayer
+    public interface IPlayerView
     {
         
     }
