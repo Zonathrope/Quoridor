@@ -1,4 +1,6 @@
-﻿namespace Quoridor.Model
+﻿using System.Collections.Generic;
+
+namespace Quoridor.Model
 {
     public enum PlayerNumber {First, Second}
 
@@ -7,5 +9,6 @@
         void StartNewGame();
         void MovePlayer(PlayerNumber playerNumber, int x, int y);
         void PlaceWall(PlayerNumber playerPlacing, WallPosition position);
+        List<CellPosition> GetCellsAvailableForMove(PlayerNumber playerNumber);
     }
 }
