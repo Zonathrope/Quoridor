@@ -9,8 +9,6 @@ public class Game: IGame
     private IPlayer _player2;
     private Field _field;
     private IAStar _aStar;
-    // TODO code duplication((
-    private const int FieldSize = 9;
 
     public Game(IPlayer player1, IPlayer player2)
     {
@@ -55,7 +53,7 @@ public class Game: IGame
         {
             return position.Y == 0;
         }
-        return position.Y == FieldSize - 1;
+        return position.Y == _field.Size;
     }
 
     private void HandleWin(PlayerNumber winner)

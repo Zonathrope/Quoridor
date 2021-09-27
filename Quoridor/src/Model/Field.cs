@@ -6,6 +6,7 @@ namespace Quoridor.Model
 {
     class Field
     {
+        public int Size => FieldSize;
         private const int FieldSize = 9;
         private const int FieldMiddleCoordinate = 4;
         private const int PlayerWallAmount = 10;
