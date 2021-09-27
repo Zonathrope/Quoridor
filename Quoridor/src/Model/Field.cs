@@ -106,7 +106,7 @@ namespace Quoridor.Model
             }
         }
 
-        private bool IsOnField(CellPosition position)
+        public bool IsOnField(CellPosition position)
         {
             return IsInFieldCoordinatesRange(position.X) && IsInFieldCoordinatesRange(position.Y);
         }
@@ -241,6 +241,33 @@ namespace Quoridor.Model
             return playerNumber == PlayerNumber.First
                 ? CellByPosition(Player1Position)
                 : CellByPosition(Player2Position);
+        }
+
+        public CellPosition GetPlayerPosition(PlayerNumber playerNumber)
+        {
+            return playerNumber == PlayerNumber.First
+                ? Player1Position
+                : Player2Position;
+        }
+        public bool IsCellTaken(CellPosition cell)
+        {
+            return cell == Player1Position || cell == Player2Position;
+        }
+
+        public List<CellPosition> GetNeighboursPositions(CellPosition cellPosition)
+        {
+            return CellByPosition(cellPosition)
+                .NeighbourCells
+                .Select(cell => cell.Position)
+                .ToList();
+        }
+
+        public bool WayBetweenCellsExists(CellPosition position1, CellPosition position2)
+        {
+            return CellByPosition(position1)
+                .NeighbourCells
+                .Select(cell => cell.Position)
+                .Contains(position2);
         }
     }
 }

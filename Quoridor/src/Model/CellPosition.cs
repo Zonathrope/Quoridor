@@ -16,6 +16,11 @@
             return new CellPosition(position1.X + position2.X, position2.Y + position2.Y);
         }
 
+        public static CellPosition operator -(CellPosition position1, CellPosition position2)
+        {
+            return new CellPosition(position2.X - position1.X, position2.Y - position1.Y);
+        }
+
         public static bool operator ==(CellPosition position1, CellPosition position2)
         {
             if (position1 is null) return false;

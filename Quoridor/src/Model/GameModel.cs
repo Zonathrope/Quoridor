@@ -58,14 +58,62 @@ public class GameModel: IGameModel
         {
             throw new AnotherPlayerTurnException($"It is player {_currentPlayer} turn");
         }
-        var cellPosition = new CellPosition(x, y);
-        _field.MovePlayer(playerNumber, cellPosition);
+
+        CellPosition oldPosition = _field.GetPlayerPosition(playerNumber);
+        var newPosition = new CellPosition(x, y);
+
+        List<CellPosition> neighbours = _field.GetNeighboursPositions(oldPosition);
+        if (!GetCellsAvailableForMove(playerNumber).Contains(newPosition))
+        {
+            throw new IncorrectPlayerPositionException(
+                $"Can't move from {_field.GetPlayerPosition(playerNumber)} to {newPosition}");
+        }
+        _field.MovePlayer(playerNumber, newPosition);
         _currentPlayer = _currentPlayer == PlayerNumber.First ? PlayerNumber.Second : PlayerNumber.First;
-        RaisePlayerMovedEvent?.Invoke(this, new PlayerMovedEventArgs(playerNumber, cellPosition));
-        if (IsInOpponentsEndLine(cellPosition, positionOwner: playerNumber))
+        RaisePlayerMovedEvent?.Invoke(this, new PlayerMovedEventArgs(playerNumber, newPosition));
+        if (IsInOpponentsEndLine(newPosition, positionOwner: playerNumber))
         {
             HandleWin(playerNumber);
         }
+    }
+
+    private List<CellPosition> GetCellsAvailableForMove(PlayerNumber playerNumber)
+    {
+        CellPosition currentPosition = _field.GetPlayerPosition(playerNumber);
+        List<CellPosition> result = _field.GetNeighboursPositions(currentPosition);
+        CellPosition neighborCellTakenByOpponent = null;
+        foreach (CellPosition position in result)
+        {
+            if (_field.IsCellTaken(position))
+            {
+                neighborCellTakenByOpponent = position;
+                break;
+            }
+        }
+
+        if (neighborCellTakenByOpponent is null)
+        {
+            return result;
+        }
+        result.Remove(neighborCellTakenByOpponent);
+        //TODO think if storing offset in same object is adequate
+        //maybe i should introduce celloffset object
+        CellPosition opponentPosition = neighborCellTakenByOpponent;
+        CellPosition moveOffset = opponentPosition - currentPosition;
+        CellPosition cellBehindOpponent = opponentPosition + moveOffset;
+        if (_field.WayBetweenCellsExists(opponentPosition, cellBehindOpponent))
+        {
+            result.Add(cellBehindOpponent);
+        }
+        else
+        {
+            //TODO think about is treating  blocked neighbours as not neighbours is ok
+            List<CellPosition> opponentNeighbours = _field.GetNeighboursPositions(opponentPosition);
+            opponentNeighbours.Remove(currentPosition);
+            opponentNeighbours.Remove(cellBehindOpponent);
+            result.AddRange(opponentNeighbours);
+        }
+        return result;
     }
 
     /// <exception cref="IncorrectWallPositionException">Caller pass invalid position.</exception>
