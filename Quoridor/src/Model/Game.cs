@@ -72,7 +72,6 @@ public class Game: IGame
 
     public bool BothPlayersHaveWayToLastLine()
     {
-        //TODO think if one check is enough
         List<FieldCell> player1WinLine = _field.GetPlayersWinLine(PlayerNumber.First).ToList<FieldCell>();
         FieldCell player1Cell = _field.GetPlayerCell(PlayerNumber.First);
         bool player1HasAccess = player1WinLine.Any(winCell => _aStar.WayExists(player1Cell, winCell));
