@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Quoridor.Model
+namespace Model.Api
 {
     public class IncorrectUserInputException: Exception
     {

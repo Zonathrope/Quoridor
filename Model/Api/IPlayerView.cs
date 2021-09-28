@@ -1,6 +1,7 @@
 ﻿using System;
+using Quoridor.Model;
 
-namespace Quoridor.Model
+namespace Model.Api
 {
     public interface IPlayerView
     {

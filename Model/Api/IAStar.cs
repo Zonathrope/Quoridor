@@ -1,4 +1,6 @@
-﻿namespace Quoridor.Model
+﻿using Quoridor.Model;
+
+namespace Model.Api
 {
     interface IAStar
     {

@@ -1,16 +1,8 @@
 ﻿using System;
+using Quoridor.Model;
 
-namespace Quoridor.Model
+namespace Model.Api
 {
-    public class PlayerWonEventArgs : EventArgs
-    {
-        public PlayerNumber WinnerNumber { get; }
-        public PlayerWonEventArgs(PlayerNumber playerNumber)
-        {
-            WinnerNumber = playerNumber;
-        }
-    }
-    
     public class PlayerMovedEventArgs : EventArgs
     {
         public PlayerNumber PlayerNumber { get; }
@@ -31,6 +23,15 @@ namespace Quoridor.Model
         {
             PlayerNumber = playerNumber;
             WallPosition = wallPosition;
+        }
+    }
+    
+    public class PlayerWonEventArgs : EventArgs
+    {
+        public PlayerNumber WinnerNumber { get; }
+        public PlayerWonEventArgs(PlayerNumber playerNumber)
+        {
+            WinnerNumber = playerNumber;
         }
     }
 }
