@@ -2,7 +2,7 @@ using Model.Api;
 using NUnit.Framework;
 using Moq;
 
-using Quoridor.Model;
+using Model;
 
 namespace ModelTest
 {
