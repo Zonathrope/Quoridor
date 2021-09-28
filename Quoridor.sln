@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "Model\Model.csproj", "{D624806C-B598-4C03-B01C-5B25770EFD24}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelTest", "ModelTest\ModelTest.csproj", "{A7FAD2E1-4CEF-4456-9DDD-2A45AF82B318}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -24,5 +26,17 @@ Global
 		{D624806C-B598-4C03-B01C-5B25770EFD24}.Release|x64.Build.0 = Release|Any CPU
 		{D624806C-B598-4C03-B01C-5B25770EFD24}.Release|x86.ActiveCfg = Release|Any CPU
 		{D624806C-B598-4C03-B01C-5B25770EFD24}.Release|x86.Build.0 = Release|Any CPU
+		{A7FAD2E1-4CEF-4456-9DDD-2A45AF82B318}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{A7FAD2E1-4CEF-4456-9DDD-2A45AF82B318}.Debug|ARM.Build.0 = Debug|Any CPU
+		{A7FAD2E1-4CEF-4456-9DDD-2A45AF82B318}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A7FAD2E1-4CEF-4456-9DDD-2A45AF82B318}.Debug|x64.Build.0 = Debug|Any CPU
+		{A7FAD2E1-4CEF-4456-9DDD-2A45AF82B318}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A7FAD2E1-4CEF-4456-9DDD-2A45AF82B318}.Debug|x86.Build.0 = Debug|Any CPU
+		{A7FAD2E1-4CEF-4456-9DDD-2A45AF82B318}.Release|ARM.ActiveCfg = Release|Any CPU
+		{A7FAD2E1-4CEF-4456-9DDD-2A45AF82B318}.Release|ARM.Build.0 = Release|Any CPU
+		{A7FAD2E1-4CEF-4456-9DDD-2A45AF82B318}.Release|x64.ActiveCfg = Release|Any CPU
+		{A7FAD2E1-4CEF-4456-9DDD-2A45AF82B318}.Release|x64.Build.0 = Release|Any CPU
+		{A7FAD2E1-4CEF-4456-9DDD-2A45AF82B318}.Release|x86.ActiveCfg = Release|Any CPU
+		{A7FAD2E1-4CEF-4456-9DDD-2A45AF82B318}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
