@@ -25,7 +25,6 @@ public class GameModel: IGameModel
         _player2 = player2;
         AttachEventsToPlayer(_player1);
         AttachEventsToPlayer(_player2);
-        StartNewGame();
     }
 
     private void AttachEventsToPlayer(IPlayerView player)
