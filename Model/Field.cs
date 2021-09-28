@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Model.Api;
 
-namespace Quoridor.Model
+namespace Model
 {
     class Field
     {

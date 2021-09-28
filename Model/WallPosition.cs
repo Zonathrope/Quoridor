@@ -1,4 +1,4 @@
-﻿namespace Quoridor.Model
+﻿namespace Model
 {
     public enum WallDirection {Vertical, Horizontal}
     public class WallPosition

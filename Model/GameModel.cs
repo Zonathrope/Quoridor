@@ -4,7 +4,7 @@ using System.Linq;
 using Model;
 using Model.Api;
 
-namespace Quoridor.Model
+namespace Model
 {
 
 public class GameModel: IGameModel

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Quoridor.Model;
 
 namespace Model.Api
 {

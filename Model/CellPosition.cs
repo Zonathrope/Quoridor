@@ -1,4 +1,4 @@
-﻿namespace Quoridor.Model
+﻿namespace Model
 {
     public class CellPosition
     {

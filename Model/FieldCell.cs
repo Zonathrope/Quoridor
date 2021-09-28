@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Quoridor.Model
+namespace Model
 {
     class FieldCell
     {
