@@ -34,6 +34,7 @@ public class GameModel: IGameModel
         _player2 = player2;
         AttachEventsToPlayer(_player1);
         AttachEventsToPlayer(_player2);
+        _field = new Field();
     }
 
     private void AttachEventsToPlayer(IPlayerView player)
