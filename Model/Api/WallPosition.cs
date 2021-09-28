@@ -1,6 +1,5 @@
-﻿namespace Model
+﻿namespace Model.Api
 {
-    public enum WallDirection {Vertical, Horizontal}
     public class WallPosition
     {
         public WallDirection Direction { get; }

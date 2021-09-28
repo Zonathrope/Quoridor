@@ -1,4 +1,4 @@
-﻿namespace Model
+﻿namespace Model.Api
 {
     public class CellPosition
     {
@@ -31,7 +31,7 @@
         {
             return !(position1 == position2);
         }
-        protected bool Equals(CellPosition other)
+        public bool Equals(CellPosition other)
         {
             return X == other.X && Y == other.Y;
         }
