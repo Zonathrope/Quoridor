@@ -54,49 +54,50 @@ namespace ModelTest
             _gameModel.StartNewGame();
         }
         
-        private bool TestMove(PlayerNumber playerNumber, CellPosition position)
+        private void TestMove(PlayerNumber playerNumber, CellPosition position)
         {
-            _gameModel.MovePlayer(playerNumber, 4, 7);
-            return _gameModel.GetPlayerPosition(playerNumber) == position;
+            _gameModel.MovePlayer(playerNumber, position.X, position.Y);
+            Assert.AreEqual(_gameModel.GetPlayerPosition(playerNumber), position);
         }
 
         [Test]
         public void Player1_move_to_correct_position_1()
         {
-            Assert.IsTrue(TestMove(PlayerNumber.First, new CellPosition(4, 7)));
+            TestMove(PlayerNumber.First, new CellPosition(4, 7));
         }
         
         [Test]
         public void Player1_move_to_correct_position_2()
         {
-            Assert.IsTrue(TestMove(PlayerNumber.First, new CellPosition(3, 8)));
+            TestMove(PlayerNumber.First, new CellPosition(3, 8));
         }
         
         [Test]
         public void Player1_move_to_correct_position_3()
         {
-            Assert.IsTrue(TestMove(PlayerNumber.First, new CellPosition(5, 8)));
+            TestMove(PlayerNumber.First, new CellPosition(5, 8));
         }
         
         [Test]
         public void Player2_move_to_correct_position_1()
         {
             _gameModel.MovePlayer(PlayerNumber.First, 4, 7);
-            Assert.IsTrue(TestMove(PlayerNumber.Second, new CellPosition(4, 1)));
+            TestMove(PlayerNumber.Second, new CellPosition(4, 1));
         }
         
         [Test]
         public void Player2_move_to_correct_position_2()
         {
             _gameModel.MovePlayer(PlayerNumber.First, 4, 7);
-            Assert.IsTrue(TestMove(PlayerNumber.Second, new CellPosition(3, 0)));
+            TestMove(PlayerNumber.Second, new CellPosition(3, 0));
         }
         
         [Test]
         public void Player2_move_to_correct_position_3()
         {
             _gameModel.MovePlayer(PlayerNumber.First, 4, 7);
-            Assert.IsTrue(TestMove(PlayerNumber.Second, new CellPosition(5, 0)));
+            TestMove(PlayerNumber.Second, new CellPosition(5, 0));
         }
+        //TODO think how to write wall test
     }
 }
