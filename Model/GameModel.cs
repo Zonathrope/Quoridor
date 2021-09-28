@@ -9,6 +9,13 @@ namespace Model
 
 public class GameModel: IGameModel
 {
+    public CellPosition Player1Position => _field.Player1Position;
+    public CellPosition Player2Position => _field.Player2Position;
+    public CellPosition GetPlayerPosition(PlayerNumber playerNumber)
+    {
+        return playerNumber == PlayerNumber.First ? Player1Position : Player2Position;
+    }
+
     private IPlayerView _player1;
     private IPlayerView _player2;
     private Field _field;
