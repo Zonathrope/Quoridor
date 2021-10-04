@@ -14,5 +14,8 @@ namespace Model.Api
         CellPosition Player2Position{ get; }
         CellPosition GetPlayerPosition(PlayerNumber playerNumber);
 
+        List<WallPosition> PlacedWalls { get; }
+        int FieldSize { get; }
+        int FieldMiddle { get; }
     }
 }

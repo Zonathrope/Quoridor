@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using Model;
 using Model.Api;
@@ -9,12 +10,18 @@ namespace Model
 
 public class GameModel: IGameModel
 {
+    //TODO add check for moving to same position
     public CellPosition Player1Position => _field.Player1Position;
     public CellPosition Player2Position => _field.Player2Position;
     public CellPosition GetPlayerPosition(PlayerNumber playerNumber)
     {
         return playerNumber == PlayerNumber.First ? Player1Position : Player2Position;
     }
+
+    public List<WallPosition> PlacedWalls => _field.PlacedWalls;
+    //TODO maybe somehow expose constants in one class
+    public int FieldSize => _field.Size;
+    public int FieldMiddle => _field.FieldMiddleCoordinate;
 
     private IPlayerView _player1;
     private IPlayerView _player2;

@@ -9,13 +9,14 @@ namespace Model
     {
         public int Size => FieldSize;
         private const int FieldSize = 9;
-        private const int FieldMiddleCoordinate = 4;
+        public readonly int FieldMiddleCoordinate = 4;
         private const int PlayerWallAmount = 10;
         private static readonly CellPosition Player1DefaultPosition = new CellPosition(FieldMiddleCoordinate, FieldSize - 1);
         private static readonly CellPosition Player2DefaultPosition = new CellPosition(FieldMiddleCoordinate, 0);
 
         public FieldCell[,] FieldMatrix => _fieldMatrix;
         private FieldCell[,] _fieldMatrix = new FieldCell[FieldSize,FieldSize];
+        public List<WallPosition> PlacedWalls => _placedWalls;
         private List<WallPosition> _placedWalls = new List<WallPosition>();
         public int Player1WallAmount { set; get; } = PlayerWallAmount;
         public int Player2WallAmount { set; get; } = PlayerWallAmount;
