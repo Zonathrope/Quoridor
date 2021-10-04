@@ -3,7 +3,7 @@ using Model.Api;
 
 namespace Model
 {
-    class FieldCell
+    public class FieldCell
     {
         public CellPosition Position { get; }
         public List<FieldCell> NeighbourCells => _neighbourCells;
