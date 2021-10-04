@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Linq;
 using Model;
 using Model.Api;
-using Moq;
 
 namespace Model
 {
@@ -28,7 +27,7 @@ public class GameModel: IGameModel
     private IPlayerView _player2;
     private Field _field;
     //TODO replace with actual implementation
-    private IAStar _aStar = Mock.Of<IAStar>();
+    private IAStar _aStar = new AStarMock();
     private PlayerNumber _currentPlayer;
 
     private event EventHandler RaiseGameStartedEvent;
