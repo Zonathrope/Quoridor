@@ -16,12 +16,11 @@ namespace Model.Api
     public class PlayerPlacedWallEventArgs : EventArgs
     {
         public PlayerNumber PlayerNumber { get; }
-        public WallPosition WallPosition;
-        public CellPosition Position { get; }
+        public WallPosition Position { set; get; }
         public PlayerPlacedWallEventArgs(PlayerNumber playerNumber, WallPosition wallPosition)
         {
             PlayerNumber = playerNumber;
-            WallPosition = wallPosition;
+            Position = wallPosition;
         }
     }
     
