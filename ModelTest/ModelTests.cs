@@ -103,7 +103,7 @@ namespace ModelTest
         public void Player1_can_place_horizontal_wall()
         {
             WallPosition wallPosition = new WallPosition(WallDirection.Horizontal,
-                new CellPosition(0, 1), new CellPosition(1, 0));
+                new CellPosition(0, 0), new CellPosition(1, 1));
             _gameModel.PlaceWall(PlayerNumber.First, wallPosition);
             Assert.IsTrue(_gameModel.PlacedWalls.Contains(wallPosition));
         }
@@ -112,7 +112,7 @@ namespace ModelTest
         public void Player1_can_place_vertical_wall()
         {
             WallPosition wallPosition = new WallPosition(WallDirection.Vertical,
-                new CellPosition(0, 1), new CellPosition(1, 0));
+                new CellPosition(0, 0), new CellPosition(1, 1));
             _gameModel.PlaceWall(PlayerNumber.First, wallPosition);
             Assert.IsTrue(_gameModel.PlacedWalls.Contains(wallPosition));
         }
@@ -121,7 +121,7 @@ namespace ModelTest
         public void Player2_can_place_horizontal_wall()
         {
             WallPosition wallPosition = new WallPosition(WallDirection.Horizontal,
-                new CellPosition(0, 1), new CellPosition(1, 0));
+                new CellPosition(0, 0), new CellPosition(1, 1));
             //TODO introduce constants for field size
             _gameModel.MovePlayer(PlayerNumber.First, 4, 7);
             _gameModel.PlaceWall(PlayerNumber.First, wallPosition);
@@ -132,7 +132,7 @@ namespace ModelTest
         public void Player2_can_place_vertical_wall()
         {
             WallPosition wallPosition = new WallPosition(WallDirection.Vertical,
-                new CellPosition(0, 1), new CellPosition(1, 0));
+                new CellPosition(0, 0), new CellPosition(1, 1));
             _gameModel.MovePlayer(PlayerNumber.First, 4, 7);
             _gameModel.PlaceWall(PlayerNumber.First, wallPosition);
             Assert.IsTrue(_gameModel.PlacedWalls.Contains(wallPosition));
@@ -141,8 +141,8 @@ namespace ModelTest
         [Test]
         public void Player1_cant_place_wall_on_already_placed_door()
         {
-            var topLeftCell = new CellPosition(0, 1);
-            var bottomRightCell = new CellPosition(1, 0);
+            var topLeftCell = new CellPosition(0, 0);
+            var bottomRightCell = new CellPosition(1, 1);
             var wallPosition1 = new WallPosition(WallDirection.Horizontal, topLeftCell, bottomRightCell);
             var wallPosition2 = new WallPosition(WallDirection.Vertical, topLeftCell, bottomRightCell);
             _gameModel.MovePlayer(PlayerNumber.First, 4, 7);
@@ -154,8 +154,8 @@ namespace ModelTest
         [Test]
         public void Player1_cant_place_wall_over_already_placed_door()
         {
-            var topLeftCell = new CellPosition(0, 1);
-            var bottomRightCell = new CellPosition(1, 0);
+            var topLeftCell = new CellPosition(0, 0);
+            var bottomRightCell = new CellPosition(1, 1);
             var wallPosition = new WallPosition(WallDirection.Horizontal, topLeftCell, bottomRightCell);
             _gameModel.MovePlayer(PlayerNumber.First, 4, 7);
             _gameModel.PlaceWall(PlayerNumber.Second, wallPosition);
@@ -167,8 +167,8 @@ namespace ModelTest
         [Test]
         public void Player2_cant_place_wall_on_already_placed_door()
         {
-            var topLeftCell = new CellPosition(0, 1);
-            var bottomRightCell = new CellPosition(1, 0);
+            var topLeftCell = new CellPosition(0, 0);
+            var bottomRightCell = new CellPosition(1, 1);
             var wallPosition1 = new WallPosition(WallDirection.Horizontal, topLeftCell, bottomRightCell);
             var wallPosition2 = new WallPosition(WallDirection.Vertical, topLeftCell, bottomRightCell);
             _gameModel.PlaceWall(PlayerNumber.First, wallPosition1);
@@ -179,8 +179,8 @@ namespace ModelTest
         [Test]
         public void Player2_cant_place_wall_over_already_placed_door()
         {
-            var topLeftCell = new CellPosition(0, 1);
-            var bottomRightCell = new CellPosition(1, 0);
+            var topLeftCell = new CellPosition(0, 0);
+            var bottomRightCell = new CellPosition(1, 1);
             var wallPosition = new WallPosition(WallDirection.Vertical, topLeftCell, bottomRightCell);
             _gameModel.PlaceWall(PlayerNumber.First, wallPosition);
             Assert.Throws<WallPlaceTakenException>(
