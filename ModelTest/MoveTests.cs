@@ -20,7 +20,7 @@ namespace ModelTest
         
         private void TestMove(PlayerNumber playerNumber, CellPosition position)
         {
-            _gameModel.MovePlayer(playerNumber, position.X, position.Y);
+            _gameModel.MovePlayer(playerNumber, position);
             Assert.AreEqual(_gameModel.GetPlayerPosition(playerNumber), position);
         }
 
@@ -45,21 +45,21 @@ namespace ModelTest
         [Test]
         public void Player2_move_to_correct_position_1()
         {
-            _gameModel.MovePlayer(PlayerNumber.First, 4, 7);
+            _gameModel.MovePlayer(PlayerNumber.First, new CellPosition(4, 7));
             TestMove(PlayerNumber.Second, new CellPosition(4, 1));
         }
         
         [Test]
         public void Player2_move_to_correct_position_2()
         {
-            _gameModel.MovePlayer(PlayerNumber.First, 4, 7);
+            _gameModel.MovePlayer(PlayerNumber.First, new CellPosition(4, 7));
             TestMove(PlayerNumber.Second, new CellPosition(3, 0));
         }
         
         [Test]
         public void Player2_move_to_correct_position_3()
         {
-            _gameModel.MovePlayer(PlayerNumber.First, 4, 7);
+            _gameModel.MovePlayer(PlayerNumber.First, new CellPosition(4, 7));
             TestMove(PlayerNumber.Second, new CellPosition(5, 0));
         }
     }

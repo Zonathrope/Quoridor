@@ -69,7 +69,7 @@ public class GameModel: IGameModel
     /// <exception cref="IncorrectPlayerPositionException">Caller pass invalid position.</exception>
     /// <exception cref="CellAlreadyTakenException">Caller tries to move to taken cell.</exception>
     /// <exception cref="AnotherPlayerTurnException">Caller tries to move to taken cell.</exception>
-    public void MovePlayer(PlayerNumber playerNumber, int x, int y)
+    public void MovePlayer(PlayerNumber playerNumber, CellPosition newPosition)
     {
         if (playerNumber != _currentPlayer)
         {
@@ -77,7 +77,6 @@ public class GameModel: IGameModel
         }
 
         CellPosition oldPosition = _field.GetPlayerPosition(playerNumber);
-        var newPosition = new CellPosition(x, y);
 
         List<CellPosition> neighbours = _field.GetNeighboursPositions(oldPosition);
         if (!GetCellsAvailableForMove(playerNumber).Contains(newPosition))

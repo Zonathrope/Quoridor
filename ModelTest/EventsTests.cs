@@ -95,7 +95,7 @@ namespace ModelTest
                 {
                     int i = moveNumber / 2;
                     var player1MovePosition = lastPlayer1Position + new CellPosition(0, -1);
-                    _gameModel.MovePlayer(PlayerNumber.First, player1MovePosition.X, player1MovePosition.Y);
+                    _gameModel.MovePlayer(PlayerNumber.First, player1MovePosition);
                     lastPlayer1Position = player1MovePosition;
                 }
                 else
@@ -113,7 +113,7 @@ namespace ModelTest
                     {
                         player2MovePosition = lastPlayer2Position == position1 ? position2 : position1;
                     }
-                    _gameModel.MovePlayer(PlayerNumber.Second, player2MovePosition.X, player2MovePosition.Y);
+                    _gameModel.MovePlayer(PlayerNumber.Second, player2MovePosition);
                     lastPlayer2Position = player2MovePosition;
                 }
             }
@@ -124,7 +124,7 @@ namespace ModelTest
         {
             _gameModel.StartNewGame();
             var movePosition = new CellPosition(_gameModel.FieldMiddle, _gameModel.FieldSize - 2);
-            _gameModel.MovePlayer(PlayerNumber.First, movePosition.X, movePosition.Y);
+            _gameModel.MovePlayer(PlayerNumber.First, movePosition);
             var lastMove = new Tuple<PlayerNumber, CellPosition>(PlayerNumber.First, movePosition);
             Assert.AreEqual(_player1Handler.LastMove, lastMove);
             Assert.AreEqual(_player2Handler.LastMove, lastMove);
@@ -136,8 +136,8 @@ namespace ModelTest
             _gameModel.StartNewGame();
             var movePosition1 = new CellPosition(_gameModel.FieldMiddle, _gameModel.FieldSize - 2);
             var movePosition2 = new CellPosition(_gameModel.FieldMiddle, 1);
-            _gameModel.MovePlayer(PlayerNumber.First, movePosition1.X, movePosition1.Y);
-            _gameModel.MovePlayer(PlayerNumber.Second, movePosition2.X, movePosition2.Y);
+            _gameModel.MovePlayer(PlayerNumber.First, movePosition1);
+            _gameModel.MovePlayer(PlayerNumber.Second, movePosition2);
             var lastMove = new Tuple<PlayerNumber, CellPosition>(PlayerNumber.Second, movePosition2);
             Assert.AreEqual(_player1Handler.LastMove, lastMove);
             Assert.AreEqual(_player2Handler.LastMove, lastMove);

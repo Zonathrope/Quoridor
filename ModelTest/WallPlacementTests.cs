@@ -42,7 +42,7 @@ namespace ModelTest
             WallPosition wallPosition = new WallPosition(WallDirection.Horizontal,
                 new CellPosition(0, 0), new CellPosition(1, 1));
             //TODO introduce constants for field size
-            _gameModel.MovePlayer(PlayerNumber.First, 4, 7);
+            _gameModel.MovePlayer(PlayerNumber.First, new CellPosition(4, 7));
             _gameModel.PlaceWall(PlayerNumber.First, wallPosition);
             Assert.IsTrue(_gameModel.PlacedWalls.Contains(wallPosition));
         }
@@ -52,7 +52,7 @@ namespace ModelTest
         {
             WallPosition wallPosition = new WallPosition(WallDirection.Vertical,
                 new CellPosition(0, 0), new CellPosition(1, 1));
-            _gameModel.MovePlayer(PlayerNumber.First, 4, 7);
+            _gameModel.MovePlayer(PlayerNumber.First, new CellPosition(4, 7));
             _gameModel.PlaceWall(PlayerNumber.First, wallPosition);
             Assert.IsTrue(_gameModel.PlacedWalls.Contains(wallPosition));
         }
@@ -64,7 +64,7 @@ namespace ModelTest
             var bottomRightCell = new CellPosition(1, 1);
             var wallPosition1 = new WallPosition(WallDirection.Horizontal, topLeftCell, bottomRightCell);
             var wallPosition2 = new WallPosition(WallDirection.Vertical, topLeftCell, bottomRightCell);
-            _gameModel.MovePlayer(PlayerNumber.First, 4, 7);
+            _gameModel.MovePlayer(PlayerNumber.First, new CellPosition(4, 7));
             _gameModel.PlaceWall(PlayerNumber.Second, wallPosition1);
             Assert.Throws<WallPlaceTakenException>(
                 () => _gameModel.PlaceWall(PlayerNumber.First, wallPosition2));
@@ -76,7 +76,7 @@ namespace ModelTest
             var topLeftCell = new CellPosition(0, 0);
             var bottomRightCell = new CellPosition(1, 1);
             var wallPosition = new WallPosition(WallDirection.Horizontal, topLeftCell, bottomRightCell);
-            _gameModel.MovePlayer(PlayerNumber.First, 4, 7);
+            _gameModel.MovePlayer(PlayerNumber.First, new CellPosition(4, 7));
             _gameModel.PlaceWall(PlayerNumber.Second, wallPosition);
             Assert.Throws<WallPlaceTakenException>(
                 () => _gameModel.PlaceWall(PlayerNumber.First, wallPosition));
