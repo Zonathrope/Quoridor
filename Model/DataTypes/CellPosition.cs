@@ -1,4 +1,4 @@
-﻿namespace Model.Api
+﻿namespace Model.DataTypes
 {
     public class CellPosition
     {

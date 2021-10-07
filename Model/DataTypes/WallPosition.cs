@@ -1,4 +1,6 @@
-﻿namespace Model.Api
+﻿using Model.Api;
+
+namespace Model.DataTypes
 {
     public class WallPosition
     {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Model.Api;
+using Model.DataTypes;
 
 namespace Model
 {

@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using Model;
 using Model.Api;
+using Model.DataTypes;
 
 namespace Model
 {
