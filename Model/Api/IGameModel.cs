@@ -7,7 +7,6 @@ namespace Model.Api
     {
         void StartNewGame();
         void EndGame();
-        // TODO think to change call signature to CellPosition instead of x and y
         void MovePlayer(PlayerNumber playerNumber, CellPosition newPosition);
         void PlaceWall(PlayerNumber playerPlacing, WallPosition position);
         List<CellPosition> GetCellsAvailableForMove(PlayerNumber playerNumber);
