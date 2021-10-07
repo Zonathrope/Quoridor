@@ -62,19 +62,19 @@ namespace Model
             if (cellPosition.Y != 0)
             {
                 //TODO think if it is okay what cell positon can accept incorrect values
-                neighbours.Add(CellByPosition(cellPosition + new CellPosition(0, -1)));
+                neighbours.Add(CellByPosition(cellPosition.Shifted(0, -1)));
             }
             if (cellPosition.X != (FieldSize - 1))
             {
-                neighbours.Add(CellByPosition(cellPosition + new CellPosition(1, 0)));
+                neighbours.Add(CellByPosition(cellPosition.Shifted(1, 0)));
             }
             if (cellPosition.Y != (FieldSize - 1))
             {
-                neighbours.Add(CellByPosition(cellPosition + new CellPosition(0, 1)));
+                neighbours.Add(CellByPosition(cellPosition.Shifted(0, 1)));
             }
             if (cellPosition.X != 0)
             {
-                neighbours.Add(CellByPosition(cellPosition + new CellPosition(-1, 0)));
+                neighbours.Add(CellByPosition(cellPosition.Shifted(-1, 0)));
             }
             return neighbours;
         }
@@ -171,13 +171,13 @@ namespace Model
             FieldCell cell2, cell4;
             if (newWall.Direction == WallDirection.Vertical)
             {
-                cell2 = CellByPosition(newWall.TopLeftCell + new CellPosition(1, 0));
-                cell4 = CellByPosition(newWall.BottomRightCell + new CellPosition(1, 0));
+                cell2 = CellByPosition(newWall.TopLeftCell.Shifted(1, 0));
+                cell4 = CellByPosition(newWall.BottomRightCell.Shifted(1, 0));
             }
             else
             {
-                cell2 = CellByPosition(newWall.TopLeftCell + new CellPosition(0, 1));
-                cell4 = CellByPosition(newWall.BottomRightCell + new CellPosition(0, 1));
+                cell2 = CellByPosition(newWall.TopLeftCell.Shifted(0, 1));
+                cell4 = CellByPosition(newWall.BottomRightCell.Shifted(0, 1));
             }
             BlockWayBetweenCells(cell1, cell2);
             BlockWayBetweenCells(cell3, cell4);
@@ -191,13 +191,13 @@ namespace Model
             FieldCell cell2, cell4;
             if (removedWall.Direction == WallDirection.Vertical)
             {
-                cell2 = CellByPosition(removedWall.TopLeftCell + new CellPosition(1, 0));
-                cell4 = CellByPosition(removedWall.BottomRightCell + new CellPosition(1, 0));
+                cell2 = CellByPosition(removedWall.TopLeftCell.Shifted(1, 0));
+                cell4 = CellByPosition(removedWall.BottomRightCell.Shifted(1, 0));
             }
             else
             {
-                cell2 = CellByPosition(removedWall.TopLeftCell + new CellPosition(0, 1));
-                cell4 = CellByPosition(removedWall.BottomRightCell + new CellPosition(0, 1));
+                cell2 = CellByPosition(removedWall.TopLeftCell.Shifted(0, 1));
+                cell4 = CellByPosition(removedWall.BottomRightCell.Shifted(0, 1));
             }
             RestoreWayBetweenCells(cell1, cell2);
             RestoreWayBetweenCells(cell3, cell4);
@@ -220,7 +220,7 @@ namespace Model
             return IsOnField(topLeftCell) &&
                    IsOnField(bottomRightCell)
                    // check if cell is really bottom right relative to top left
-                   && bottomRightCell == topLeftCell + new CellPosition(1, 1);
+                   && bottomRightCell == topLeftCell.Shifted(1, 1);
         }
 
         public FieldCell[] GetPlayersWinLine(PlayerNumber playerNumber)

@@ -95,7 +95,7 @@ namespace ModelTest
                 if (moveNumber % 2 == 0)
                 {
                     int i = moveNumber / 2;
-                    var player1MovePosition = lastPlayer1Position + new CellPosition(0, -1);
+                    var player1MovePosition = lastPlayer1Position.Shifted(0, -1);
                     _gameModel.MovePlayer(PlayerNumber.First, player1MovePosition);
                     lastPlayer1Position = player1MovePosition;
                 }

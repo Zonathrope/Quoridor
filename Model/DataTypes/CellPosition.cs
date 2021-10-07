@@ -11,11 +11,6 @@
             Y = y;
         }
 
-        public static CellPosition operator +(CellPosition position1, CellPosition position2)
-        {
-            return new CellPosition(position1.X + position2.X, position1.Y + position2.Y);
-        }
-
         public static CellPosition operator -(CellPosition position1, CellPosition position2)
         {
             return new CellPosition(position2.X - position1.X, position2.Y - position1.Y);
@@ -48,6 +43,11 @@
         public override string ToString()
         {
             return $"[{X},{Y}]";
+        }
+
+        public CellPosition Shifted(int shiftX, int shiftY)
+        {
+            return new CellPosition(this.X + shiftX, this.Y + shiftY);
         }
     }
 }

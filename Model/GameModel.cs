@@ -116,7 +116,7 @@ public class GameModel: IGameModel
         //maybe i should introduce celloffset object
         CellPosition opponentPosition = neighborCellTakenByOpponent;
         CellPosition moveOffset = opponentPosition - currentPosition;
-        CellPosition cellBehindOpponent = opponentPosition + moveOffset;
+        CellPosition cellBehindOpponent = opponentPosition.Shifted(moveOffset.X, moveOffset.Y);
         if (_field.WayBetweenCellsExists(opponentPosition, cellBehindOpponent))
         {
             result.Add(cellBehindOpponent);
