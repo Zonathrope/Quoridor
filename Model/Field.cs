@@ -169,12 +169,12 @@ namespace Model
             if (newWall.Direction == WallDirection.Vertical)
             {
                 cell2 = CellByPosition(newWall.TopLeftCell + new CellPosition(1, 0));
-                cell4 = CellByPosition(newWall.BottomRightCell + new CellPosition(1, 0));
+                cell4 = CellByPosition(newWall.BottomRightCell + new CellPosition(-1, 0));
             }
             else
             {
                 cell2 = CellByPosition(newWall.TopLeftCell + new CellPosition(0, 1));
-                cell4 = CellByPosition(newWall.BottomRightCell + new CellPosition(0, 1));
+                cell4 = CellByPosition(newWall.BottomRightCell + new CellPosition(0, -1));
             }
             BlockWayBetweenCells(cell1, cell2);
             BlockWayBetweenCells(cell3, cell4);

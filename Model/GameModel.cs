@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Model;
 using Model.Api;
 
 namespace Model
@@ -164,6 +163,19 @@ public class GameModel: IGameModel
         FieldCell player2Cell = _field.GetPlayerCell(PlayerNumber.Second);
         bool player2HasAccess = player2WinLine.Any(winCell => _aStar.WayExists(player2Cell, winCell));
         return player1HasAccess && player2HasAccess;
+    }
+    public List<FieldCell> TestFindPath(CellPosition startPos, CellPosition endPos)
+    {
+        var aStar = (AStar) _aStar;
+        if (TestIsReachable(startPos, endPos)){ 
+            return aStar.FindPath(_field.FieldMatrix[startPos.X, startPos.Y], _field.FieldMatrix[endPos.X, endPos.Y]);
+        }
+        return null;
+    }
+
+    public bool TestIsReachable(CellPosition startPos, CellPosition endPos)
+    {
+        return _aStar.WayExists(_field.FieldMatrix[startPos.X, startPos.Y], _field.FieldMatrix[endPos.X, endPos.Y]);
     }
 }
 }

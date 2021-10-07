@@ -13,6 +13,7 @@ namespace Model.Api
         CellPosition Player1Position{ get; }
         CellPosition Player2Position{ get; }
         CellPosition GetPlayerPosition(PlayerNumber playerNumber);
-
+        public List<FieldCell> TestFindPath(CellPosition startPos, CellPosition endPos);
+        public bool TestIsReachable(CellPosition startPos, CellPosition endPos);
     }
 }

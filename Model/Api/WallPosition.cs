@@ -5,7 +5,7 @@
         public WallDirection Direction { get; }
         public CellPosition TopLeftCell { get; }
         public CellPosition BottomRightCell { get; }
-        WallPosition(WallDirection direction, CellPosition topLeftCell, CellPosition bottomRightCell)
+        public WallPosition(WallDirection direction, CellPosition topLeftCell, CellPosition bottomRightCell)
         {
             Direction = direction;
             TopLeftCell = topLeftCell;
