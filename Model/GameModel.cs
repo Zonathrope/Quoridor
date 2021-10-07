@@ -11,7 +11,6 @@ namespace Model
 
 public class GameModel: IGameModel
 {
-    //TODO add check for moving to same position
     public CellPosition Player1Position => _field.Player1Position;
     public CellPosition Player2Position => _field.Player2Position;
     public CellPosition GetPlayerPosition(PlayerNumber playerNumber)
