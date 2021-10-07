@@ -214,5 +214,18 @@ namespace Model
                 Player2WallAmount--;
         }
     }
+    public List<FieldCell> TestFindPath(CellPosition startPos, CellPosition endPos)
+    {
+        var aStar = (AStar) _aStar;
+        if (TestIsReachable(startPos, endPos)){ 
+            return aStar.FindPath(_field.FieldMatrix[startPos.X, startPos.Y], _field.FieldMatrix[endPos.X, endPos.Y]);
+        }
+        return null;
+    }
+
+    public bool TestIsReachable(CellPosition startPos, CellPosition endPos)
+    {
+        return _aStar.WayExists(_field.FieldMatrix[startPos.X, startPos.Y], _field.FieldMatrix[endPos.X, endPos.Y]);
+    }
 }
 

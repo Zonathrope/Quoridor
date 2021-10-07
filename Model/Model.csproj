@@ -2,6 +2,23 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
+        <OutputType>Exe</OutputType>
     </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Moq" Version="4.16.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="AStar\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="AStar\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="AStar\**" />
+    </ItemGroup>
 
 </Project>
