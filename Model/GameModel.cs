@@ -135,7 +135,7 @@ public class GameModel: IGameModel
     {
         List<CellPosition> availableCells = new List<CellPosition>();
         int positionDifferenceX = opponentPosition.X - playerCurrentPosition.X;
-        int positionDifferenceY = opponentPosition.Y - playerCurrentPosition.X;
+        int positionDifferenceY = opponentPosition.Y - playerCurrentPosition.Y;
         // Cell behind opponent is acquired by finding next cell from player position in opponents
         // direction
         CellPosition cellBehindOpponent = opponentPosition.Shifted(positionDifferenceX, positionDifferenceY);
