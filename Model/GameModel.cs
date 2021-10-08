@@ -95,8 +95,8 @@ public class GameModel: IGameModel
 
     public List<CellPosition> GetCellsAvailableForMove(PlayerNumber playerNumber)
     {
-        CellPosition currentPosition = _field.GetPlayerPosition(playerNumber);
-        List<CellPosition> availableCells = _field.GetNeighboursPositions(currentPosition);
+        CellPosition playerCurrentPosition = _field.GetPlayerPosition(playerNumber);
+        List<CellPosition> availableCells = _field.GetNeighboursPositions(playerCurrentPosition);
         CellPosition neighborCellTakenByOpponent = null;
         foreach (CellPosition position in availableCells)
         {
@@ -111,12 +111,14 @@ public class GameModel: IGameModel
         {
             return availableCells;
         }
+        //TODO think about moving this to separate method
         availableCells.Remove(neighborCellTakenByOpponent);
-        //TODO think if storing offset in same object is adequate
-        //maybe i should introduce celloffset object
         CellPosition opponentPosition = neighborCellTakenByOpponent;
-        CellPosition moveOffset = opponentPosition - currentPosition;
-        CellPosition cellBehindOpponent = opponentPosition.Shifted(moveOffset.X, moveOffset.Y);
+        int positionDifferenceX = opponentPosition.X - playerCurrentPosition.X;
+        int positionDifferenceY = opponentPosition.Y - playerCurrentPosition.X;
+        // Cell behind opponent is acquired by finding next cell from player position in opponents
+        // direction
+        CellPosition cellBehindOpponent = opponentPosition.Shifted(positionDifferenceX, positionDifferenceY);
         if (_field.WayBetweenCellsExists(opponentPosition, cellBehindOpponent))
         {
             availableCells.Add(cellBehindOpponent);
@@ -125,7 +127,7 @@ public class GameModel: IGameModel
         {
             //TODO think about is treating  blocked neighbours as not neighbours is ok
             List<CellPosition> opponentNeighbours = _field.GetNeighboursPositions(opponentPosition);
-            opponentNeighbours.Remove(currentPosition);
+            opponentNeighbours.Remove(playerCurrentPosition);
             opponentNeighbours.Remove(cellBehindOpponent);
             availableCells.AddRange(opponentNeighbours);
         }
