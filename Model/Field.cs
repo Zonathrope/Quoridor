@@ -53,8 +53,6 @@ namespace Model
                 }
             }
         }
-        // TODO think how to rename method to not conflict with fact what neighbours
-        // can be removed during game flow
         private List<FieldCell> GetCellNeighbours(FieldCell cell)
         {
             List<FieldCell> neighbours = new List<FieldCell>();
@@ -258,7 +256,7 @@ namespace Model
             return cell == Player1Position || cell == Player2Position;
         }
 
-        public List<CellPosition> GetNeighboursPositions(CellPosition cellPosition)
+        public List<CellPosition> GetReachableNeighbours(CellPosition cellPosition)
         {
             return CellByPosition(cellPosition)
                 .NeighbourCells

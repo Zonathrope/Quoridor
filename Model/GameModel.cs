@@ -78,7 +78,7 @@ public class GameModel: IGameModel
 
         CellPosition oldPosition = _field.GetPlayerPosition(playerNumber);
 
-        List<CellPosition> neighbours = _field.GetNeighboursPositions(oldPosition);
+        List<CellPosition> neighbours = _field.GetReachableNeighbours(oldPosition);
         if (!GetCellsAvailableForMove(playerNumber).Contains(newPosition))
         {
             throw new IncorrectPlayerPositionException(
@@ -96,7 +96,7 @@ public class GameModel: IGameModel
     public List<CellPosition> GetCellsAvailableForMove(PlayerNumber playerNumber)
     {
         CellPosition playerCurrentPosition = _field.GetPlayerPosition(playerNumber);
-        List<CellPosition> availableCells = _field.GetNeighboursPositions(playerCurrentPosition);
+        List<CellPosition> availableCells = _field.GetReachableNeighbours(playerCurrentPosition);
         CellPosition neighborCellTakenByOpponent = null;
         foreach (CellPosition position in availableCells)
         {
@@ -126,7 +126,7 @@ public class GameModel: IGameModel
         else
         {
             //TODO think about is treating  blocked neighbours as not neighbours is ok
-            List<CellPosition> opponentNeighbours = _field.GetNeighboursPositions(opponentPosition);
+            List<CellPosition> opponentNeighbours = _field.GetReachableNeighbours(opponentPosition);
             opponentNeighbours.Remove(playerCurrentPosition);
             opponentNeighbours.Remove(cellBehindOpponent);
             availableCells.AddRange(opponentNeighbours);
