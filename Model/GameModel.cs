@@ -85,12 +85,18 @@ public class GameModel: IGameModel
                 $"Can't move from {_field.GetPlayerPosition(playerNumber)} to {newPosition}");
         }
         _field.MovePlayer(playerNumber, newPosition);
-        _currentPlayer = _currentPlayer == PlayerNumber.First ? PlayerNumber.Second : PlayerNumber.First;
+        SwitchCurrentPlayer();
         RaisePlayerMovedEvent?.Invoke(this, new PlayerMovedEventArgs(playerNumber, newPosition));
         if (IsInOpponentsEndLine(newPosition, positionOwner: playerNumber))
         {
             HandleWin(playerNumber);
         }
+
+    }
+
+    private void SwitchCurrentPlayer()
+    {
+        _currentPlayer = _currentPlayer == PlayerNumber.First ? PlayerNumber.Second : PlayerNumber.First;
     }
 
     public List<CellPosition> GetCellsAvailableForMove(PlayerNumber playerNumber)
@@ -150,6 +156,7 @@ public class GameModel: IGameModel
             throw new WallBlocksPathForPlayerException(
                 $"Wall between {position.TopLeftCell} and {position.BottomRightCell} blocks way for players");
         }
+        SwitchCurrentPlayer();
         RaisePlayerPlacedWallEvent?.Invoke(this, new PlayerPlacedWallEventArgs(playerPlacing, position));
     }
 
