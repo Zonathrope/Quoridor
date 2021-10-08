@@ -8,6 +8,22 @@ namespace Model
 {
     class Field
     {
+        private class CellsAroundWall
+        {
+            public FieldCell TopLeftCell     { get; }
+            public FieldCell TopRightCell    { get; }
+            public FieldCell BottomRightCell { get; }
+            public FieldCell BottomLeftCell  { get; }
+
+            public CellsAroundWall(FieldCell topLeftCell, FieldCell topRightCell,
+                                   FieldCell bottomRightCell, FieldCell bottomLeftCell)
+            {
+                TopLeftCell = topLeftCell;
+                TopRightCell = topRightCell;
+                BottomRightCell = bottomRightCell;
+                BottomLeftCell = bottomLeftCell;
+            }
+        }
         public int Size => FieldSize;
         private const int FieldSize = 9;
         public int FieldMiddleCoordinate => _fieldMiddleCordinat;
@@ -162,43 +178,49 @@ namespace Model
             RestoreWaysBetweenCells(position);
         }
 
+        // TODO think how to rename method
         private void BlockWaysBetweenCells(WallPosition newWall)
         {
-            FieldCell cell1 = CellByPosition(newWall.TopLeftCell);
-            FieldCell cell3 = CellByPosition(newWall.BottomRightCell);
-            FieldCell cell2, cell4;
-            if (newWall.Direction == WallDirection.Vertical)
+            CellsAroundWall cells = GetCellsAroundWall(newWall);
+            if (newWall.Direction == WallDirection.Horizontal)
             {
-                cell2 = CellByPosition(newWall.TopLeftCell.Shifted(1, 0));
-                cell4 = CellByPosition(newWall.BottomRightCell.Shifted(1, 0));
+                BlockWayBetweenCells(cells.TopLeftCell, cells.TopRightCell);
+                BlockWayBetweenCells(cells.BottomLeftCell, cells.BottomRightCell);
             }
             else
             {
-                cell2 = CellByPosition(newWall.TopLeftCell.Shifted(0, 1));
-                cell4 = CellByPosition(newWall.BottomRightCell.Shifted(0, 1));
+                BlockWayBetweenCells(cells.TopLeftCell, cells.BottomLeftCell);
+                BlockWayBetweenCells(cells.TopRightCell, cells.BottomRightCell);
             }
-            BlockWayBetweenCells(cell1, cell2);
-            BlockWayBetweenCells(cell3, cell4);
+        }
+
+        private CellsAroundWall GetCellsAroundWall(WallPosition wallPosition)
+        {
+            //TODO think if i really need to store two positions in wall position
+            CellPosition topLeftCell = wallPosition.TopLeftCell;
+            CellPosition topRightCell = wallPosition.TopLeftCell.Shifted(1, 0);
+            CellPosition bottomRightCell = wallPosition.BottomRightCell;
+            CellPosition bottomLeftCell = wallPosition.BottomRightCell.Shifted(-1, 0);
+            return new CellsAroundWall(
+                CellByPosition(topLeftCell),
+                CellByPosition(topRightCell),
+                CellByPosition(bottomRightCell),
+                CellByPosition(bottomLeftCell));
         }
 
         private void RestoreWaysBetweenCells(WallPosition removedWall)
         {
-            //TODO think how to reuse code
-            FieldCell cell1 = CellByPosition(removedWall.TopLeftCell);
-            FieldCell cell3 = CellByPosition(removedWall.BottomRightCell);
-            FieldCell cell2, cell4;
-            if (removedWall.Direction == WallDirection.Vertical)
+            CellsAroundWall cells = GetCellsAroundWall(removedWall);
+            if (removedWall.Direction == WallDirection.Horizontal)
             {
-                cell2 = CellByPosition(removedWall.TopLeftCell.Shifted(1, 0));
-                cell4 = CellByPosition(removedWall.BottomRightCell.Shifted(1, 0));
+                RestoreWayBetweenCells(cells.TopLeftCell, cells.TopRightCell);
+                RestoreWayBetweenCells(cells.BottomLeftCell, cells.BottomRightCell);
             }
             else
             {
-                cell2 = CellByPosition(removedWall.TopLeftCell.Shifted(0, 1));
-                cell4 = CellByPosition(removedWall.BottomRightCell.Shifted(0, 1));
+                RestoreWayBetweenCells(cells.TopLeftCell, cells.BottomLeftCell);
+                RestoreWayBetweenCells(cells.TopRightCell, cells.BottomRightCell);
             }
-            RestoreWayBetweenCells(cell1, cell2);
-            RestoreWayBetweenCells(cell3, cell4);
         }
         private void BlockWayBetweenCells(FieldCell cell1, FieldCell cell2)
         {
@@ -211,6 +233,7 @@ namespace Model
             cell1.AddNeighbour(cell2);
             cell2.AddNeighbour(cell1);
         }
+
         private bool IsValidWallPosition(WallPosition position)
         {
             CellPosition topLeftCell = position.TopLeftCell;
