@@ -8,22 +8,9 @@ namespace Model
 {
     class Field
     {
-        private class CellsAroundWall
-        {
-            public FieldCell TopLeftCell     { get; }
-            public FieldCell TopRightCell    { get; }
-            public FieldCell BottomRightCell { get; }
-            public FieldCell BottomLeftCell  { get; }
+        private record CellsAroundWall(FieldCell TopLeftCell, FieldCell TopRightCell,
+            FieldCell BottomRightCell, FieldCell BottomLeftCell);
 
-            public CellsAroundWall(FieldCell topLeftCell, FieldCell topRightCell,
-                                   FieldCell bottomRightCell, FieldCell bottomLeftCell)
-            {
-                TopLeftCell = topLeftCell;
-                TopRightCell = topRightCell;
-                BottomRightCell = bottomRightCell;
-                BottomLeftCell = bottomLeftCell;
-            }
-        }
         public int Size => FieldSize;
         private const int FieldSize = 9;
         public int FieldMiddleCoordinate => _fieldMiddleCordinat;
