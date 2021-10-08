@@ -132,6 +132,8 @@ namespace Model
             return value >= 0 && value < FieldSize;
         }
 
+        // TODO think about moving wall amount concept to game model
+        /// <exception cref="NoWallsLeftException">Player has no walls.</exception>
         /// <exception cref="IncorrectWallPositionException">Caller pass invalid position.</exception>
         /// <exception cref="WallPlaceTakenException">Caller tries to place wall over existing wall.</exception>
         //TODO think if it is good to call every position argument just position
@@ -154,6 +156,14 @@ namespace Model
             }
 
             //TODO think if i should have some class for player representation inside field class
+            DecrementPlayerWallAmount(playerNumber);
+            _placedWalls.Add(position);
+            BlockWaysBetweenCells(position);
+        }
+
+        /// <exception cref="NoWallsLeftException">Player has no walls.</exception>
+        private void DecrementPlayerWallAmount(PlayerNumber playerNumber)
+        {
             if (playerNumber == PlayerNumber.First)
             {
                 if (Player1WallAmount == 0) throw new NoWallsLeftException("Player 1 have no walls left");
@@ -165,8 +175,6 @@ namespace Model
                 if (Player2WallAmount == 0) throw new NoWallsLeftException("Player 2 have no walls left");
                 Player2WallAmount--;
             }
-            _placedWalls.Add(position);
-            BlockWaysBetweenCells(position);
         }
 
         public void RemoveWall(WallPosition position)
