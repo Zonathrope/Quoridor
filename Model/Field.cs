@@ -159,7 +159,6 @@ namespace Model
             {
                 if (Player1WallAmount == 0) throw new NoWallsLeftException("Player 1 have no walls left");
                 //TODO think if calling private fields through property is okay
-                //TODO check if it works at all with decrement
                 Player1WallAmount--;
             }
             else
