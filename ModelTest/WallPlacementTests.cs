@@ -44,7 +44,7 @@ namespace ModelTest
                 new CellPosition(0, 0), new CellPosition(1, 1));
             //TODO introduce constants for field size
             _gameModel.MovePlayer(PlayerNumber.First, new CellPosition(4, 7));
-            _gameModel.PlaceWall(PlayerNumber.First, wallPosition);
+            _gameModel.PlaceWall(PlayerNumber.Second, wallPosition);
             Assert.IsTrue(_gameModel.PlacedWalls.Contains(wallPosition));
         }
 
@@ -54,7 +54,7 @@ namespace ModelTest
             WallPosition wallPosition = new WallPosition(WallDirection.Vertical,
                 new CellPosition(0, 0), new CellPosition(1, 1));
             _gameModel.MovePlayer(PlayerNumber.First, new CellPosition(4, 7));
-            _gameModel.PlaceWall(PlayerNumber.First, wallPosition);
+            _gameModel.PlaceWall(PlayerNumber.Second, wallPosition);
             Assert.IsTrue(_gameModel.PlacedWalls.Contains(wallPosition));
         }
 
