@@ -1,4 +1,6 @@
-﻿namespace Model.DataTypes
+﻿using System;
+
+namespace Model.DataTypes
 {
     public class CellPosition
     {
@@ -7,6 +9,10 @@
 
         public CellPosition(int x, int y)
         {
+            if (x < 0 || y < 0)
+            {
+                throw new ArgumentOutOfRangeException($"both x and y must be > 0, got x={x}, y={y}");
+            }
             X = x;
             Y = y;
         }

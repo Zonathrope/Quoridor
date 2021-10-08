@@ -75,7 +75,6 @@ namespace Model
             CellPosition cellPosition = cell.Position;
             if (cellPosition.Y != 0)
             {
-                //TODO think if it is okay what cell positon can accept incorrect values
                 neighbours.Add(CellByPosition(cellPosition.Shifted(0, -1)));
             }
             if (cellPosition.X != (FieldSize - 1))
