@@ -259,7 +259,7 @@ namespace Model
         public List<CellPosition> GetReachableNeighbours(CellPosition cellPosition)
         {
             return CellByPosition(cellPosition)
-                .NeighbourCells
+                .ReachableNeighbours
                 .Select(cell => cell.Position)
                 .ToList();
         }
@@ -267,7 +267,7 @@ namespace Model
         public bool WayBetweenCellsExists(CellPosition position1, CellPosition position2)
         {
             return CellByPosition(position1)
-                .NeighbourCells
+                .ReachableNeighbours
                 .Select(cell => cell.Position)
                 .Contains(position2);
         }
