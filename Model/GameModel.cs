@@ -96,9 +96,9 @@ public class GameModel: IGameModel
     public List<CellPosition> GetCellsAvailableForMove(PlayerNumber playerNumber)
     {
         CellPosition currentPosition = _field.GetPlayerPosition(playerNumber);
-        List<CellPosition> result = _field.GetNeighboursPositions(currentPosition);
+        List<CellPosition> availableCells = _field.GetNeighboursPositions(currentPosition);
         CellPosition neighborCellTakenByOpponent = null;
-        foreach (CellPosition position in result)
+        foreach (CellPosition position in availableCells)
         {
             if (_field.IsCellTaken(position))
             {
@@ -109,9 +109,9 @@ public class GameModel: IGameModel
 
         if (neighborCellTakenByOpponent is null)
         {
-            return result;
+            return availableCells;
         }
-        result.Remove(neighborCellTakenByOpponent);
+        availableCells.Remove(neighborCellTakenByOpponent);
         //TODO think if storing offset in same object is adequate
         //maybe i should introduce celloffset object
         CellPosition opponentPosition = neighborCellTakenByOpponent;
@@ -119,7 +119,7 @@ public class GameModel: IGameModel
         CellPosition cellBehindOpponent = opponentPosition.Shifted(moveOffset.X, moveOffset.Y);
         if (_field.WayBetweenCellsExists(opponentPosition, cellBehindOpponent))
         {
-            result.Add(cellBehindOpponent);
+            availableCells.Add(cellBehindOpponent);
         }
         else
         {
@@ -127,9 +127,9 @@ public class GameModel: IGameModel
             List<CellPosition> opponentNeighbours = _field.GetNeighboursPositions(opponentPosition);
             opponentNeighbours.Remove(currentPosition);
             opponentNeighbours.Remove(cellBehindOpponent);
-            result.AddRange(opponentNeighbours);
+            availableCells.AddRange(opponentNeighbours);
         }
-        return result;
+        return availableCells;
     }
 
     /// <exception cref="IncorrectWallPositionException">Caller pass invalid position.</exception>
