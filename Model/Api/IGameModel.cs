@@ -12,6 +12,8 @@ namespace Model.Api
         List<CellPosition> GetCellsAvailableForMove(PlayerNumber playerNumber);
         CellPosition Player1Position{ get; }
         CellPosition Player2Position{ get; }
+        int Player1WallAmount { get; }
+        int Player2WallAmount { get; }
         CellPosition GetPlayerPosition(PlayerNumber playerNumber);
 
         List<WallPosition> PlacedWalls { get; }

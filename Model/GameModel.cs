@@ -36,6 +36,11 @@ public class GameModel: IGameModel
     private event EventHandler<PlayerMovedEventArgs> RaisePlayerMovedEvent;
     private event EventHandler<PlayerPlacedWallEventArgs> RaisePlayerPlacedWallEvent;
 
+    private const int StartWallAmount = 10;
+    public int Player1WallAmount => _player1WallAmount;
+    public int Player2WallAmount => _player1WallAmount;
+    private int _player1WallAmount;
+    private int _player2WallAmount;
     public GameModel(IPlayerView player1, IPlayerView player2)
     {
         _player1 = player1;
@@ -58,6 +63,8 @@ public class GameModel: IGameModel
     {
         _field = new Field();
         _currentPlayer = PlayerNumber.First;
+        _player1WallAmount = StartWallAmount;
+        _player2WallAmount = StartWallAmount;
         RaiseGameStartedEvent?.Invoke(this, EventArgs.Empty);
     }
 
@@ -154,16 +161,22 @@ public class GameModel: IGameModel
         return availableCells;
     }
 
+    /// <exception cref="NoWallsLeftException">Player has no walls.</exception>
     /// <exception cref="IncorrectWallPositionException">Caller pass invalid position.</exception>
     /// <exception cref="WallPlaceTakenException">Caller tries to place wall over existing wall.</exception>
     /// <exception cref="WallBlocksPathForPlayerException">Caller tries to place wall that blocks way.</exception>
     public void PlaceWall(PlayerNumber playerPlacing, WallPosition position)
     {
+        if (!DoesPlayerHasWalls(playerPlacing))
+        {
+            throw new NoWallsLeftException($"Player {playerPlacing} has no walls left");
+        }
+        DecrementPlayerWallAmount(playerPlacing);
         if (!IsThisPlayersTurn(playerPlacing))
         {
             throw new AnotherPlayerTurnException($"It is player {_currentPlayer} turn");
         }
-        _field.PlaceWall(playerPlacing, position);
+        _field.PlaceWall(position);
         if (!BothPlayersHaveWayToLastLine())
         {
             _field.RemoveWall(position);
@@ -172,6 +185,20 @@ public class GameModel: IGameModel
         }
         SwitchCurrentPlayer();
         RaisePlayerPlacedWallEvent?.Invoke(this, new PlayerPlacedWallEventArgs(playerPlacing, position));
+    }
+
+    private bool DoesPlayerHasWalls(PlayerNumber playerNumber)
+    {
+        int wallAmount = playerNumber == PlayerNumber.First ? _player1WallAmount : _player2WallAmount;
+        return wallAmount != 0;
+    }
+
+    private void DecrementPlayerWallAmount(PlayerNumber playerNumber)
+    {
+        if (playerNumber == PlayerNumber.First)
+            _player1WallAmount--;
+        else
+            _player2WallAmount--;
     }
 
     private bool IsThisPlayersTurn(PlayerNumber playerNumber)

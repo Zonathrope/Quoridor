@@ -28,7 +28,6 @@ namespace Model
         private const int FieldSize = 9;
         public int FieldMiddleCoordinate => _fieldMiddleCordinat;
         private const int _fieldMiddleCordinat = 4;
-        private const int PlayerWallAmount = 10;
         private readonly CellPosition Player1DefaultPosition = new CellPosition(_fieldMiddleCordinat, FieldSize - 1);
         private readonly CellPosition Player2DefaultPosition = new CellPosition(_fieldMiddleCordinat, 0);
 
@@ -36,8 +35,6 @@ namespace Model
         private FieldCell[,] _fieldMatrix = new FieldCell[FieldSize,FieldSize];
         public List<WallPosition> PlacedWalls => _placedWalls;
         private List<WallPosition> _placedWalls = new List<WallPosition>();
-        public int Player1WallAmount { set; get; } = PlayerWallAmount;
-        public int Player2WallAmount { set; get; } = PlayerWallAmount;
 
         public CellPosition Player1Position { set; get; }
         public CellPosition Player2Position { set; get; }
@@ -132,12 +129,10 @@ namespace Model
             return value >= 0 && value < FieldSize;
         }
 
-        // TODO think about moving wall amount concept to game model
-        /// <exception cref="NoWallsLeftException">Player has no walls.</exception>
         /// <exception cref="IncorrectWallPositionException">Caller pass invalid position.</exception>
         /// <exception cref="WallPlaceTakenException">Caller tries to place wall over existing wall.</exception>
         //TODO think if it is good to call every position argument just position
-        public void PlaceWall(PlayerNumber playerNumber, WallPosition position)
+        public void PlaceWall(WallPosition position)
         {
             if (!IsValidWallPosition(position))
             {
@@ -155,26 +150,8 @@ namespace Model
                 }
             }
 
-            //TODO think if i should have some class for player representation inside field class
-            DecrementPlayerWallAmount(playerNumber);
             _placedWalls.Add(position);
             BlockWaysBetweenCells(position);
-        }
-
-        /// <exception cref="NoWallsLeftException">Player has no walls.</exception>
-        private void DecrementPlayerWallAmount(PlayerNumber playerNumber)
-        {
-            if (playerNumber == PlayerNumber.First)
-            {
-                if (Player1WallAmount == 0) throw new NoWallsLeftException("Player 1 have no walls left");
-                //TODO think if calling private fields through property is okay
-                Player1WallAmount--;
-            }
-            else
-            {
-                if (Player2WallAmount == 0) throw new NoWallsLeftException("Player 2 have no walls left");
-                Player2WallAmount--;
-            }
         }
 
         public void RemoveWall(WallPosition position)
