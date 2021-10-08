@@ -17,7 +17,6 @@ namespace ModelTest
 
         public void HandleGameStartedEvent(object sender, EventArgs args)
         {
-            Console.Out.WriteLine("here");
             GameStared = true;
         }
 
