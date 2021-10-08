@@ -71,7 +71,7 @@ public class GameModel: IGameModel
     /// <exception cref="AnotherPlayerTurnException">Caller tries to move to taken cell.</exception>
     public void MovePlayer(PlayerNumber playerNumber, CellPosition newPosition)
     {
-        if (playerNumber != _currentPlayer)
+        if (!IsThisPlayersTurn(playerNumber))
         {
             throw new AnotherPlayerTurnException($"It is player {_currentPlayer} turn");
         }
@@ -137,6 +137,10 @@ public class GameModel: IGameModel
     /// <exception cref="WallBlocksPathForPlayerException">Caller tries to place wall that blocks way.</exception>
     public void PlaceWall(PlayerNumber playerPlacing, WallPosition position)
     {
+        if (!IsThisPlayersTurn(playerPlacing))
+        {
+            throw new AnotherPlayerTurnException($"It is player {_currentPlayer} turn");
+        }
         _field.PlaceWall(playerPlacing, position);
         if (!BothPlayersHaveWayToLastLine())
         {
@@ -147,6 +151,10 @@ public class GameModel: IGameModel
         RaisePlayerPlacedWallEvent?.Invoke(this, new PlayerPlacedWallEventArgs(playerPlacing, position));
     }
 
+    private bool IsThisPlayersTurn(PlayerNumber playerNumber)
+    {
+        return playerNumber == _currentPlayer;
+    }
     private bool IsInOpponentsEndLine(CellPosition position, PlayerNumber positionOwner)
     {
         if (positionOwner == PlayerNumber.First)
