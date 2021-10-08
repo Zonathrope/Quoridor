@@ -104,6 +104,7 @@ public class GameModel: IGameModel
         CellPosition playerCurrentPosition = _field.GetPlayerPosition(playerNumber);
         List<CellPosition> availableCells = _field.GetReachableNeighbours(playerCurrentPosition);
         CellPosition neighborCellTakenByOpponent = null;
+        //TODO think about replacing cycle
         foreach (CellPosition position in availableCells)
         {
             if (_field.IsCellTaken(position))
@@ -112,14 +113,27 @@ public class GameModel: IGameModel
                 break;
             }
         }
-
-        if (neighborCellTakenByOpponent is null)
+        if (!(neighborCellTakenByOpponent is null))
         {
-            return availableCells;
+            CellPosition opponentPosition = neighborCellTakenByOpponent;
+            availableCells.Remove(opponentPosition);
+            availableCells.AddRange(
+                CellsAvailableFromFaceToFaceSituation(playerCurrentPosition, opponentPosition));
         }
-        //TODO think about moving this to separate method
-        availableCells.Remove(neighborCellTakenByOpponent);
-        CellPosition opponentPosition = neighborCellTakenByOpponent;
+        return availableCells;
+    }
+
+    /// <summary>
+    /// For the Quoridor game the situation where opponents face each over face to face is
+    /// threatened using some special rules.
+    /// </summary>
+    /// <returns>Cells available for player to move due face to face situation.
+    /// Don't include cells available by regular rules</returns>
+    private List<CellPosition> CellsAvailableFromFaceToFaceSituation(
+        CellPosition playerCurrentPosition,
+        CellPosition opponentPosition)
+    {
+        List<CellPosition> availableCells = new List<CellPosition>();
         int positionDifferenceX = opponentPosition.X - playerCurrentPosition.X;
         int positionDifferenceY = opponentPosition.Y - playerCurrentPosition.X;
         // Cell behind opponent is acquired by finding next cell from player position in opponents
