@@ -13,12 +13,13 @@ namespace Model
         {
             Position = new CellPosition(x, y);
         }
-        public void AddNeighbour(FieldCell neighbour)
+
+        public void AddReachableNeighbour(FieldCell neighbour)
         {
             _reachableNeighbours.Add(neighbour);
         }
 
-        public void RemoveNeighbour(FieldCell neighbour)
+        public void RemoveReachableNeighbour(FieldCell neighbour)
         {
             _reachableNeighbours.Remove(neighbour);
         }

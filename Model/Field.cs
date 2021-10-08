@@ -64,7 +64,7 @@ namespace Model
                     FieldCell cell = CellByPosition(new CellPosition(x, y));
                     foreach (FieldCell neighbour in GetCellNeighbours(cell))
                     {
-                        cell.AddNeighbour(neighbour);
+                        cell.AddReachableNeighbour(neighbour);
                     }
                 }
             }
@@ -224,14 +224,14 @@ namespace Model
         }
         private void BlockWayBetweenCells(FieldCell cell1, FieldCell cell2)
         {
-            cell1.RemoveNeighbour(cell2);
-            cell2.RemoveNeighbour(cell1);
+            cell1.RemoveReachableNeighbour(cell2);
+            cell2.RemoveReachableNeighbour(cell1);
         }
 
         private void RestoreWayBetweenCells(FieldCell cell1, FieldCell cell2)
         {
-            cell1.AddNeighbour(cell2);
-            cell2.AddNeighbour(cell1);
+            cell1.AddReachableNeighbour(cell2);
+            cell2.AddReachableNeighbour(cell1);
         }
 
         private bool IsValidWallPosition(WallPosition position)
