@@ -1,6 +1,4 @@
-﻿using Model.Api;
-
-namespace Model.DataTypes
+﻿namespace Model.DataTypes
 {
     public record WallPosition(
         WallDirection Direction,

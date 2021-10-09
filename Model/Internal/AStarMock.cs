@@ -1,6 +1,4 @@
-﻿using Model.Api;
-
-namespace Model
+﻿namespace Model.Internal
 {
     class AStarMock: IAStar
     {

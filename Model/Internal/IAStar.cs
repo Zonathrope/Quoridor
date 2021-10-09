@@ -1,4 +1,4 @@
-﻿namespace Model.Api
+﻿namespace Model.Internal
 {
     interface IAStar
     {

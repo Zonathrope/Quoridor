@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Model.Api
+namespace Model
 {
     public interface IPlayerView
     {

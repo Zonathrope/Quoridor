@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Model.Api;
 using Model.DataTypes;
 
-namespace Model
+namespace Model.Internal
 {
     class Field
     {

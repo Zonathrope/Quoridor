@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Model.Api
+namespace Model
 {
     //TODO make base Quoridor exception
     public class IncorrectUserInputException: Exception

@@ -1,5 +1,4 @@
 ﻿using Model;
-using Model.Api;
 using Model.DataTypes;
 using Moq;
 using NUnit.Framework;

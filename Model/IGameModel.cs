@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Model.DataTypes;
 
-namespace Model.Api
+namespace Model
 {
     public interface IGameModel
     {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using Model;
-using Model.Api;
 using Model.DataTypes;
 using NUnit.Framework;
 

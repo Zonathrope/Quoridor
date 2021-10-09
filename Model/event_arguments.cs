@@ -1,7 +1,7 @@
 ﻿using System;
 using Model.DataTypes;
 
-namespace Model.Api
+namespace Model
 {
     public class PlayerMovedEventArgs : EventArgs
     {
