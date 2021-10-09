@@ -29,11 +29,11 @@ public class GameModel: IGameModel
     private IAStar _aStar = new AStarMock();
     private PlayerNumber _currentPlayer;
 
-    private event EventHandler RaiseGameStartedEvent;
-    private event EventHandler RaiseGameEndedEvent;
-    private event EventHandler<PlayerWonEventArgs> RaisePlayerWonEvent;
-    private event EventHandler<PlayerMovedEventArgs> RaisePlayerMovedEvent;
-    private event EventHandler<PlayerPlacedWallEventArgs> RaisePlayerPlacedWallEvent;
+    private event Action                            GameStartedEvent;
+    private event Action                            GameEndedEvent;
+    private event Action<PlayerNumber>              PlayerWonEvent;
+    private event Action<PlayerMovedEventArgs>      PlayerMovedEvent;
+    private event Action<PlayerPlacedWallEventArgs> PlayerPlacedWallEvent;
 
     private const int StartWallAmount = 10;
     public int Player1WallAmount => _player1WallAmount;
@@ -51,11 +51,11 @@ public class GameModel: IGameModel
 
     private void AttachEventsToPlayer(IPlayerView player)
     {
-        this.RaiseGameStartedEvent      += player.HandleGameStartedEvent;
-        this.RaiseGameEndedEvent        += player.HandleGameEndedEvent;
-        this.RaisePlayerWonEvent        += player.HandlePlayerWonEvent;
-        this.RaisePlayerMovedEvent      += player.HandlePlayerMovedEvent;
-        this.RaisePlayerPlacedWallEvent += player.HandlePlayerPlacedWallEvent;
+        this.GameStartedEvent      += player.HandleGameStartedEvent;
+        this.GameEndedEvent        += player.HandleGameEndedEvent;
+        this.PlayerWonEvent        += player.HandlePlayerWonEvent;
+        this.PlayerMovedEvent      += player.HandlePlayerMovedEvent;
+        this.PlayerPlacedWallEvent += player.HandlePlayerPlacedWallEvent;
     }
 
     public void StartNewGame()
@@ -64,12 +64,12 @@ public class GameModel: IGameModel
         _currentPlayer = PlayerNumber.First;
         _player1WallAmount = StartWallAmount;
         _player2WallAmount = StartWallAmount;
-        RaiseGameStartedEvent?.Invoke(this, EventArgs.Empty);
+        GameStartedEvent?.Invoke();
     }
 
     public void EndGame()
     {
-        RaiseGameEndedEvent?.Invoke(this, EventArgs.Empty);
+        GameEndedEvent?.Invoke();
     }
 
     /// <exception cref="IncorrectPlayerPositionException">Caller pass invalid position.</exception>
@@ -92,7 +92,7 @@ public class GameModel: IGameModel
         }
         _field.MovePlayer(playerNumber, newPosition);
         SwitchCurrentPlayer();
-        RaisePlayerMovedEvent?.Invoke(this, new PlayerMovedEventArgs(playerNumber, newPosition));
+        PlayerMovedEvent?.Invoke(new PlayerMovedEventArgs(playerNumber, newPosition));
         if (IsInOpponentsEndLine(newPosition, positionOwner: playerNumber))
         {
             HandleWin(playerNumber);
@@ -173,7 +173,7 @@ public class GameModel: IGameModel
                 $"Wall between {wallPosition.TopLeftCell} and {wallPosition.BottomRightCell} blocks way for players");
         }
         SwitchCurrentPlayer();
-        RaisePlayerPlacedWallEvent?.Invoke(this, new PlayerPlacedWallEventArgs(playerPlacing, wallPosition));
+        PlayerPlacedWallEvent?.Invoke(new PlayerPlacedWallEventArgs(playerPlacing, wallPosition));
     }
 
     private bool DoesPlayerHasWalls(PlayerNumber playerNumber)
@@ -205,7 +205,7 @@ public class GameModel: IGameModel
 
     private void HandleWin(PlayerNumber winner)
     {
-        RaisePlayerWonEvent?.Invoke(this, new PlayerWonEventArgs(winner));
+        PlayerWonEvent?.Invoke(winner);
     }
 
     private bool BothPlayersHaveWayToLastLine()

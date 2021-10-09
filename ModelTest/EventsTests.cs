@@ -14,27 +14,27 @@ namespace ModelTest
         public Tuple<PlayerNumber, CellPosition> LastMove { set; get; }
         public Tuple<PlayerNumber, WallPosition> LastWallPlacement { set; get; }
 
-        public void HandleGameStartedEvent(object sender, EventArgs args)
+        public void HandleGameStartedEvent()
         {
             GameStared = true;
         }
 
-        public void HandleGameEndedEvent(object sender, EventArgs args)
+        public void HandleGameEndedEvent()
         {
             GameEnded = true;
         }
 
-        public void HandlePlayerWonEvent(object sender, PlayerWonEventArgs args)
+        public void HandlePlayerWonEvent(PlayerNumber winnerNumber)
         {
-            GameWinner = args.WinnerNumber;
+            GameWinner = winnerNumber;
         }
 
-        public void HandlePlayerMovedEvent(object sender, PlayerMovedEventArgs args)
+        public void HandlePlayerMovedEvent(PlayerMovedEventArgs args)
         {
             LastMove = new Tuple<PlayerNumber, CellPosition>(args.PlayerNumber, args.Position);
         }
 
-        public void HandlePlayerPlacedWallEvent(object sender, PlayerPlacedWallEventArgs args)
+        public void HandlePlayerPlacedWallEvent(PlayerPlacedWallEventArgs args)
         {
             LastWallPlacement = new Tuple<PlayerNumber, WallPosition>(args.PlayerNumber, args.Position);
         }
