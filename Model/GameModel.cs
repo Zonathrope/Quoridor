@@ -106,10 +106,10 @@ public class GameModel: IGameModel
     public List<CellPosition> GetCellsAvailableForMove(PlayerNumber playerNumber)
     {
         CellPosition playerCurrentPosition = _field.GetPlayerPosition(playerNumber);
-        List<CellPosition> availableCells = _field.GetReachableNeighbours(playerCurrentPosition);
+        List<CellPosition> reachableCells = _field.GetReachableNeighbours(playerCurrentPosition);
         CellPosition neighborCellTakenByOpponent = null;
         //TODO think about replacing cycle
-        foreach (CellPosition position in availableCells)
+        foreach (CellPosition position in reachableCells)
         {
             if (_field.IsCellTaken(position))
             {
@@ -120,11 +120,11 @@ public class GameModel: IGameModel
         if (!(neighborCellTakenByOpponent is null))
         {
             CellPosition opponentPosition = neighborCellTakenByOpponent;
-            availableCells.Remove(opponentPosition);
-            availableCells.AddRange(
+            reachableCells.Remove(opponentPosition);
+            reachableCells.AddRange(
                 CellsAvailableFromFaceToFaceSituation(playerCurrentPosition, opponentPosition));
         }
-        return availableCells;
+        return reachableCells;
     }
 
     /// <summary>
