@@ -140,7 +140,6 @@ public class GameModel: IGameModel
         }
         else
         {
-            //TODO think about is treating  blocked neighbours as not neighbours is ok
             List<CellPosition> opponentNeighbours = _field.GetReachableNeighbours(opponentPosition);
             opponentNeighbours.Remove(playerCurrentPosition);
             opponentNeighbours.Remove(cellBehindOpponent);
