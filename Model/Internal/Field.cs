@@ -81,33 +81,33 @@ namespace Model.Internal
 
         /// <exception cref="IncorrectPlayerPositionException">Caller pass invalid position.</exception>
         /// <exception cref="CellAlreadyTakenException">Caller tries to move to taken cell.</exception>
-        public void MovePlayer(PlayerNumber playerNumber, CellPosition position)
+        public void MovePlayer(PlayerNumber playerNumber, CellPosition cellPosition)
         {
-            if (!IsOnField(position))
+            if (!IsOnField(cellPosition))
             {
-                throw new IncorrectPlayerPositionException($"({position} is not on field");
+                throw new IncorrectPlayerPositionException($"({cellPosition} is not on field");
             }
 
-            if ((playerNumber == PlayerNumber.First && position == Player2Position) ||
-                 playerNumber == PlayerNumber.Second && position == Player1Position)
+            if ((playerNumber == PlayerNumber.First && cellPosition == Player2Position) ||
+                 playerNumber == PlayerNumber.Second && cellPosition == Player1Position)
             {
                 throw new CellAlreadyTakenException(
-                    $"Player {playerNumber} can't take cell ${position}, it is already taken by other player");
+                    $"Player {playerNumber} can't take cell ${cellPosition}, it is already taken by other player");
             }
 
             if (playerNumber == PlayerNumber.First)
             {
-                Player1Position = position;
+                Player1Position = cellPosition;
             }
             else
             {
-                Player2Position = position;
+                Player2Position = cellPosition;
             }
         }
 
-        public bool IsOnField(CellPosition position)
+        public bool IsOnField(CellPosition cellPosition)
         {
-            return IsInFieldCoordinatesRange(position.X) && IsInFieldCoordinatesRange(position.Y);
+            return IsInFieldCoordinatesRange(cellPosition.X) && IsInFieldCoordinatesRange(cellPosition.Y);
         }
         private bool IsInFieldCoordinatesRange(int value)
         {
@@ -116,34 +116,33 @@ namespace Model.Internal
 
         /// <exception cref="IncorrectWallPositionException">Caller pass invalid position.</exception>
         /// <exception cref="WallPlaceTakenException">Caller tries to place wall over existing wall.</exception>
-        //TODO think if it is good to call every position argument just position
-        public void PlaceWall(WallPosition position)
+        public void PlaceWall(WallPosition wallPosition)
         {
-            if (!IsValidWallPosition(position))
+            if (!IsValidWallPosition(wallPosition))
             {
                 throw new IncorrectWallPositionException(
-                    $"({position.TopLeftCell}, {position.BottomRightCell}) is not correct wall position");
+                    $"({wallPosition.TopLeftCell}, {wallPosition.BottomRightCell}) is not correct wall position");
             }
 
             foreach (WallPosition placedWall in _placedWalls)
             {
-                if (position.TopLeftCell == placedWall.TopLeftCell &&
-                    position.BottomRightCell == placedWall.BottomRightCell)
+                if (wallPosition.TopLeftCell == placedWall.TopLeftCell &&
+                    wallPosition.BottomRightCell == placedWall.BottomRightCell)
                 {
                     throw new WallPlaceTakenException(
-                        $"There is already wall between {position.TopLeftCell} and {position.BottomRightCell}");
+                        $"There is already wall between {wallPosition.TopLeftCell} and {wallPosition.BottomRightCell}");
                 }
             }
 
-            _placedWalls.Add(position);
-            BlockWaysBetweenCells(position);
+            _placedWalls.Add(wallPosition);
+            BlockWaysBetweenCells(wallPosition);
         }
 
-        public void RemoveWall(WallPosition position)
+        public void RemoveWall(WallPosition wallPosition)
         {
-            if (!_placedWalls.Contains(position)) return;
-            _placedWalls.Remove(position);
-            RestoreWaysBetweenCells(position);
+            if (!_placedWalls.Contains(wallPosition)) return;
+            _placedWalls.Remove(wallPosition);
+            RestoreWaysBetweenCells(wallPosition);
         }
 
         // TODO think how to rename method
@@ -169,6 +168,7 @@ namespace Model.Internal
             CellPosition topRightCell = wallPosition.TopLeftCell.Shifted(1, 0);
             CellPosition bottomRightCell = wallPosition.BottomRightCell;
             CellPosition bottomLeftCell = wallPosition.BottomRightCell.Shifted(-1, 0);
+            //TODO check deconsturction
             return new CellsAroundWall(
                 CellByPosition(topLeftCell),
                 CellByPosition(topRightCell),
@@ -202,10 +202,10 @@ namespace Model.Internal
             cell2.AddReachableNeighbour(cell1);
         }
 
-        private bool IsValidWallPosition(WallPosition position)
+        private bool IsValidWallPosition(WallPosition wallPosition)
         {
-            CellPosition topLeftCell = position.TopLeftCell;
-            CellPosition bottomRightCell = position.BottomRightCell;
+            CellPosition topLeftCell = wallPosition.TopLeftCell;
+            CellPosition bottomRightCell = wallPosition.BottomRightCell;
             return IsOnField(topLeftCell) &&
                    IsOnField(bottomRightCell)
                    // check if cell is really bottom right relative to top left
