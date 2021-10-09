@@ -152,7 +152,7 @@ public class GameModel: IGameModel
     /// <exception cref="IncorrectWallPositionException">Caller pass invalid position.</exception>
     /// <exception cref="WallPlaceTakenException">Caller tries to place wall over existing wall.</exception>
     /// <exception cref="WallBlocksPathForPlayerException">Caller tries to place wall that blocks way.</exception>
-    public void PlaceWall(PlayerNumber playerPlacing, WallPosition position)
+    public void PlaceWall(PlayerNumber playerPlacing, WallPosition wallPosition)
     {
         if (!DoesPlayerHasWalls(playerPlacing))
         {
@@ -163,15 +163,15 @@ public class GameModel: IGameModel
         {
             throw new AnotherPlayerTurnException($"It is player {_currentPlayer} turn");
         }
-        _field.PlaceWall(position);
+        _field.PlaceWall(wallPosition);
         if (!BothPlayersHaveWayToLastLine())
         {
-            _field.RemoveWall(position);
+            _field.RemoveWall(wallPosition);
             throw new WallBlocksPathForPlayerException(
-                $"Wall between {position.TopLeftCell} and {position.BottomRightCell} blocks way for players");
+                $"Wall between {wallPosition.TopLeftCell} and {wallPosition.BottomRightCell} blocks way for players");
         }
         SwitchCurrentPlayer();
-        RaisePlayerPlacedWallEvent?.Invoke(this, new PlayerPlacedWallEventArgs(playerPlacing, position));
+        RaisePlayerPlacedWallEvent?.Invoke(this, new PlayerPlacedWallEventArgs(playerPlacing, wallPosition));
     }
 
     private bool DoesPlayerHasWalls(PlayerNumber playerNumber)

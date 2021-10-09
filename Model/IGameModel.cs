@@ -8,7 +8,7 @@ namespace Model
         void StartNewGame();
         void EndGame();
         void MovePlayer(PlayerNumber playerNumber, CellPosition newPosition);
-        void PlaceWall(PlayerNumber playerPlacing, WallPosition position);
+        void PlaceWall(PlayerNumber playerPlacing, WallPosition wallPosition);
         List<CellPosition> GetCellsAvailableForMove(PlayerNumber playerNumber);
         CellPosition Player1Position{ get; }
         CellPosition Player2Position{ get; }
