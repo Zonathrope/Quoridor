@@ -87,11 +87,11 @@ namespace ModelTest
         private void MovePlayer1ToFinish()
         {
             int fieldSize = _gameModel.FieldSize;
-            int player1Moves = fieldSize - 1;
-            int player2Moves = player1Moves - 1;
+            int player1MoveAmount = fieldSize - 1;
+            int player2MoveAmount = player1MoveAmount - 1;
             var lastPlayer1Position = _gameModel.Player1Position;
             var lastPlayer2Position = _gameModel.Player2Position;
-            foreach (int moveNumber in Enumerable.Range(0, player1Moves + player2Moves))
+            foreach (int moveNumber in Enumerable.Range(0, player1MoveAmount + player2MoveAmount))
             {
                 if (moveNumber % 2 == 0)
                 {
