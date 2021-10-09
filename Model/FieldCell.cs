@@ -3,7 +3,7 @@ using Model.DataTypes;
 
 namespace Model
 {
-    public class FieldCell
+    class FieldCell
     {
         public CellPosition Position { get; }
         public List<FieldCell> ReachableNeighbours => _reachableNeighbours;

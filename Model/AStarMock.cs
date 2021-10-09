@@ -2,7 +2,7 @@
 
 namespace Model
 {
-    public class AStarMock: IAStar
+    class AStarMock: IAStar
     {
         public bool WayExists(FieldCell start, FieldCell end)
         {

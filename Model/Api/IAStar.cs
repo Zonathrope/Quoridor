@@ -1,6 +1,6 @@
 ﻿namespace Model.Api
 {
-    public interface IAStar
+    interface IAStar
     {
         bool WayExists(FieldCell start, FieldCell end);
     }
