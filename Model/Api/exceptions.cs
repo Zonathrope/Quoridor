@@ -2,6 +2,7 @@
 
 namespace Model.Api
 {
+    //TODO make base Quoridor exception
     public class IncorrectUserInputException: Exception
     {
         public IncorrectUserInputException(){}
