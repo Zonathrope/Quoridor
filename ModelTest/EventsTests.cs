@@ -86,7 +86,6 @@ namespace ModelTest
 
         private void MovePlayer1ToFinish()
         {
-            int fieldMiddle = _gameModel.FieldMiddle;
             int fieldSize = _gameModel.FieldSize;
             int player1Moves = fieldSize - 1;
             int player2Moves = player1Moves - 1;
@@ -96,17 +95,15 @@ namespace ModelTest
             {
                 if (moveNumber % 2 == 0)
                 {
-                    int i = moveNumber / 2;
                     var player1MovePosition = lastPlayer1Position.Shifted(0, -1);
                     _gameModel.MovePlayer(PlayerNumber.First, player1MovePosition);
                     lastPlayer1Position = player1MovePosition;
                 }
                 else
                 {
-                    //TODO replace with constant
-                    var player2StartPosition = new CellPosition(fieldMiddle, 0);
-                    var position1 = new CellPosition(fieldMiddle + 1, 0);
-                    var position2 = new CellPosition(fieldMiddle + 1, 1);
+                    var player2StartPosition = _player2StartPos;
+                    CellPosition position1 = player2StartPosition.Shifted(1, 0);
+                    CellPosition position2 = player2StartPosition.Shifted(1, 1);
                     CellPosition player2MovePosition;
                     if (lastPlayer2Position == player2StartPosition)
                     {
