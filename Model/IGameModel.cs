@@ -16,7 +16,11 @@ namespace Model
         int Player2WallAmount { get; }
         CellPosition GetPlayerPosition(PlayerNumber playerNumber);
         List<WallPosition> PlacedWalls { get; }
+        //TODO think if i need to move this constants out
         int FieldSize { get; }
         int FieldMiddle { get; }
+        CellPosition Player1DefaultPosition { get; }
+        CellPosition Player2DefaultPosition { get; }
+
     }
 }

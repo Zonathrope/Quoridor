@@ -13,8 +13,8 @@ namespace Model.Internal
         private const int FieldSize = 9;
         public int FieldMiddleCoordinate => _fieldMiddleCordinat;
         private const int _fieldMiddleCordinat = 4;
-        private readonly CellPosition Player1DefaultPosition = new CellPosition(_fieldMiddleCordinat, FieldSize - 1);
-        private readonly CellPosition Player2DefaultPosition = new CellPosition(_fieldMiddleCordinat, 0);
+        public readonly CellPosition Player1DefaultPosition = new CellPosition(_fieldMiddleCordinat, FieldSize - 1);
+        public readonly CellPosition Player2DefaultPosition = new CellPosition(_fieldMiddleCordinat, 0);
 
         public FieldCell[,] FieldMatrix => _fieldMatrix;
         private FieldCell[,] _fieldMatrix = new FieldCell[FieldSize,FieldSize];

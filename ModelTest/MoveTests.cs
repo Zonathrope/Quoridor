@@ -9,12 +9,16 @@ namespace ModelTest
     public class MoveTests
     {
         private IGameModel _gameModel;
+        private CellPosition _player1StartPos;
+        private CellPosition _player2StartPos;
         [SetUp]
         public void Setup()
         {
             var player1Mock = Mock.Of<IPlayerView>();
             var player2Mock = Mock.Of<IPlayerView>();
             _gameModel = new GameModel(player1Mock, player2Mock);
+            _player1StartPos = _gameModel.Player1DefaultPosition;
+            _player2StartPos = _gameModel.Player2DefaultPosition;
             _gameModel.StartNewGame();
         }
         
@@ -25,42 +29,42 @@ namespace ModelTest
         }
 
         [Test]
-        public void Player1_move_to_correct_position_1()
+        public void Player1_move_to_correct_position_up()
         {
-            TestMove(PlayerNumber.First, new CellPosition(4, 7));
+            TestMove(PlayerNumber.First, _player1StartPos.Shifted(0, -1));
         }
         
         [Test]
-        public void Player1_move_to_correct_position_2()
+        public void Player1_move_to_correct_position_left()
         {
-            TestMove(PlayerNumber.First, new CellPosition(3, 8));
+            TestMove(PlayerNumber.First, _player1StartPos.Shifted(-1 , 0));
         }
         
         [Test]
-        public void Player1_move_to_correct_position_3()
+        public void Player1_move_to_correct_position_right()
         {
-            TestMove(PlayerNumber.First, new CellPosition(5, 8));
+            TestMove(PlayerNumber.First, _player1StartPos.Shifted(1, 0));
         }
         
         [Test]
-        public void Player2_move_to_correct_position_1()
+        public void Player2_move_to_correct_position_bottom()
         {
-            _gameModel.MovePlayer(PlayerNumber.First, new CellPosition(4, 7));
-            TestMove(PlayerNumber.Second, new CellPosition(4, 1));
+            _gameModel.MovePlayer(PlayerNumber.First, _player1StartPos.Shifted(0, -1));
+            TestMove(PlayerNumber.Second, _player2StartPos.Shifted(0, 1));
         }
         
         [Test]
-        public void Player2_move_to_correct_position_2()
+        public void Player2_move_to_correct_position_left()
         {
-            _gameModel.MovePlayer(PlayerNumber.First, new CellPosition(4, 7));
-            TestMove(PlayerNumber.Second, new CellPosition(3, 0));
+            _gameModel.MovePlayer(PlayerNumber.First, _player1StartPos.Shifted(0, -1));
+            TestMove(PlayerNumber.Second, _player2StartPos.Shifted(-1, 0));
         }
         
         [Test]
-        public void Player2_move_to_correct_position_3()
+        public void Player2_move_to_correct_position_right()
         {
-            _gameModel.MovePlayer(PlayerNumber.First, new CellPosition(4, 7));
-            TestMove(PlayerNumber.Second, new CellPosition(5, 0));
+            _gameModel.MovePlayer(PlayerNumber.First, _player1StartPos.Shifted(0, -1));
+            TestMove(PlayerNumber.Second, _player2StartPos.Shifted(1, 0));
         }
     }
 }

@@ -39,12 +39,14 @@ namespace ModelTest
             LastWallPlacement = new Tuple<PlayerNumber, WallPosition>(args.PlayerNumber, args.Position);
         }
     }
-    
+    // TODO maybe separate tests abstract class
     [TestFixture]
     public class EventsTests
     {
         private MyEventHandler _player1Handler;
         private MyEventHandler _player2Handler;
+        private CellPosition _player1StartPos;
+        private CellPosition _player2StartPos;
         private IGameModel _gameModel;
         
         [SetUp]
@@ -53,6 +55,8 @@ namespace ModelTest
             _player1Handler = new MyEventHandler();
             _player2Handler = new MyEventHandler();
             _gameModel = new GameModel(_player1Handler, _player2Handler);
+            _player1StartPos = _gameModel.Player1DefaultPosition;
+            _player2StartPos = _gameModel.Player2DefaultPosition;
         }
 
         [Test]
@@ -122,7 +126,7 @@ namespace ModelTest
         public void Players_receive_player1_move()
         {
             _gameModel.StartNewGame();
-            var movePosition = new CellPosition(_gameModel.FieldMiddle, _gameModel.FieldSize - 2);
+            var movePosition = _player1StartPos.Shifted(0, -1);
             _gameModel.MovePlayer(PlayerNumber.First, movePosition);
             var lastMove = new Tuple<PlayerNumber, CellPosition>(PlayerNumber.First, movePosition);
             Assert.AreEqual(_player1Handler.LastMove, lastMove);
@@ -133,8 +137,8 @@ namespace ModelTest
         public void Players_receive_player2_move()
         {
             _gameModel.StartNewGame();
-            var movePosition1 = new CellPosition(_gameModel.FieldMiddle, _gameModel.FieldSize - 2);
-            var movePosition2 = new CellPosition(_gameModel.FieldMiddle, 1);
+            var movePosition1 = _player1StartPos.Shifted(0, -1);
+            var movePosition2 = _player2StartPos.Shifted(0, 1);
             _gameModel.MovePlayer(PlayerNumber.First, movePosition1);
             _gameModel.MovePlayer(PlayerNumber.Second, movePosition2);
             var lastMove = new Tuple<PlayerNumber, CellPosition>(PlayerNumber.Second, movePosition2);

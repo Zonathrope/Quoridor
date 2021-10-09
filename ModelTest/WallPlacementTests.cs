@@ -9,12 +9,16 @@ namespace ModelTest
     public class WallPlacementTests
     {
         private IGameModel _gameModel;
+        private CellPosition _player1StartPos;
+        private CellPosition _player2StartPos;
         [SetUp]
         public void Setup()
         {
             var player1Mock = Mock.Of<IPlayerView>();
             var player2Mock = Mock.Of<IPlayerView>();
             _gameModel = new GameModel(player1Mock, player2Mock);
+            _player1StartPos = _gameModel.Player1DefaultPosition;
+            _player2StartPos = _gameModel.Player2DefaultPosition;
             _gameModel.StartNewGame();
         }
 
@@ -82,7 +86,6 @@ namespace ModelTest
                 () => _gameModel.PlaceWall(PlayerNumber.First, wallPosition));
         }
 
-        //TODO write tests with random wall position pick
         [Test]
         public void Player2_cant_place_wall_on_already_placed_door()
         {
@@ -112,18 +115,18 @@ namespace ModelTest
             int fieldMiddle = _gameModel.FieldMiddle;
             _gameModel.PlaceWall(PlayerNumber.First,
                 new WallPosition(WallDirection.Vertical,
-                    new CellPosition(fieldMiddle - 1, 0),
-                    new CellPosition(fieldMiddle, 1)));
+                    _player2StartPos.Shifted(-1, 0),
+                    _player2StartPos.Shifted(0, 1)));
             _gameModel.PlaceWall(PlayerNumber.Second,
-                new WallPosition(WallDirection.Vertical,
-                    new CellPosition(fieldMiddle + 1, 0),
-                    new CellPosition(fieldMiddle + 2, 1)));
+                new WallPosition(WallDirection.Horizontal,
+                    _player2StartPos.Shifted(0, 1),
+                    _player2StartPos.Shifted(1, 2)));
             Assert.Throws<WallBlocksPathForPlayerException>(() =>
             {
                 _gameModel.PlaceWall(PlayerNumber.First,
-                    new WallPosition(WallDirection.Horizontal,
-                        new CellPosition(fieldMiddle, 0),
-                        new CellPosition(fieldMiddle + 1, 1)));
+                    new WallPosition(WallDirection.Vertical,
+                        _player2StartPos.Shifted(1, 0),
+                        _player2StartPos.Shifted(2, 1)));
             });
         }
 
@@ -134,18 +137,18 @@ namespace ModelTest
             int fieldEnd = _gameModel.FieldSize - 1;
             _gameModel.PlaceWall(PlayerNumber.First,
                 new WallPosition(WallDirection.Vertical,
-                    new CellPosition(fieldMiddle - 1, fieldEnd - 1),
-                    new CellPosition(fieldMiddle, fieldEnd)));
+                    _player1StartPos.Shifted(-1, -1),
+                    _player1StartPos));
             _gameModel.PlaceWall(PlayerNumber.Second,
                 new WallPosition(WallDirection.Vertical,
-                    new CellPosition(fieldMiddle + 1, fieldEnd - 1),
-                    new CellPosition(fieldMiddle + 2, fieldEnd)));
+                    _player1StartPos.Shifted(1, -1),
+                    _player1StartPos.Shifted(2, 0)));
             Assert.Throws<WallBlocksPathForPlayerException>(() =>
             {
                 _gameModel.PlaceWall(PlayerNumber.First,
                     new WallPosition(WallDirection.Horizontal,
-                        new CellPosition(fieldMiddle, fieldEnd - 1),
-                        new CellPosition(fieldMiddle + 1, fieldEnd)));
+                        _player1StartPos.Shifted(0, -1),
+                        _player1StartPos.Shifted(1, 0)));
             });
         }
     }
