@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using Model;
 using Model.Api;
 using Model.DataTypes;
 
 namespace Model
 {
-
 public class GameModel: IGameModel
 {
     public CellPosition Player1Position => _field.Player1Position;

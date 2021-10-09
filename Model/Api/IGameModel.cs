@@ -15,7 +15,6 @@ namespace Model.Api
         int Player1WallAmount { get; }
         int Player2WallAmount { get; }
         CellPosition GetPlayerPosition(PlayerNumber playerNumber);
-
         List<WallPosition> PlacedWalls { get; }
         int FieldSize { get; }
         int FieldMiddle { get; }
