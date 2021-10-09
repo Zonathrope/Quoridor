@@ -109,6 +109,7 @@ namespace Model.Internal
         {
             return IsInFieldCoordinatesRange(cellPosition.X) && IsInFieldCoordinatesRange(cellPosition.Y);
         }
+
         private bool IsInFieldCoordinatesRange(int value)
         {
             return value >= 0 && value < FieldSize;
@@ -135,18 +136,18 @@ namespace Model.Internal
             }
 
             _placedWalls.Add(wallPosition);
-            BlockWaysBetweenCells(wallPosition);
+            BlockWays(newWall: wallPosition);
         }
 
         public void RemoveWall(WallPosition wallPosition)
         {
+            // TODO think about throwing exception here
             if (!_placedWalls.Contains(wallPosition)) return;
             _placedWalls.Remove(wallPosition);
-            RestoreWaysBetweenCells(wallPosition);
+            RestoreWays(removedWall:wallPosition);
         }
 
-        // TODO think how to rename method
-        private void BlockWaysBetweenCells(WallPosition newWall)
+        private void BlockWays(WallPosition newWall)
         {
             CellsAroundWall cells = GetCellsAroundWall(newWall);
             if (newWall.Direction == WallDirection.Horizontal)
@@ -176,7 +177,7 @@ namespace Model.Internal
                 CellByPosition(bottomLeftCell));
         }
 
-        private void RestoreWaysBetweenCells(WallPosition removedWall)
+        private void RestoreWays(WallPosition removedWall)
         {
             CellsAroundWall cells = GetCellsAroundWall(removedWall);
             if (removedWall.Direction == WallDirection.Horizontal)
