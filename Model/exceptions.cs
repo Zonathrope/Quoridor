@@ -47,4 +47,9 @@ namespace Model
     {
         public AnotherPlayerTurnException(string message) : base(message){}
     }
+
+    public class NoSuchWallException : QuoridorException
+    {
+        public NoSuchWallException(string message): base(message){}
+    }
 }

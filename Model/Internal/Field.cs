@@ -139,10 +139,13 @@ namespace Model.Internal
             BlockWays(newWall: wallPosition);
         }
 
+        //TODO ask if it is ok that exception is documented here, but not in calling method
+        /// <exception cref="NoSuchWallException">passed wall wasn't placed.</exception>
         public void RemoveWall(WallPosition wallPosition)
         {
             // TODO think about throwing exception here
-            if (!_placedWalls.Contains(wallPosition)) return;
+            if (!_placedWalls.Contains(wallPosition))
+                throw new NoSuchWallException($"There is no {wallPosition} among placed walls");
             _placedWalls.Remove(wallPosition);
             RestoreWays(removedWall:wallPosition);
         }
