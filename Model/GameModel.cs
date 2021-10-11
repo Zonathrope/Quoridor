@@ -16,7 +16,6 @@ public class GameModel: IGameModel
     }
 
     public List<WallPosition> PlacedWalls => _field.PlacedWalls;
-    //TODO maybe somehow expose constants in one class
     public int FieldSize => _field.Size;
     public int FieldMiddle => _field.FieldMiddleCoordinate;
     public CellPosition Player1DefaultPosition => _field.Player1DefaultPosition;
