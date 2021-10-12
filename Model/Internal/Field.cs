@@ -10,11 +10,12 @@ namespace Model.Internal
         private record CellsAroundWall(FieldCell TopLeftCell, FieldCell TopRightCell,
             FieldCell BottomRightCell, FieldCell BottomLeftCell);
 
+        public CellPosition Player1Position { get; private set; }
+        public CellPosition Player2Position { get; private set; }
         private FieldCell[,] _fieldMatrix = new FieldCell[GameConstants.FieldSize,GameConstants.FieldSize];
         public List<WallPosition> PlacedWalls { get; } = new ();
 
-        public CellPosition Player1Position { get; private set; }
-        public CellPosition Player2Position { get; private set; }
+
         public Field()
         {
             InitMatrix();
