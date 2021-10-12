@@ -135,7 +135,6 @@ public class GameModel: IGameModel
         {
             throw new NoWallsLeftException($"Player {playerPlacing} has no walls left");
         }
-        DecrementPlayerWallAmount(playerPlacing);
         if (!IsThisPlayersTurn(playerPlacing))
         {
             throw new AnotherPlayerTurnException($"It is player {_currentPlayer} turn");
@@ -148,6 +147,7 @@ public class GameModel: IGameModel
             throw new WallBlocksPathForPlayerException(
                 $"{wallDirection} wall at {wallPosition.TopLeftCell} blocks way for players");
         }
+        DecrementPlayerWallAmount(playerPlacing);
         SwitchCurrentPlayer();
         PlayerPlacedWallEvent?.Invoke(new PlayerPlacedWallEventArgs(playerPlacing, wallPosition));
     }
