@@ -36,7 +36,7 @@ namespace ModelTest
 
         public void HandlePlayerPlacedWallEvent(PlayerPlacedWallEventArgs args)
         {
-            LastWallPlacement = new Tuple<PlayerNumber, WallPosition>(args.PlayerNumber, args.Position);
+            LastWallPlacement = new Tuple<PlayerNumber, WallPosition>(args.PlayerNumber, args.WallPosition);
         }
     }
     // TODO maybe separate tests abstract class
