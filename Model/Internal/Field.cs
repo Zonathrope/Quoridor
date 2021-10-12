@@ -25,26 +25,25 @@ namespace Model.Internal
 
         private void InitMatrix()
         {
-            int fieldSize = GameConstants.FieldSize;
-            for (int y = 0; y < fieldSize; y++)
+            for (int y = 0; y < _fieldMatrix.GetLength(0); y++)
             {
-                for (int x = 0; x < fieldSize; x++)
+                for (int x = 0; x < _fieldMatrix.GetLength(1); x++)
                 {
                     _fieldMatrix[y, x] = new FieldCell(x, y);
                 }
             }
-            for (int y = 0; y < fieldSize; y++)
+            foreach (var cell in _fieldMatrix)
             {
-                for (int x = 0; x < fieldSize; x++)
-                {
-                    FieldCell cell = CellByPosition(new CellPosition(x, y));
-                    foreach (FieldCell neighbour in GetCellNeighbours(cell))
-                    {
-                        cell.AddReachableNeighbour(neighbour);
-                    }
-                }
+                AddNeighboursToCell(cell);
             }
         }
+
+        /// <summary>Add cell neighbours as reacheble neighbours</summary>
+        private void AddNeighboursToCell(FieldCell cell)
+        {
+            GetCellNeighbours(cell).ForEach(cell.AddReachableNeighbour);
+        }
+
         private List<FieldCell> GetCellNeighbours(FieldCell cell)
         {
             List<FieldCell> neighbours = new List<FieldCell>();
