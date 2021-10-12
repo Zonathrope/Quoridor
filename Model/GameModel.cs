@@ -71,7 +71,7 @@ public class GameModel: IGameModel
         _field.MovePlayer(playerNumber, newPosition);
         SwitchCurrentPlayer();
         PlayerMovedEvent?.Invoke(new PlayerMovedEventArgs(playerNumber, newPosition));
-        if (IsInOpponentsEndLine(newPosition, positionOwner: playerNumber))
+        if (IsOnWinningPosition(playerNumber))
         {
             HandleWin(playerNumber);
         }
@@ -169,13 +169,15 @@ public class GameModel: IGameModel
     {
         return playerNumber == _currentPlayer;
     }
-    private bool IsInOpponentsEndLine(CellPosition position, PlayerNumber positionOwner)
+    /// <summary>Checks if player is on last(relative to his start position)</summary>
+    private bool IsOnWinningPosition(PlayerNumber player)
     {
-        if (positionOwner == PlayerNumber.First)
+        CellPosition playerPosition = GetPlayerPosition(player);
+        if (player == PlayerNumber.First)
         {
-            return position.Y == 0;
+            return playerPosition.Y == 0;
         }
-        return position.Y == _field.Size;
+        return playerPosition.Y == GameConstants.FieldSize;
     }
 
     private void HandleWin(PlayerNumber winner)
