@@ -27,10 +27,9 @@ public class GameModel: IGameModel
     private event Action<PlayerMovedEventArgs>      PlayerMovedEvent;
     private event Action<PlayerPlacedWallEventArgs> PlayerPlacedWallEvent;
 
-    public int Player1WallAmount => _player1WallAmount;
-    public int Player2WallAmount => _player1WallAmount;
-    private int _player1WallAmount;
-    private int _player2WallAmount;
+    public int Player1WallAmount { get; private set; }
+    public int Player2WallAmount { get; private set; }
+
     public GameModel(IPlayerView player1, IPlayerView player2)
     {
         AttachEventsToPlayer(player1);
@@ -51,8 +50,8 @@ public class GameModel: IGameModel
     {
         _field = new Field();
         _currentPlayer = PlayerNumber.First;
-        _player1WallAmount = GameConstants.StartWallAmount;
-        _player2WallAmount = GameConstants.StartWallAmount;
+        Player1WallAmount = GameConstants.StartWallAmount;
+        Player2WallAmount = GameConstants.StartWallAmount;
         GameStartedEvent?.Invoke();
     }
 
@@ -161,16 +160,16 @@ public class GameModel: IGameModel
 
     private bool DoesPlayerHasWalls(PlayerNumber playerNumber)
     {
-        int wallAmount = playerNumber == PlayerNumber.First ? _player1WallAmount : _player2WallAmount;
+        int wallAmount = playerNumber == PlayerNumber.First ? Player1WallAmount : Player2WallAmount;
         return wallAmount != 0;
     }
 
     private void DecrementPlayerWallAmount(PlayerNumber playerNumber)
     {
         if (playerNumber == PlayerNumber.First)
-            _player1WallAmount--;
+            Player1WallAmount--;
         else
-            _player2WallAmount--;
+            Player2WallAmount--;
     }
 
     private bool IsThisPlayersTurn(PlayerNumber playerNumber)
