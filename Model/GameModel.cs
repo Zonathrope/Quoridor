@@ -131,7 +131,7 @@ public class GameModel: IGameModel
 
     public void PlaceWall(PlayerNumber playerPlacing, WallPosition wallPosition)
     {
-        if (!DoesPlayerHasWalls(playerPlacing))
+        if (!PlayerHasWalls(playerPlacing))
         {
             throw new NoWallsLeftException($"Player {playerPlacing} has no walls left");
         }
@@ -152,7 +152,7 @@ public class GameModel: IGameModel
         PlayerPlacedWallEvent?.Invoke(new PlayerPlacedWallEventArgs(playerPlacing, wallPosition));
     }
 
-    private bool DoesPlayerHasWalls(PlayerNumber playerNumber)
+    private bool PlayerHasWalls(PlayerNumber playerNumber)
     {
         int wallAmount = playerNumber == PlayerNumber.First ? Player1WallAmount : Player2WallAmount;
         return wallAmount != 0;
