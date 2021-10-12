@@ -13,8 +13,8 @@ namespace Model.Internal
         private FieldCell[,] _fieldMatrix = new FieldCell[GameConstants.FieldSize,GameConstants.FieldSize];
         public List<WallPosition> PlacedWalls { get; } = new ();
 
-        public CellPosition Player1Position { set; get; }
-        public CellPosition Player2Position { set; get; }
+        public CellPosition Player1Position { get; private set; }
+        public CellPosition Player2Position { get; private set; }
         public Field()
         {
             InitMatrix();
