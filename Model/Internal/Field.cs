@@ -10,11 +10,8 @@ namespace Model.Internal
         private record CellsAroundWall(FieldCell TopLeftCell, FieldCell TopRightCell,
             FieldCell BottomRightCell, FieldCell BottomLeftCell);
 
-        public int Size => FieldSize;
-        private const int FieldSize = 9;
-
         public FieldCell[,] FieldMatrix => _fieldMatrix;
-        private FieldCell[,] _fieldMatrix = new FieldCell[FieldSize,FieldSize];
+        private FieldCell[,] _fieldMatrix = new FieldCell[GameConstants.FieldSize,GameConstants.FieldSize];
         public List<WallPosition> PlacedWalls => _placedWalls;
         private List<WallPosition> _placedWalls = new List<WallPosition>();
 
@@ -29,16 +26,17 @@ namespace Model.Internal
 
         private void InitMatrix()
         {
-            for (int y = 0; y < FieldSize; y++)
+            int fieldSize = GameConstants.FieldSize;
+            for (int y = 0; y < fieldSize; y++)
             {
-                for (int x = 0; x < FieldSize; x++)
+                for (int x = 0; x < fieldSize; x++)
                 {
                     _fieldMatrix[y, x] = new FieldCell(x, y);
                 }
             }
-            for (int y = 0; y < FieldSize; y++)
+            for (int y = 0; y < fieldSize; y++)
             {
-                for (int x = 0; x < FieldSize; x++)
+                for (int x = 0; x < fieldSize; x++)
                 {
                     FieldCell cell = CellByPosition(new CellPosition(x, y));
                     foreach (FieldCell neighbour in GetCellNeighbours(cell))
@@ -56,11 +54,11 @@ namespace Model.Internal
             {
                 neighbours.Add(CellByPosition(cellPosition.Shifted(0, -1)));
             }
-            if (cellPosition.X != (FieldSize - 1))
+            if (cellPosition.X != (GameConstants.FieldSize - 1))
             {
                 neighbours.Add(CellByPosition(cellPosition.Shifted(1, 0)));
             }
-            if (cellPosition.Y != (FieldSize - 1))
+            if (cellPosition.Y != (GameConstants.FieldSize - 1))
             {
                 neighbours.Add(CellByPosition(cellPosition.Shifted(0, 1)));
             }
@@ -109,7 +107,7 @@ namespace Model.Internal
 
         private bool IsInFieldCoordinatesRange(int value)
         {
-            return value >= 0 && value < FieldSize;
+            return value >= 0 && value < GameConstants.FieldSize;
         }
 
         /// <exception cref="IncorrectWallPositionException">Caller pass invalid position.</exception>
@@ -224,12 +222,12 @@ namespace Model.Internal
                 return GetFieldRow(0);
             }
 
-            return GetFieldRow(FieldSize - 1);
+            return GetFieldRow(GameConstants.FieldSize - 1);
         }
 
         private FieldCell[] GetFieldRow(int rowNumber)
         {
-            return Enumerable.Range(0, FieldSize - 1)
+            return Enumerable.Range(0, GameConstants.FieldSize - 1)
                 .Select(columnNumber => _fieldMatrix[rowNumber, columnNumber])
                 .ToArray();
         }
