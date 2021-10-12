@@ -11,8 +11,7 @@ namespace Model.Internal
             FieldCell BottomRightCell, FieldCell BottomLeftCell);
 
         private FieldCell[,] _fieldMatrix = new FieldCell[GameConstants.FieldSize,GameConstants.FieldSize];
-        public List<WallPosition> PlacedWalls => _placedWalls;
-        private List<WallPosition> _placedWalls = new List<WallPosition>();
+        public List<WallPosition> PlacedWalls { get; } = new ();
 
         public CellPosition Player1Position { set; get; }
         public CellPosition Player2Position { set; get; }
@@ -119,7 +118,7 @@ namespace Model.Internal
                     $"({wallPosition.TopLeftCell} is not correct wall position");
             }
 
-            foreach (WallPosition placedWall in _placedWalls)
+            foreach (WallPosition placedWall in PlacedWalls)
             {
                 if (wallPosition.TopLeftCell == placedWall.TopLeftCell)
                 {
@@ -128,7 +127,7 @@ namespace Model.Internal
                 }
             }
 
-            _placedWalls.Add(wallPosition);
+            PlacedWalls.Add(wallPosition);
             BlockWays(newWall: wallPosition);
         }
 
@@ -136,9 +135,9 @@ namespace Model.Internal
         /// <exception cref="NoSuchWallException">passed wall wasn't placed.</exception>
         public void RemoveWall(WallPosition wallPosition)
         {
-            if (!_placedWalls.Contains(wallPosition))
+            if (!PlacedWalls.Contains(wallPosition))
                 throw new NoSuchWallException($"There is no {wallPosition} among placed walls");
-            _placedWalls.Remove(wallPosition);
+            PlacedWalls.Remove(wallPosition);
             RestoreWays(removedWall:wallPosition);
         }
 
