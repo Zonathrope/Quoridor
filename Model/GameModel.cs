@@ -90,15 +90,14 @@ public class GameModel: IGameModel
     public List<CellPosition> GetCellsAvailableForMove(PlayerNumber playerNumber)
     {
         CellPosition playerCurrentPosition = _field.GetPlayerPosition(playerNumber);
+        CellPosition opponentPosition = GetPlayerPosition(GetOppositePlayerNumber(playerNumber));
         List<CellPosition> reachableCells = _field.GetReachableNeighbours(playerCurrentPosition);
-        CellPosition neighborCellTakenByOpponent = reachableCells.Find(
-            position => _field.IsCellTaken(position));
-        if (neighborCellTakenByOpponent is null)
-            return reachableCells;
-        CellPosition opponentPosition = neighborCellTakenByOpponent;
-        reachableCells.Remove(opponentPosition);
-        reachableCells.AddRange(
-            CellsAvailableFromFaceToFaceSituation(playerCurrentPosition, opponentPosition));
+        if (reachableCells.Contains(opponentPosition))
+        {
+            reachableCells.Remove(opponentPosition);
+            reachableCells.AddRange(
+                CellsAvailableFromFaceToFaceSituation(playerCurrentPosition, opponentPosition));
+        }
         return reachableCells;
     }
 
