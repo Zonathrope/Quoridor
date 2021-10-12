@@ -23,7 +23,7 @@ namespace Model.DataTypes
             return $"[{X},{Y}]";
         }
 
-        /// <exception cref="ArgumentOutOfRangeException">Shift result in cell with negative cordinates</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Shift result in cell with negative coordinates</exception>
         public CellPosition Shifted(int shiftX, int shiftY)
         {
             return new CellPosition(this.X + shiftX, this.Y + shiftY);
