@@ -55,8 +55,8 @@ namespace ModelTest
             _player1Handler = new MyEventHandler();
             _player2Handler = new MyEventHandler();
             _gameModel = new GameModel(_player1Handler, _player2Handler);
-            _player1StartPos = _gameModel.Player1DefaultPosition;
-            _player2StartPos = _gameModel.Player2DefaultPosition;
+            _player1StartPos = GameConstants.Player1DefaultPosition;
+            _player2StartPos = GameConstants.Player2DefaultPosition;
         }
 
         [Test]
@@ -86,7 +86,7 @@ namespace ModelTest
 
         private void MovePlayer1ToFinish()
         {
-            int fieldSize = _gameModel.FieldSize;
+            int fieldSize = GameConstants.FieldSize;
             int player1MoveAmount = fieldSize - 1;
             int player2MoveAmount = player1MoveAmount - 1;
             var lastPlayer1Position = _gameModel.Player1Position;

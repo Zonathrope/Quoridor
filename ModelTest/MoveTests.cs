@@ -17,8 +17,8 @@ namespace ModelTest
             var player1Mock = Mock.Of<IPlayerView>();
             var player2Mock = Mock.Of<IPlayerView>();
             _gameModel = new GameModel(player1Mock, player2Mock);
-            _player1StartPos = _gameModel.Player1DefaultPosition;
-            _player2StartPos = _gameModel.Player2DefaultPosition;
+            _player1StartPos = GameConstants.Player1DefaultPosition;
+            _player2StartPos = GameConstants.Player2DefaultPosition;
             _gameModel.StartNewGame();
         }
         

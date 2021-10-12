@@ -17,8 +17,8 @@ namespace ModelTest
             var player1Mock = Mock.Of<IPlayerView>();
             var player2Mock = Mock.Of<IPlayerView>();
             _gameModel = new GameModel(player1Mock, player2Mock);
-            _player1StartPos = _gameModel.Player1DefaultPosition;
-            _player2StartPos = _gameModel.Player2DefaultPosition;
+            _player1StartPos = GameConstants.Player1DefaultPosition;
+            _player2StartPos = GameConstants.Player2DefaultPosition;
             _gameModel.StartNewGame();
         }
 
@@ -112,7 +112,6 @@ namespace ModelTest
         [Test]
         public void Players_cant_block_way_for_player1_by_walls()
         {
-            int fieldMiddle = _gameModel.FieldMiddle;
             _gameModel.PlaceWall(PlayerNumber.First,
                 new WallPosition(WallDirection.Vertical,
                     _player2StartPos.Shifted(-1, 0),
@@ -133,8 +132,6 @@ namespace ModelTest
         [Test]
         public void Players_cant_block_way_for_player2_by_walls()
         {
-            int fieldMiddle = _gameModel.FieldMiddle;
-            int fieldEnd = _gameModel.FieldSize - 1;
             _gameModel.PlaceWall(PlayerNumber.First,
                 new WallPosition(WallDirection.Vertical,
                     _player1StartPos.Shifted(-1, -1),

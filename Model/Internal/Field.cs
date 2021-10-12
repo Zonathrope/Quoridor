@@ -11,10 +11,6 @@ namespace Model.Internal
 
         public int Size => FieldSize;
         private const int FieldSize = 9;
-        public int FieldMiddleCoordinate => _fieldMiddleCordinat;
-        private const int _fieldMiddleCordinat = 4;
-        public readonly CellPosition Player1DefaultPosition = new CellPosition(_fieldMiddleCordinat, FieldSize - 1);
-        public readonly CellPosition Player2DefaultPosition = new CellPosition(_fieldMiddleCordinat, 0);
 
         public FieldCell[,] FieldMatrix => _fieldMatrix;
         private FieldCell[,] _fieldMatrix = new FieldCell[FieldSize,FieldSize];
@@ -26,8 +22,8 @@ namespace Model.Internal
         public Field()
         {
             InitMatrix();
-            Player1Position = Player1DefaultPosition;
-            Player2Position = Player2DefaultPosition;
+            Player1Position = GameConstants.Player1DefaultPosition;
+            Player2Position = GameConstants.Player2DefaultPosition;
         }
 
         private void InitMatrix()
