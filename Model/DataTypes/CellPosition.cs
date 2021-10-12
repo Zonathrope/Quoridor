@@ -7,6 +7,7 @@ namespace Model.DataTypes
         public int X { get; }
         public int Y { get; }
 
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public CellPosition(int x, int y)
         {
             if (x < 0 || y < 0)
