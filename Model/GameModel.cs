@@ -58,7 +58,7 @@ public class GameModel: IGameModel
 
     public void MovePlayer(PlayerNumber playerNumber, CellPosition newPosition)
     {
-        if (!IsThisPlayersTurn(playerNumber))
+        if (!IsPlayersTurn(playerNumber))
         {
             throw new AnotherPlayerTurnException($"It is player {_currentPlayer} turn");
         }
@@ -131,7 +131,7 @@ public class GameModel: IGameModel
 
     public void PlaceWall(PlayerNumber playerPlacing, WallPosition wallPosition)
     {
-        if (!IsThisPlayersTurn(playerPlacing))
+        if (!IsPlayersTurn(playerPlacing))
         {
             throw new AnotherPlayerTurnException($"It is player {_currentPlayer} turn");
         }
@@ -139,6 +139,7 @@ public class GameModel: IGameModel
         {
             throw new NoWallsLeftException($"Player {playerPlacing} has no walls left");
         }
+
         _field.PlaceWall(wallPosition);
         if (!BothPlayersHaveWayToLastLine())
         {
@@ -166,10 +167,11 @@ public class GameModel: IGameModel
             Player2WallAmount--;
     }
 
-    private bool IsThisPlayersTurn(PlayerNumber playerNumber)
+    private bool IsPlayersTurn(PlayerNumber playerNumber)
     {
         return playerNumber == _currentPlayer;
     }
+
     /// <summary>Checks if player is on last(relative to his start position)</summary>
     private bool IsOnWinningPosition(PlayerNumber player)
     {
