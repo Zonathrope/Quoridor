@@ -2,5 +2,5 @@
 {
     public record WallPosition(
         WallDirection Direction,
-        CellPosition TopLeftCell, CellPosition BottomRightCell);
+        CellPosition TopLeftCell);
 }

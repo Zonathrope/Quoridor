@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Model.DataTypes;
 
@@ -118,16 +119,15 @@ namespace Model.Internal
             if (!IsValidWallPosition(wallPosition))
             {
                 throw new IncorrectWallPositionException(
-                    $"({wallPosition.TopLeftCell}, {wallPosition.BottomRightCell}) is not correct wall position");
+                    $"({wallPosition.TopLeftCell} is not correct wall position");
             }
 
             foreach (WallPosition placedWall in _placedWalls)
             {
-                if (wallPosition.TopLeftCell == placedWall.TopLeftCell &&
-                    wallPosition.BottomRightCell == placedWall.BottomRightCell)
+                if (wallPosition.TopLeftCell == placedWall.TopLeftCell)
                 {
                     throw new WallPlaceTakenException(
-                        $"There is already wall between {wallPosition.TopLeftCell} and {wallPosition.BottomRightCell}");
+                        $"There is already wall at {wallPosition.TopLeftCell}");
                 }
             }
 
@@ -165,8 +165,8 @@ namespace Model.Internal
             //TODO think if i really need to store two positions in wall position
             CellPosition topLeftCell = wallPosition.TopLeftCell;
             CellPosition topRightCell = wallPosition.TopLeftCell.Shifted(1, 0);
-            CellPosition bottomRightCell = wallPosition.BottomRightCell;
-            CellPosition bottomLeftCell = wallPosition.BottomRightCell.Shifted(-1, 0);
+            CellPosition bottomRightCell = wallPosition.TopLeftCell.Shifted(1, 1);
+            CellPosition bottomLeftCell = wallPosition.TopLeftCell.Shifted(0, 1);
             //TODO check deconsturction
             return new CellsAroundWall(
                 CellByPosition(topLeftCell),
@@ -204,11 +204,18 @@ namespace Model.Internal
         private bool IsValidWallPosition(WallPosition wallPosition)
         {
             CellPosition topLeftCell = wallPosition.TopLeftCell;
-            CellPosition bottomRightCell = wallPosition.BottomRightCell;
-            return IsOnField(topLeftCell) &&
-                   IsOnField(bottomRightCell)
-                   // check if cell is really bottom right relative to top left
-                   && bottomRightCell == topLeftCell.Shifted(1, 1);
+            CellPosition bottomRightCell;
+            //Exception will fire if top left cell is on field bottom or right edge
+            try
+            {
+                bottomRightCell = wallPosition.TopLeftCell.Shifted(1, 1);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return false;
+            }
+
+            return IsOnField(topLeftCell) && IsOnField(bottomRightCell);
         }
 
         public FieldCell[] GetPlayersWinLine(PlayerNumber playerNumber)
