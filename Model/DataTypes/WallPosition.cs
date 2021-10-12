@@ -1,6 +1,6 @@
 ﻿namespace Model.DataTypes
 {
     public record WallPosition(
-        WallDirection Direction,
+        WallOrientation Orientation,
         CellPosition TopLeftCell);
 }

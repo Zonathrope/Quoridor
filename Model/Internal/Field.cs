@@ -146,7 +146,7 @@ namespace Model.Internal
         private void BlockWays(WallPosition newWall)
         {
             CellsAroundWall cells = GetCellsAroundWall(newWall);
-            if (newWall.Direction == WallDirection.Horizontal)
+            if (newWall.Orientation == WallOrientation.Horizontal)
             {
                 BlockWayBetweenCells(cells.TopLeftCell, cells.TopRightCell);
                 BlockWayBetweenCells(cells.BottomLeftCell, cells.BottomRightCell);
@@ -175,7 +175,7 @@ namespace Model.Internal
         private void RestoreWays(WallPosition removedWall)
         {
             CellsAroundWall cells = GetCellsAroundWall(removedWall);
-            if (removedWall.Direction == WallDirection.Horizontal)
+            if (removedWall.Orientation == WallOrientation.Horizontal)
             {
                 RestoreWayBetweenCells(cells.TopLeftCell, cells.TopRightCell);
                 RestoreWayBetweenCells(cells.BottomLeftCell, cells.BottomRightCell);

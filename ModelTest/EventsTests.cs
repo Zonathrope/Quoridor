@@ -146,7 +146,7 @@ namespace ModelTest
         public void Players_receive_player1_placed_wall()
         {
             _gameModel.StartNewGame();
-            var wallPosition = new WallPosition(WallDirection.Horizontal, new CellPosition(0, 0));
+            var wallPosition = new WallPosition(WallOrientation.Horizontal, new CellPosition(0, 0));
             _gameModel.PlaceWall(PlayerNumber.First, wallPosition);
             var lastWall = new Tuple<PlayerNumber, WallPosition>(PlayerNumber.First, wallPosition);
             Assert.AreEqual(_player1Handler.LastWallPlacement, lastWall);
@@ -157,8 +157,8 @@ namespace ModelTest
         public void Players_receive_player2_placed_wll()
         {
             _gameModel.StartNewGame();
-            var wallPosition1 = new WallPosition(WallDirection.Horizontal, new CellPosition(0, 0));
-            var wallPosition2 = new WallPosition(WallDirection.Horizontal, new CellPosition(0, 2));
+            var wallPosition1 = new WallPosition(WallOrientation.Horizontal, new CellPosition(0, 0));
+            var wallPosition2 = new WallPosition(WallOrientation.Horizontal, new CellPosition(0, 2));
             _gameModel.PlaceWall(PlayerNumber.First, wallPosition1);
             _gameModel.PlaceWall(PlayerNumber.Second, wallPosition2);
             var lastWall = new Tuple<PlayerNumber, WallPosition>(PlayerNumber.Second, wallPosition2);

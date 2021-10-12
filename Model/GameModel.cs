@@ -144,7 +144,7 @@ public class GameModel: IGameModel
         if (!BothPlayersHaveWayToLastLine())
         {
             _field.RemoveWall(wallPosition);
-            var wallDirection = wallPosition.Direction == WallDirection.Horizontal ? "Horizontal" : "Vertical";
+            var wallDirection = wallPosition.Orientation == WallOrientation.Horizontal ? "Horizontal" : "Vertical";
             throw new WallBlocksPathForPlayerException(
                 $"{wallDirection} wall at {wallPosition.TopLeftCell} blocks way for players");
         }
