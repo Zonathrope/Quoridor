@@ -162,7 +162,6 @@ namespace Model.Internal
 
         private CellsAroundWall GetCellsAroundWall(WallPosition wallPosition)
         {
-            //TODO think if i really need to store two positions in wall position
             CellPosition topLeftCell = wallPosition.TopLeftCell;
             CellPosition topRightCell = wallPosition.TopLeftCell.Shifted(1, 0);
             CellPosition bottomRightCell = wallPosition.TopLeftCell.Shifted(1, 1);
