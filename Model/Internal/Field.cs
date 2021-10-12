@@ -215,7 +215,7 @@ namespace Model.Internal
             return IsOnField(topLeftCell) && IsOnField(bottomRightCell);
         }
 
-        public FieldCell[] GetPlayersWinLine(PlayerNumber playerNumber)
+        public FieldCell[] GetPlayerWinLine(PlayerNumber playerNumber)
         {
             if (playerNumber == PlayerNumber.First)
             {

@@ -196,7 +196,7 @@ public class GameModel: IGameModel
 
     private bool PlayerHasWayToLastLine(PlayerNumber playerNumber)
     {
-        List<FieldCell> winLine = _field.GetPlayersWinLine(playerNumber).ToList();
+        List<FieldCell> winLine = _field.GetPlayerWinLine(playerNumber).ToList();
         FieldCell playerCell = _field.GetPlayerCell(playerNumber);
         return winLine.Any(winCell => _aStar.WayExists(playerCell, winCell));
     }
