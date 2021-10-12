@@ -30,7 +30,6 @@ public class GameModel: IGameModel
     private event Action<PlayerMovedEventArgs>      PlayerMovedEvent;
     private event Action<PlayerPlacedWallEventArgs> PlayerPlacedWallEvent;
 
-    private const int StartWallAmount = 10;
     public int Player1WallAmount => _player1WallAmount;
     public int Player2WallAmount => _player1WallAmount;
     private int _player1WallAmount;
@@ -57,8 +56,8 @@ public class GameModel: IGameModel
     {
         _field = new Field();
         _currentPlayer = PlayerNumber.First;
-        _player1WallAmount = StartWallAmount;
-        _player2WallAmount = StartWallAmount;
+        _player1WallAmount = GameConstants.StartWallAmount;
+        _player2WallAmount = GameConstants.StartWallAmount;
         GameStartedEvent?.Invoke();
     }
 
