@@ -131,13 +131,13 @@ public class GameModel: IGameModel
 
     public void PlaceWall(PlayerNumber playerPlacing, WallPosition wallPosition)
     {
-        if (!PlayerHasWalls(playerPlacing))
-        {
-            throw new NoWallsLeftException($"Player {playerPlacing} has no walls left");
-        }
         if (!IsThisPlayersTurn(playerPlacing))
         {
             throw new AnotherPlayerTurnException($"It is player {_currentPlayer} turn");
+        }
+        if (!PlayerHasWalls(playerPlacing))
+        {
+            throw new NoWallsLeftException($"Player {playerPlacing} has no walls left");
         }
         _field.PlaceWall(wallPosition);
         if (!BothPlayersHaveWayToLastLine())
