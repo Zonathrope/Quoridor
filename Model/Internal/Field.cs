@@ -20,8 +20,8 @@ namespace Model.Internal
         public Field()
         {
             InitMatrix();
-            Player1Position = GameConstants.Player1DefaultPosition;
-            Player2Position = GameConstants.Player2DefaultPosition;
+            Player1Position = GameConstants.Player1StartPosition;
+            Player2Position = GameConstants.Player2StartPosition;
         }
 
         private void InitMatrix()

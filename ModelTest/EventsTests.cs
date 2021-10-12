@@ -55,8 +55,8 @@ namespace ModelTest
             _player1Handler = new MyEventHandler();
             _player2Handler = new MyEventHandler();
             _gameModel = new GameModel(_player1Handler, _player2Handler);
-            _player1StartPos = GameConstants.Player1DefaultPosition;
-            _player2StartPos = GameConstants.Player2DefaultPosition;
+            _player1StartPos = GameConstants.Player1StartPosition;
+            _player2StartPos = GameConstants.Player2StartPosition;
         }
 
         [Test]
