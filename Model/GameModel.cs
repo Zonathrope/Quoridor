@@ -75,12 +75,16 @@ public class GameModel: IGameModel
         {
             HandleWin(playerNumber);
         }
-
     }
 
     private void SwitchCurrentPlayer()
     {
-        _currentPlayer = _currentPlayer == PlayerNumber.First ? PlayerNumber.Second : PlayerNumber.First;
+        _currentPlayer = GetOppositePlayerNumber(_currentPlayer);
+    }
+
+    private static PlayerNumber GetOppositePlayerNumber(PlayerNumber playerNumber)
+    {
+        return playerNumber == PlayerNumber.First ? PlayerNumber.Second : PlayerNumber.First;
     }
 
     public List<CellPosition> GetCellsAvailableForMove(PlayerNumber playerNumber)
