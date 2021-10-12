@@ -258,7 +258,7 @@ namespace Model.Internal
                 .ToList();
         }
 
-        public bool WayBetweenCellsExists(CellPosition position1, CellPosition position2)
+        public bool WayBetweenExists(CellPosition position1, CellPosition position2)
         {
             return CellByPosition(position1)
                 .ReachableNeighbours

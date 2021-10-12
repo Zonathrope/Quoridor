@@ -117,7 +117,7 @@ public class GameModel: IGameModel
         // Cell behind opponent is acquired by finding next cell from player position in opponents
         // direction
         CellPosition cellBehindOpponent = opponentPosition.Shifted(positionDifferenceX, positionDifferenceY);
-        if (_field.WayBetweenCellsExists(opponentPosition, cellBehindOpponent))
+        if (_field.WayBetweenExists(opponentPosition, cellBehindOpponent))
         {
             availableCells.Add(cellBehindOpponent);
         }
