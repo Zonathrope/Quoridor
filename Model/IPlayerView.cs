@@ -1,5 +1,4 @@
-﻿using System;
-using Model.DataTypes;
+﻿using Model.DataTypes;
 
 namespace Model
 {
