@@ -188,16 +188,17 @@ public class GameModel: IGameModel
         PlayerWonEvent?.Invoke(winner);
     }
 
+    //TODO think if last line is good name
     private bool BothPlayersHaveWayToLastLine()
     {
-        List<FieldCell> player1WinLine = _field.GetPlayersWinLine(PlayerNumber.First).ToList<FieldCell>();
-        FieldCell player1Cell = _field.GetPlayerCell(PlayerNumber.First);
-        bool player1HasAccess = player1WinLine.Any(winCell => _aStar.WayExists(player1Cell, winCell));
+        return PlayerHasWayToLastLine(PlayerNumber.First) && PlayerHasWayToLastLine(PlayerNumber.Second);
+    }
 
-        List<FieldCell> player2WinLine = _field.GetPlayersWinLine(PlayerNumber.Second).ToList<FieldCell>();
-        FieldCell player2Cell = _field.GetPlayerCell(PlayerNumber.Second);
-        bool player2HasAccess = player2WinLine.Any(winCell => _aStar.WayExists(player2Cell, winCell));
-        return player1HasAccess && player2HasAccess;
+    private bool PlayerHasWayToLastLine(PlayerNumber playerNumber)
+    {
+        List<FieldCell> winLine = _field.GetPlayersWinLine(playerNumber).ToList();
+        FieldCell playerCell = _field.GetPlayerCell(playerNumber);
+        return winLine.Any(winCell => _aStar.WayExists(playerCell, winCell));
     }
 
     public CellPosition GetPlayerPosition(PlayerNumber playerNumber)
