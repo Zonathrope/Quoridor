@@ -10,10 +10,8 @@ public class GameModel: IGameModel
 {
     public CellPosition Player1Position => _field.Player1Position;
     public CellPosition Player2Position => _field.Player2Position;
-    public CellPosition GetPlayerPosition(PlayerNumber playerNumber)
-    {
-        return playerNumber == PlayerNumber.First ? Player1Position : Player2Position;
-    }
+    public int Player1WallAmount { get; private set; }
+    public int Player2WallAmount { get; private set; }
     public List<WallPosition> PlacedWalls => _field.PlacedWalls;
 
     private Field _field;
@@ -27,8 +25,6 @@ public class GameModel: IGameModel
     private event Action<PlayerMovedEventArgs>      PlayerMovedEvent;
     private event Action<PlayerPlacedWallEventArgs> PlayerPlacedWallEvent;
 
-    public int Player1WallAmount { get; private set; }
-    public int Player2WallAmount { get; private set; }
 
     public GameModel(IPlayerView player1, IPlayerView player2)
     {
@@ -200,6 +196,11 @@ public class GameModel: IGameModel
         FieldCell player2Cell = _field.GetPlayerCell(PlayerNumber.Second);
         bool player2HasAccess = player2WinLine.Any(winCell => _aStar.WayExists(player2Cell, winCell));
         return player1HasAccess && player2HasAccess;
+    }
+
+    public CellPosition GetPlayerPosition(PlayerNumber playerNumber)
+    {
+        return playerNumber == PlayerNumber.First ? Player1Position : Player2Position;
     }
 }
 }
