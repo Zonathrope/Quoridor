@@ -14,11 +14,8 @@ public class GameModel: IGameModel
     {
         return playerNumber == PlayerNumber.First ? Player1Position : Player2Position;
     }
-
     public List<WallPosition> PlacedWalls => _field.PlacedWalls;
 
-    private IPlayerView _player1;
-    private IPlayerView _player2;
     private Field _field;
     //TODO replace with actual implementation
     private IAStar _aStar = new AStarMock();
@@ -36,10 +33,8 @@ public class GameModel: IGameModel
     private int _player2WallAmount;
     public GameModel(IPlayerView player1, IPlayerView player2)
     {
-        _player1 = player1;
-        _player2 = player2;
-        AttachEventsToPlayer(_player1);
-        AttachEventsToPlayer(_player2);
+        AttachEventsToPlayer(player1);
+        AttachEventsToPlayer(player2);
         _field = new Field();
     }
 
