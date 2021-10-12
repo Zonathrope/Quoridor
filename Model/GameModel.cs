@@ -96,26 +96,24 @@ public class GameModel: IGameModel
         {
             reachableCells.Remove(opponentPosition);
             reachableCells.AddRange(
-                CellsAvailableFromFaceToFaceSituation(playerCurrentPosition, opponentPosition));
+                GetCellsAvailableFromFaceToFaceSituation(playerCurrentPosition, opponentPosition));
         }
         return reachableCells;
     }
 
     /// <summary>
-    /// For the Quoridor game the situation where opponents face each over face to face is
+    /// For the Quoridor game the situation when opponents face each over face to face is
     /// threatened using some special rules.
     /// </summary>
     /// <returns>Cells available for player to move due face to face situation.
     /// Don't include cells available by regular rules</returns>
-    private List<CellPosition> CellsAvailableFromFaceToFaceSituation(
-        CellPosition playerCurrentPosition,
-        CellPosition opponentPosition)
+    private List<CellPosition> GetCellsAvailableFromFaceToFaceSituation(
+        CellPosition playerPosition, CellPosition opponentPosition)
     {
-        List<CellPosition> availableCells = new List<CellPosition>();
-        int positionDifferenceX = opponentPosition.X - playerCurrentPosition.X;
-        int positionDifferenceY = opponentPosition.Y - playerCurrentPosition.Y;
-        // Cell behind opponent is acquired by finding next cell from player position in opponents
-        // direction
+        var availableCells = new List<CellPosition>();
+        int positionDifferenceX = opponentPosition.X - playerPosition.X;
+        int positionDifferenceY = opponentPosition.Y - playerPosition.Y;
+        // Cell behind opponent is acquired by finding next cell from player position in opponents direction
         CellPosition cellBehindOpponent = opponentPosition.Shifted(positionDifferenceX, positionDifferenceY);
         if (_field.WayBetweenExists(opponentPosition, cellBehindOpponent))
         {
@@ -124,7 +122,7 @@ public class GameModel: IGameModel
         else
         {
             List<CellPosition> opponentNeighbours = _field.GetReachableNeighbours(opponentPosition);
-            opponentNeighbours.Remove(playerCurrentPosition);
+            opponentNeighbours.Remove(playerPosition);
             opponentNeighbours.Remove(cellBehindOpponent);
             availableCells.AddRange(opponentNeighbours);
         }
