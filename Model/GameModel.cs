@@ -63,9 +63,6 @@ public class GameModel: IGameModel
             throw new AnotherPlayerTurnException($"It is player {_currentPlayer} turn");
         }
 
-        CellPosition oldPosition = _field.GetPlayerPosition(playerNumber);
-
-        List<CellPosition> neighbours = _field.GetReachableNeighbours(oldPosition);
         if (!GetCellsAvailableForMove(playerNumber).Contains(newPosition))
         {
             throw new IncorrectPlayerPositionException(
