@@ -15,15 +15,14 @@ namespace Model
         public List<WallPosition> PlacedWalls => _field.PlacedWalls;
 
         private Field _field;
-
         //TODO replace with actual implementation
         private IAStar _aStar = new AStarMock();
         private PlayerNumber _currentPlayer;
 
-        private event Action GameStartedEvent;
-        private event Action GameEndedEvent;
-        private event Action<PlayerNumber> PlayerWonEvent;
-        private event Action<PlayerMovedEventArgs> PlayerMovedEvent;
+        private event Action                            GameStartedEvent;
+        private event Action                            GameEndedEvent;
+        private event Action<PlayerNumber>              PlayerWonEvent;
+        private event Action<PlayerMovedEventArgs>      PlayerMovedEvent;
         private event Action<PlayerPlacedWallEventArgs> PlayerPlacedWallEvent;
 
 
@@ -36,10 +35,10 @@ namespace Model
 
         private void AttachEventsToPlayer(IPlayerView player)
         {
-            this.GameStartedEvent += player.HandleGameStartedEvent;
-            this.GameEndedEvent += player.HandleGameEndedEvent;
-            this.PlayerWonEvent += player.HandlePlayerWonEvent;
-            this.PlayerMovedEvent += player.HandlePlayerMovedEvent;
+            this.GameStartedEvent      += player.HandleGameStartedEvent;
+            this.GameEndedEvent        += player.HandleGameEndedEvent;
+            this.PlayerWonEvent        += player.HandlePlayerWonEvent;
+            this.PlayerMovedEvent      += player.HandlePlayerMovedEvent;
             this.PlayerPlacedWallEvent += player.HandlePlayerPlacedWallEvent;
         }
 
@@ -93,13 +92,14 @@ namespace Model
                 reachableCells.AddRange(
                     GetCellsAvailableFromFaceToFaceSituation(playerCurrentPosition, opponentPosition));
             }
-
             return reachableCells;
         }
 
         private static PlayerNumber GetOppositePlayerNumber(PlayerNumber playerNumber)
         {
-            return playerNumber == PlayerNumber.First ? PlayerNumber.Second : PlayerNumber.First;
+            return playerNumber == PlayerNumber.First
+                ? PlayerNumber.Second
+                : PlayerNumber.First;
         }
 
         public CellPosition GetPlayerPosition(PlayerNumber playerNumber)
@@ -134,7 +134,6 @@ namespace Model
                 opponentNeighbours.Remove(cellBehindOpponent);
                 availableCells.AddRange(opponentNeighbours);
             }
-
             return availableCells;
         }
 
@@ -151,7 +150,6 @@ namespace Model
             {
                 return playerPosition.Y == 0;
             }
-
             return playerPosition.Y == GameConstants.FieldSize;
         }
 
