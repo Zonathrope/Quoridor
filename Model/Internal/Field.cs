@@ -81,14 +81,16 @@ namespace Model.Internal
             {
                 throw new IncorrectPlayerPositionException($"({cellPosition} is not on field");
             }
-
-            if ((playerNumber == PlayerNumber.First && cellPosition == Player2Position) ||
-                 playerNumber == PlayerNumber.Second && cellPosition == Player1Position)
+            if (IsCellTaken(cellPosition))
             {
                 throw new CellAlreadyTakenException(
-                    $"Player {playerNumber} can't take cell ${cellPosition}, it is already taken by other player");
+                    $"Player {playerNumber} can't take cell ${cellPosition}, it is already taken by {playerNumber}");
             }
+            SetPlayerPosition(playerNumber, cellPosition);
+        }
 
+        private void SetPlayerPosition(PlayerNumber playerNumber, CellPosition cellPosition)
+        {
             if (playerNumber == PlayerNumber.First)
             {
                 Player1Position = cellPosition;
