@@ -101,12 +101,12 @@ namespace Model.Internal
             }
         }
 
-        private bool IsOnField(CellPosition cellPosition)
+        private static bool IsOnField(CellPosition cellPosition)
         {
             return IsInFieldCoordinatesRange(cellPosition.X) && IsInFieldCoordinatesRange(cellPosition.Y);
         }
 
-        private bool IsInFieldCoordinatesRange(int value)
+        private static bool IsInFieldCoordinatesRange(int value)
         {
             return value >= 0 && value < GameConstants.FieldSize;
         }
@@ -267,4 +267,4 @@ namespace Model.Internal
                 .Contains(position2);
         }
     }
-}
+}   
