@@ -157,11 +157,10 @@ namespace Model.Internal
 
         private CellsAroundWall GetCellsAroundWall(WallPosition wallPosition)
         {
-            CellPosition topLeftCell = wallPosition.TopLeftCell;
-            CellPosition topRightCell = wallPosition.TopLeftCell.Shifted(1, 0);
-            CellPosition bottomRightCell = wallPosition.TopLeftCell.Shifted(1, 1);
-            CellPosition bottomLeftCell = wallPosition.TopLeftCell.Shifted(0, 1);
-            //TODO check deconsturction
+            CellPosition topLeftCell     = wallPosition.TopLeftCell;
+            CellPosition topRightCell    = topLeftCell.Shifted(1, 0);
+            CellPosition bottomRightCell = topLeftCell.Shifted(1, 1);
+            CellPosition bottomLeftCell  = topLeftCell.Shifted(0, 1);
             return new CellsAroundWall(
                 CellByPosition(topLeftCell),
                 CellByPosition(topRightCell),
