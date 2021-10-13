@@ -67,7 +67,7 @@ namespace Model
             if (!GetCellsAvailableForMove(playerNumber).Contains(newPosition))
             {
                 throw new IncorrectPlayerPositionException(
-                    $"Can't move from {_field.GetPlayerPosition(playerNumber)} to {newPosition}");
+                    $"Can't move from {GetPlayerPosition(playerNumber)} to {newPosition}");
             }
 
             _field.MovePlayer(playerNumber, newPosition);
@@ -87,7 +87,7 @@ namespace Model
         public List<CellPosition> GetCellsAvailableForMove(PlayerNumber playerNumber)
         {
             //TODO replace 
-            CellPosition playerCurrentPosition = _field.GetPlayerPosition(playerNumber);
+            CellPosition playerCurrentPosition = GetPlayerPosition(playerNumber);
             CellPosition opponentPosition = GetPlayerPosition(GetOppositePlayerNumber(playerNumber));
             List<CellPosition> reachableCells = _field.GetReachableNeighbours(playerCurrentPosition);
             if (reachableCells.Contains(opponentPosition))
@@ -107,7 +107,9 @@ namespace Model
 
         public CellPosition GetPlayerPosition(PlayerNumber playerNumber)
         {
-            return playerNumber == PlayerNumber.First ? Player1Position : Player2Position;
+            return playerNumber == PlayerNumber.First 
+                ? Player1Position 
+                : Player2Position;
         }
 
         /// <summary>

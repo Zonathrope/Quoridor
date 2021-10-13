@@ -234,13 +234,6 @@ namespace Model.Internal
                 : CellByPosition(Player2Position);
         }
 
-        public CellPosition GetPlayerPosition(PlayerNumber playerNumber)
-        {
-            return playerNumber == PlayerNumber.First
-                ? Player1Position
-                : Player2Position;
-        }
-
         public bool IsCellTaken(CellPosition cell)
         {
             return cell == Player1Position || cell == Player2Position;
