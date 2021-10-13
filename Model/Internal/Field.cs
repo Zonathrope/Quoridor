@@ -101,7 +101,7 @@ namespace Model.Internal
             }
         }
 
-        public bool IsOnField(CellPosition cellPosition)
+        private bool IsOnField(CellPosition cellPosition)
         {
             return IsInFieldCoordinatesRange(cellPosition.X) && IsInFieldCoordinatesRange(cellPosition.Y);
         }
