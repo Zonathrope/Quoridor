@@ -46,7 +46,7 @@ namespace Model.Internal
 
         private List<FieldCell> GetCellNeighbours(FieldCell cell)
         {
-            List<FieldCell> neighbours = new();
+            var neighbours = new List<FieldCell>();
             CellPosition cellPosition = cell.Position;
             // checks to account for field borders
             if (cellPosition.Y != 0)
@@ -79,6 +79,7 @@ namespace Model.Internal
         {
             if (!IsOnField(cellPosition))
                 throw new IncorrectPlayerPositionException($"({cellPosition} is not on field");
+
             if (IsCellTaken(cellPosition))
             {
                 throw new CellAlreadyTakenException(
