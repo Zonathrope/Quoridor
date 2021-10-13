@@ -38,7 +38,7 @@ namespace Model.Internal
             }
         }
 
-        /// <summary>Add cell neighbours as reacheble neighbours</summary>
+        /// <summary>Add cell neighbours as reachable neighbours</summary>
         private void AddNeighboursToCell(FieldCell cell)
         {
             GetCellNeighbours(cell).ForEach(cell.AddReachableNeighbour);
