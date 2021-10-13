@@ -46,7 +46,7 @@ namespace Model.Internal
 
         private List<FieldCell> GetCellNeighbours(FieldCell cell)
         {
-            List<FieldCell> neighbours = new List<FieldCell>();
+            List<FieldCell> neighbours = new();
             CellPosition cellPosition = cell.Position;
             // checks to account for field borders
             if (cellPosition.Y != 0)
@@ -108,7 +108,7 @@ namespace Model.Internal
 
         private static bool IsInFieldCoordinatesRange(int value)
         {
-            return value >= 0 && value < GameConstants.FieldSize;
+            return value is >= 0 and < GameConstants.FieldSize;
         }
 
         /// <exception cref="IncorrectWallPositionException">Caller pass invalid position.</exception>
