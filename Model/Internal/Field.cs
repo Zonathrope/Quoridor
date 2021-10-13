@@ -48,6 +48,7 @@ namespace Model.Internal
         {
             List<FieldCell> neighbours = new List<FieldCell>();
             CellPosition cellPosition = cell.Position;
+            // checks to account for field borders
             if (cellPosition.Y != 0)
             {
                 neighbours.Add(CellByPosition(cellPosition.Shifted(0, -1)));
