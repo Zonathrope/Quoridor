@@ -18,12 +18,12 @@ namespace Model.Internal
 
         public Field()
         {
-            InitMatrix();
+            InitFieldMatrix();
             Player1Position = GameConstants.Player1StartPosition;
             Player2Position = GameConstants.Player2StartPosition;
         }
 
-        private void InitMatrix()
+        private void InitFieldMatrix()
         {
             for (int y = 0; y < _fieldMatrix.GetLength(0); y++)
             {
