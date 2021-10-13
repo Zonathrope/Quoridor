@@ -6,8 +6,7 @@ namespace Model.Internal
     class FieldCell
     {
         public CellPosition Position { get; }
-        public List<FieldCell> ReachableNeighbours => _reachableNeighbours;
-        private List<FieldCell> _reachableNeighbours = new List<FieldCell>();
+        public List<FieldCell> ReachableNeighbours { get; } = new ();
 
         public FieldCell(int x, int y)
         {
@@ -16,12 +15,12 @@ namespace Model.Internal
 
         public void AddReachableNeighbour(FieldCell neighbour)
         {
-            _reachableNeighbours.Add(neighbour);
+            ReachableNeighbours.Add(neighbour);
         }
 
         public void RemoveReachableNeighbour(FieldCell neighbour)
         {
-            _reachableNeighbours.Remove(neighbour);
+            ReachableNeighbours.Remove(neighbour);
         }
     }
 }
