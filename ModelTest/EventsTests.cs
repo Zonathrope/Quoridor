@@ -143,6 +143,7 @@ namespace ModelTest
             Assert.AreEqual(_player2Handler.LastMove, lastMove);
         }
         
+        [Test]
         public void Players_receive_player1_placed_wall()
         {
             _gameModel.StartNewGame();
@@ -154,7 +155,7 @@ namespace ModelTest
         }
         
         [Test]
-        public void Players_receive_player2_placed_wll()
+        public void Players_receive_player2_placed_wall()
         {
             _gameModel.StartNewGame();
             var wallPosition1 = new WallPosition(WallOrientation.Horizontal, new CellPosition(0, 0));
