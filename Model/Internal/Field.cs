@@ -208,17 +208,16 @@ namespace Model.Internal
             {
                 return false;
             }
-
             return IsOnField(topLeftCell) && IsOnField(bottomRightCell);
         }
 
+        // TODO change astar signature to get rid of this
         public FieldCell[] GetPlayerWinLine(PlayerNumber playerNumber)
         {
             if (playerNumber == PlayerNumber.First)
             {
                 return GetFieldRow(0);
             }
-
             return GetFieldRow(GameConstants.FieldSize - 1);
         }
 
@@ -242,6 +241,7 @@ namespace Model.Internal
                 ? Player1Position
                 : Player2Position;
         }
+
         public bool IsCellTaken(CellPosition cell)
         {
             return cell == Player1Position || cell == Player2Position;
