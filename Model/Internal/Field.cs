@@ -113,21 +113,21 @@ namespace Model.Internal
 
         /// <exception cref="IncorrectWallPositionException">Caller pass invalid position.</exception>
         /// <exception cref="WallPlaceTakenException">Caller tries to place wall over existing wall.</exception>
-        public void PlaceWall(WallPosition wallPosition)
+        public void PlaceWall(WallPosition newWallPosition)
         {
-            if (!IsValidWallPosition(wallPosition))
+            if (!IsValidWallPosition(newWallPosition))
             {
                 throw new IncorrectWallPositionException(
-                    $"({wallPosition.TopLeftCell} is not correct wall position");
+                    $"({newWallPosition.TopLeftCell} is not correct wall position");
             }
-            if (PlacedWalls.Any(wallPosition.IsEqualByPlace))
+            if (PlacedWalls.Any(newWallPosition.IsEqualByPlace))
             {
                 throw new WallPlaceTakenException(
-                    $"There is already wall at {wallPosition.TopLeftCell}");
+                    $"There is already wall at {newWallPosition.TopLeftCell}");
             }
 
-            PlacedWalls.Add(wallPosition);
-            BlockWays(newWall: wallPosition);
+            PlacedWalls.Add(newWallPosition);
+            BlockWays(newWall: newWallPosition);
         }
 
         //TODO ask if it is ok that exception is documented here, but not in calling method
