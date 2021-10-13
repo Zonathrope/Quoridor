@@ -84,7 +84,6 @@ namespace Model
 
         public List<CellPosition> GetCellsAvailableForMove(PlayerNumber playerNumber)
         {
-            //TODO replace 
             CellPosition playerCurrentPosition = GetPlayerPosition(playerNumber);
             CellPosition opponentPosition = GetPlayerPosition(GetOppositePlayerNumber(playerNumber));
             List<CellPosition> reachableCells = _field.GetReachableNeighbours(playerCurrentPosition);
