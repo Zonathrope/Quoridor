@@ -78,9 +78,7 @@ namespace Model.Internal
         public void MovePlayer(PlayerNumber playerNumber, CellPosition cellPosition)
         {
             if (!IsOnField(cellPosition))
-            {
                 throw new IncorrectPlayerPositionException($"({cellPosition} is not on field");
-            }
             if (IsCellTaken(cellPosition))
             {
                 throw new CellAlreadyTakenException(

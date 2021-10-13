@@ -60,9 +60,7 @@ namespace Model
         public void MovePlayer(PlayerNumber playerNumber, CellPosition newPosition)
         {
             if (!IsPlayersTurn(playerNumber))
-            {
                 throw new AnotherPlayerTurnException($"It is player {_currentPlayer} turn");
-            }
 
             if (!GetCellsAvailableForMove(playerNumber).Contains(newPosition))
             {
@@ -166,14 +164,10 @@ namespace Model
         public void PlaceWall(PlayerNumber playerPlacing, WallPosition wallPosition)
         {
             if (!IsPlayersTurn(playerPlacing))
-            {
                 throw new AnotherPlayerTurnException($"It is player {_currentPlayer} turn");
-            }
 
             if (!PlayerHasWalls(playerPlacing))
-            {
                 throw new NoWallsLeftException($"Player {playerPlacing} has no walls left");
-            }
 
             _field.PlaceWall(wallPosition);
             if (!BothPlayersHaveWayToLastLine())
