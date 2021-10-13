@@ -120,14 +120,10 @@ namespace Model.Internal
                 throw new IncorrectWallPositionException(
                     $"({wallPosition.TopLeftCell} is not correct wall position");
             }
-
-            foreach (WallPosition placedWall in PlacedWalls)
+            if (PlacedWalls.Any(wallPosition.IsEqualByPlace))
             {
-                if (wallPosition.TopLeftCell == placedWall.TopLeftCell)
-                {
-                    throw new WallPlaceTakenException(
-                        $"There is already wall at {wallPosition.TopLeftCell}");
-                }
+                throw new WallPlaceTakenException(
+                    $"There is already wall at {wallPosition.TopLeftCell}");
             }
 
             PlacedWalls.Add(wallPosition);
