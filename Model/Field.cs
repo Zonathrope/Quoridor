@@ -76,7 +76,7 @@ namespace Model
             return neighbours;
         }
 
-        private FieldCell CellByPosition(CellPosition cellPosition)
+        public FieldCell CellByPosition(CellPosition cellPosition)
         {
             return _fieldMatrix[cellPosition.Y, cellPosition.X];
         }
@@ -220,7 +220,7 @@ namespace Model
                    && bottomRightCell == topLeftCell + new CellPosition(1, 1);
         }
 
-        public FieldCell[] GetPlayersWinLine(PlayerNumber playerNumber)
+        public FieldCell[] GetPlayerWinLine(PlayerNumber playerNumber)
         {
             if (playerNumber == PlayerNumber.First)
             {

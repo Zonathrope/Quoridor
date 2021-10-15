@@ -155,13 +155,17 @@ public class GameModel: IGameModel
 
     private bool BothPlayersHaveWayToLastLine()
     {
-        List<FieldCell> player1WinLine = _field.GetPlayersWinLine(PlayerNumber.First).ToList<FieldCell>();
-        FieldCell player1Cell = _field.GetPlayerCell(PlayerNumber.First);
-        bool player1HasAccess = player1WinLine.Any(winCell => _aStar.WayExists(player1Cell, winCell));
+        IEnumerable<CellPosition> player1WinLine = _field
+            .GetPlayerWinLine(PlayerNumber.First)
+            .Select(fieldCell => fieldCell.Position);
+        CellPosition player1Cell = Player1Position;
+        bool player1HasAccess = player1WinLine.Any(winCell => _aStar.WayExists(player1Cell, winCell, _field));
 
-        List<FieldCell> player2WinLine = _field.GetPlayersWinLine(PlayerNumber.Second).ToList<FieldCell>();
-        FieldCell player2Cell = _field.GetPlayerCell(PlayerNumber.Second);
-        bool player2HasAccess = player2WinLine.Any(winCell => _aStar.WayExists(player2Cell, winCell));
+        IEnumerable<CellPosition> player2WinLine = _field.
+            GetPlayerWinLine(PlayerNumber.Second)
+            .Select(fieldCell => fieldCell.Position);
+        CellPosition player2Cell = Player2Position;
+        bool player2HasAccess = player2WinLine.Any(winCell => _aStar.WayExists(player2Cell, winCell, _field));
         return player1HasAccess && player2HasAccess;
     }
     public List<FieldCell> TestFindPath(CellPosition startPos, CellPosition endPos)
@@ -175,7 +179,8 @@ public class GameModel: IGameModel
 
     public bool TestIsReachable(CellPosition startPos, CellPosition endPos)
     {
-        return _aStar.WayExists(_field.FieldMatrix[startPos.X, startPos.Y], _field.FieldMatrix[endPos.X, endPos.Y]);
+        return _aStar.WayExists(_field.FieldMatrix[startPos.X, startPos.Y].Position, 
+            _field.FieldMatrix[endPos.X, endPos.Y].Position, _field);
     }
 }
 }
