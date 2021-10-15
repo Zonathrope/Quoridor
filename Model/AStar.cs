@@ -5,8 +5,7 @@ using Model.Api;
 
 namespace Model
 {
-    public class AStar : IAStar
-
+    internal class AStar : IAStar
     {
         private List<FieldCell> _path;
 
@@ -97,8 +96,10 @@ namespace Model
             return dstX + dstY;
         }
 
-        public bool WayExists(FieldCell start, FieldCell end)
+        public bool WayExists(CellPosition start, CellPosition end, Field field)
         {
+            FieldCell startCell = field.CellByPosition(start);
+            FieldCell endCell = field.CellByPosition(end);
             HashSet<FieldCell> openSet = new HashSet<FieldCell>();
             HashSet<FieldCell> closedSet = new HashSet<FieldCell>();
             if (start == end)
@@ -106,8 +107,8 @@ namespace Model
                 throw new Exception("They are the same nodes");
             }
 
-            openSet.Add(start);
-            return NeighbourLinkSearch(openSet, closedSet, end);
+            openSet.Add(startCell);
+            return NeighbourLinkSearch(openSet, closedSet, endCell);
         }
 
         private bool NeighbourLinkSearch(HashSet<FieldCell> openSet, HashSet<FieldCell> closedSet, FieldCell end)

@@ -2,6 +2,6 @@
 {
     interface IAStar
     {
-        bool WayExists(FieldCell start, FieldCell end);
+        bool WayExists(CellPosition start, CellPosition end, Field field);
     }
 }
