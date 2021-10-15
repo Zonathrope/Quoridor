@@ -214,6 +214,7 @@ namespace Model
                 Player2WallAmount--;
         }
     }
+
     public List<FieldCell> TestFindPath(CellPosition startPos, CellPosition endPos)
     {
         var aStar = (AStar) _aStar;
@@ -225,7 +226,8 @@ namespace Model
 
     public bool TestIsReachable(CellPosition startPos, CellPosition endPos)
     {
-        return _aStar.WayExists(_field.FieldMatrix[startPos.X, startPos.Y], _field.FieldMatrix[endPos.X, endPos.Y]);
+        return _aStar.WayExists(_field.FieldMatrix[startPos.X, startPos.Y].Position, 
+            _field.FieldMatrix[endPos.X, endPos.Y].Position, _field);
     }
 }
 
