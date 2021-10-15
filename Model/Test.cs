@@ -1,5 +1,6 @@
 ﻿using System;
-using Model.Api;
+using Model.DataTypes;
+using Model.Internal;
 using Moq;
 
 namespace Model
@@ -19,17 +20,17 @@ namespace Model
             var player2Mock = Mock.Of<IPlayerView>();
             _gameModel = new GameModel(player1Mock, player2Mock);
             Console.WriteLine(_gameModel.TestIsReachable(new CellPosition(0,0), new CellPosition(2,2)));
+         //TODO fix errors   
+            _gameModel.PlaceWall(PlayerNumber.First, new WallPosition(WallOrientation.Vertical, new CellPosition(0, 1))); //0112
+            _gameModel.PlaceWall(PlayerNumber.First, new WallPosition(WallOrientation.Vertical, new CellPosition(0, 3))); //0314
+            _gameModel.PlaceWall(PlayerNumber.First, new WallPosition(WallOrientation.Horizontal, new CellPosition(1, 0))); //1021
+            _gameModel.PlaceWall(PlayerNumber.First, new WallPosition(WallOrientation.Horizontal, new CellPosition(3, 0))); //3041
             
-            _gameModel.PlaceWall(PlayerNumber.First, new WallPosition(WallDirection.Vertical,new CellPosition(0,1), new CellPosition(1,2))); //0112
-            _gameModel.PlaceWall(PlayerNumber.First, new WallPosition(WallDirection.Vertical,new CellPosition(0,3), new CellPosition(1,4))); //0314
-            _gameModel.PlaceWall(PlayerNumber.First, new WallPosition(WallDirection.Horizontal,new CellPosition(1,0), new CellPosition(2,1))); //1021
-            _gameModel.PlaceWall(PlayerNumber.First, new WallPosition(WallDirection.Horizontal,new CellPosition(3,0), new CellPosition(4,1))); //3041
+            _gameModel.PlaceWall(PlayerNumber.First, new WallPosition(WallOrientation.Horizontal, new CellPosition(1, 4))); //1425
+            // _gameModel.PlaceWall(PlayerNumber.First, new WallPosition(WallOrientation.Vertical, new CellPosition(4, 3))); //4345
+            _gameModel.PlaceWall(PlayerNumber.First, new WallPosition(WallOrientation.Vertical, new CellPosition(4, 1))); //4152
             
-            _gameModel.PlaceWall(PlayerNumber.First, new WallPosition(WallDirection.Horizontal,new CellPosition(1,4), new CellPosition(2,5))); //1425
-            // _gameModel.PlaceWall(PlayerNumber.First, new WallPosition(WallDirection.Vertical,new CellPosition(4,3), new CellPosition(4,5))); //4345
-            _gameModel.PlaceWall(PlayerNumber.First, new WallPosition(WallDirection.Vertical,new CellPosition(4,1), new CellPosition(5,2))); //4152
-            
-            _gameModel.PlaceWall(PlayerNumber.First, new WallPosition(WallDirection.Horizontal,new CellPosition(3,4), new CellPosition(4,5))); // 3445
+            _gameModel.PlaceWall(PlayerNumber.First, new WallPosition(WallOrientation.Horizontal,new CellPosition(3,4))); // 3445
              
             Console.WriteLine(_gameModel.TestIsReachable(new CellPosition(0,0), new CellPosition(2,2)));
 

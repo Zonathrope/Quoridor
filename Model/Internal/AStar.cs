@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Model.Api;
+using Model.DataTypes;
+using Model.Internal;
 
-namespace Model
+namespace Model.Internal
 {
     internal class AStar : IAStar
     {
@@ -39,7 +40,7 @@ namespace Model
                     return _path;
                 }
 
-                foreach (FieldCell neighbour in node.NeighbourCells)
+                foreach (FieldCell neighbour in node.ReachableNeighbours)
                 {
                     if (closedSet.Contains(neighbour))
                     {
@@ -124,7 +125,7 @@ namespace Model
 
                     openSet.Remove(node);
                     closedSet.Add(node);
-                    foreach (FieldCell neighbour in node.NeighbourCells)
+                    foreach (FieldCell neighbour in node.ReachableNeighbours)
                     {
                         if (neighbour == end)
                         {

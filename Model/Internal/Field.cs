@@ -12,6 +12,7 @@ namespace Model.Internal
 
         public CellPosition Player1Position { get; private set; }
         public CellPosition Player2Position { get; private set; }
+        internal FieldCell[,] FieldMatrix => _fieldMatrix;
         private FieldCell[,] _fieldMatrix = new FieldCell[GameConstants.FieldSize,GameConstants.FieldSize];
         public List<WallPosition> PlacedWalls { get; } = new ();
 
@@ -68,7 +69,7 @@ namespace Model.Internal
             return neighbours;
         }
 
-        private FieldCell CellByPosition(CellPosition cellPosition)
+        public FieldCell CellByPosition(CellPosition cellPosition)
         {
             return _fieldMatrix[cellPosition.Y, cellPosition.X];
         }

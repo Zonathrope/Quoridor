@@ -15,14 +15,15 @@ namespace Model
         public List<WallPosition> PlacedWalls => _field.PlacedWalls;
 
         private Field _field;
+
         //TODO replace with actual implementation
-    	private IAStar _aStar = new AStar();
+        private IAStar _aStar = new AStar();
         private PlayerNumber _currentPlayer;
 
-        private event Action                            GameStartedEvent;
-        private event Action                            GameEndedEvent;
-        private event Action<PlayerNumber>              PlayerWonEvent;
-        private event Action<PlayerMovedEventArgs>      PlayerMovedEvent;
+        private event Action GameStartedEvent;
+        private event Action GameEndedEvent;
+        private event Action<PlayerNumber> PlayerWonEvent;
+        private event Action<PlayerMovedEventArgs> PlayerMovedEvent;
         private event Action<PlayerPlacedWallEventArgs> PlayerPlacedWallEvent;
 
 
@@ -35,10 +36,10 @@ namespace Model
 
         private void AttachEventsToPlayer(IPlayerView player)
         {
-            this.GameStartedEvent      += player.HandleGameStartedEvent;
-            this.GameEndedEvent        += player.HandleGameEndedEvent;
-            this.PlayerWonEvent        += player.HandlePlayerWonEvent;
-            this.PlayerMovedEvent      += player.HandlePlayerMovedEvent;
+            this.GameStartedEvent += player.HandleGameStartedEvent;
+            this.GameEndedEvent += player.HandleGameEndedEvent;
+            this.PlayerWonEvent += player.HandlePlayerWonEvent;
+            this.PlayerMovedEvent += player.HandlePlayerMovedEvent;
             this.PlayerPlacedWallEvent += player.HandlePlayerPlacedWallEvent;
         }
 
@@ -73,6 +74,7 @@ namespace Model
             {
                 HandleWin(playerNumber);
             }
+
             SwitchCurrentPlayer();
         }
 
@@ -92,6 +94,7 @@ namespace Model
                 reachableCells.AddRange(
                     GetCellsAvailableFromFaceToFaceSituation(playerCurrentPosition, opponentPosition));
             }
+
             return reachableCells;
         }
 
@@ -104,8 +107,8 @@ namespace Model
 
         public CellPosition GetPlayerPosition(PlayerNumber playerNumber)
         {
-            return playerNumber == PlayerNumber.First 
-                ? Player1Position 
+            return playerNumber == PlayerNumber.First
+                ? Player1Position
                 : Player2Position;
         }
 
@@ -134,6 +137,7 @@ namespace Model
                 opponentNeighbours.Remove(cellBehindOpponent);
                 availableCells.AddRange(opponentNeighbours);
             }
+
             return availableCells;
         }
 
@@ -150,6 +154,7 @@ namespace Model
             {
                 return playerPosition.Y == 0;
             }
+
             return playerPosition.Y == GameConstants.FieldEndCoordinate;
         }
 
@@ -213,21 +218,24 @@ namespace Model
             else
                 Player2WallAmount--;
         }
-    }
 
-    public List<FieldCell> TestFindPath(CellPosition startPos, CellPosition endPos)
-    {
-        var aStar = (AStar) _aStar;
-        if (TestIsReachable(startPos, endPos)){ 
-            return aStar.FindPath(_field.FieldMatrix[startPos.X, startPos.Y], _field.FieldMatrix[endPos.X, endPos.Y]);
+        internal List<FieldCell> TestFindPath(CellPosition startPos, CellPosition endPos)
+        {
+            var aStar = (AStar) _aStar;
+            if (TestIsReachable(startPos, endPos))
+            {
+                return aStar.FindPath(_field.FieldMatrix[startPos.X, startPos.Y],
+                    _field.FieldMatrix[endPos.X, endPos.Y]);
+            }
+        
+            return null;
         }
-        return null;
-    }
-
-    public bool TestIsReachable(CellPosition startPos, CellPosition endPos)
-    {
-        return _aStar.WayExists(_field.FieldMatrix[startPos.X, startPos.Y].Position, 
-            _field.FieldMatrix[endPos.X, endPos.Y].Position, _field);
+        
+        internal bool TestIsReachable(CellPosition startPos, CellPosition endPos)
+        {
+            return _aStar.WayExists(_field.FieldMatrix[startPos.X, startPos.Y].Position,
+                _field.FieldMatrix[endPos.X, endPos.Y].Position, _field);
+        }
     }
 }
 
