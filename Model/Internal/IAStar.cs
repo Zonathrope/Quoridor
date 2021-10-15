@@ -1,6 +1,6 @@
 ﻿namespace Model.Internal
 {
-    interface IAStar
+    internal interface IAStar
     {
         bool WayExists(FieldCell start, FieldCell end);
     }
