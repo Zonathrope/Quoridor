@@ -194,11 +194,16 @@ namespace Model
 
         private bool PlayerHasWayToLastLine(PlayerNumber playerNumber)
         {
-            IEnumerable<CellPosition> winLine = _field
-                .GetPlayerWinLine(playerNumber)
-                .Select(fieldCell => fieldCell.Position);
             CellPosition playerCell = GetPlayerPosition(playerNumber);
+            CellPosition[] winLine = GetPlayerWinLine(playerNumber);
             return winLine.Any(winCell => _aStar.WayExists(playerCell, winCell, _field));
+        }
+
+        private CellPosition[] GetPlayerWinLine(PlayerNumber playerNumber)
+        {
+            return playerNumber == PlayerNumber.First
+                ? GameConstants.Player1WinLine
+                : GameConstants.Player2WinLine;
         }
 
         private void DecrementPlayerWallAmount(PlayerNumber playerNumber)

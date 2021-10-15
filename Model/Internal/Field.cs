@@ -209,28 +209,11 @@ namespace Model.Internal
             return IsOnField(topLeftCell) && IsOnField(bottomRightCell);
         }
 
-        // TODO change astar signature to get rid of this
-        public FieldCell[] GetPlayerWinLine(PlayerNumber playerNumber)
-        {
-            if (playerNumber == PlayerNumber.First)
-            {
-                return GetFieldRow(0);
-            }
-            return GetFieldRow(GameConstants.FieldSize - 1);
-        }
-
         private FieldCell[] GetFieldRow(int rowNumber)
         {
             return Enumerable.Range(0, GameConstants.FieldSize - 1)
                 .Select(columnNumber => _fieldMatrix[rowNumber, columnNumber])
                 .ToArray();
-        }
-
-        public FieldCell GetPlayerCell(PlayerNumber playerNumber)
-        {
-            return playerNumber == PlayerNumber.First
-                ? CellByPosition(Player1Position)
-                : CellByPosition(Player2Position);
         }
 
         public bool IsCellTaken(CellPosition cell)
