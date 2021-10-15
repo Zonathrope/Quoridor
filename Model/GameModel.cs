@@ -32,6 +32,8 @@ namespace Model
             AttachEventsToPlayer(player1);
             AttachEventsToPlayer(player2);
             _field = new Field();
+            Player1WallAmount = GameConstants.StartWallAmount;
+            Player2WallAmount = GameConstants.StartWallAmount;
         }
 
         private void AttachEventsToPlayer(IPlayerView player)
