@@ -209,13 +209,6 @@ namespace Model.Internal
             return IsOnField(topLeftCell) && IsOnField(bottomRightCell);
         }
 
-        private FieldCell[] GetFieldRow(int rowNumber)
-        {
-            return Enumerable.Range(0, GameConstants.FieldSize - 1)
-                .Select(columnNumber => _fieldMatrix[rowNumber, columnNumber])
-                .ToArray();
-        }
-
         public bool IsCellTaken(CellPosition cell)
         {
             return cell == Player1Position || cell == Player2Position;
