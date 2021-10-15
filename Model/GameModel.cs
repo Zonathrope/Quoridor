@@ -18,7 +18,7 @@ public class GameModel: IGameModel
     private IPlayerView _player1;
     private IPlayerView _player2;
     private Field _field;
-    private IAStar _aStar;
+    private IAStar _aStar = new AStar();
     private PlayerNumber _currentPlayer;
 
     private event EventHandler RaiseGameStartedEvent;
