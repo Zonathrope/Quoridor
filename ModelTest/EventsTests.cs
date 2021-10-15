@@ -86,8 +86,7 @@ namespace ModelTest
 
         private void MovePlayer1ToFinish()
         {
-            int fieldSize = GameConstants.FieldSize;
-            int player1MoveAmount = fieldSize - 1;
+            int player1MoveAmount = GameConstants.FieldEndCoordinate;
             int player2MoveAmount = player1MoveAmount - 1;
             var lastPlayer1Position = _gameModel.Player1Position;
             var lastPlayer2Position = _gameModel.Player2Position;

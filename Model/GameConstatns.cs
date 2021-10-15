@@ -6,7 +6,7 @@ namespace Model
     {
         public const int FieldSize = 9;
         // TODO look if coordinate can be useful elsewhere
-        private const int FieldEndCoordinate = FieldSize - 1;
+        public const int FieldEndCoordinate = FieldSize - 1;
         private const int FieldMiddleCoordinate = 4;
         public static readonly CellPosition Player1StartPosition = new (FieldMiddleCoordinate, FieldEndCoordinate);
         public static readonly CellPosition Player2StartPosition = new (FieldMiddleCoordinate, 0);

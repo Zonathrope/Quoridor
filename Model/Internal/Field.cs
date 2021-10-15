@@ -53,11 +53,11 @@ namespace Model.Internal
             {
                 neighbours.Add(CellByPosition(cellPosition.Shifted(0, -1)));
             }
-            if (cellPosition.X != (GameConstants.FieldSize - 1))
+            if (cellPosition.X != GameConstants.FieldEndCoordinate)
             {
                 neighbours.Add(CellByPosition(cellPosition.Shifted(1, 0)));
             }
-            if (cellPosition.Y != (GameConstants.FieldSize - 1))
+            if (cellPosition.Y != GameConstants.FieldEndCoordinate)
             {
                 neighbours.Add(CellByPosition(cellPosition.Shifted(0, 1)));
             }

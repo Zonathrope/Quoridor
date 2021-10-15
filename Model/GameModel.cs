@@ -150,7 +150,7 @@ namespace Model
             {
                 return playerPosition.Y == 0;
             }
-            return playerPosition.Y == GameConstants.FieldSize - 1;
+            return playerPosition.Y == GameConstants.FieldEndCoordinate;
         }
 
         private void HandleWin(PlayerNumber winner)
