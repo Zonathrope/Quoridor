@@ -26,7 +26,7 @@ namespace Model
             _gameModel.PlaceWall(PlayerNumber.First, new WallPosition(WallDirection.Horizontal,new CellPosition(3,0), new CellPosition(4,1))); //3041
             
             _gameModel.PlaceWall(PlayerNumber.First, new WallPosition(WallDirection.Horizontal,new CellPosition(1,4), new CellPosition(2,5))); //1425
-            _gameModel.PlaceWall(PlayerNumber.First, new WallPosition(WallDirection.Vertical,new CellPosition(4,3), new CellPosition(4,5))); //4345
+            // _gameModel.PlaceWall(PlayerNumber.First, new WallPosition(WallDirection.Vertical,new CellPosition(4,3), new CellPosition(4,5))); //4345
             _gameModel.PlaceWall(PlayerNumber.First, new WallPosition(WallDirection.Vertical,new CellPosition(4,1), new CellPosition(5,2))); //4152
             
             _gameModel.PlaceWall(PlayerNumber.First, new WallPosition(WallDirection.Horizontal,new CellPosition(3,4), new CellPosition(4,5))); // 3445
