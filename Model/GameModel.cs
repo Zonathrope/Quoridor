@@ -68,12 +68,12 @@ namespace Model
             }
 
             _field.MovePlayer(playerNumber, newPosition);
-            SwitchCurrentPlayer();
             PlayerMovedEvent?.Invoke(new PlayerMovedEventArgs(playerNumber, newPosition));
             if (IsOnWinningPosition(playerNumber))
             {
                 HandleWin(playerNumber);
             }
+            SwitchCurrentPlayer();
         }
 
         private bool IsPlayersTurn(PlayerNumber playerNumber)
@@ -176,8 +176,8 @@ namespace Model
             }
 
             DecrementPlayerWallAmount(playerPlacing);
-            SwitchCurrentPlayer();
             PlayerPlacedWallEvent?.Invoke(new PlayerPlacedWallEventArgs(playerPlacing, wallPosition));
+            SwitchCurrentPlayer();
         }
 
         private bool PlayerHasWalls(PlayerNumber playerNumber)
