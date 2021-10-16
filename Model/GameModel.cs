@@ -17,7 +17,7 @@ namespace Model
         private Field _field;
 
         //TODO replace with actual implementation
-        private IAStar _aStar = new AStar();
+        private AStar _aStar = new ();
         private PlayerNumber _currentPlayer;
 
         private event Action GameStartedEvent;

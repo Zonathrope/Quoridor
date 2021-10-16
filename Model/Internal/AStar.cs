@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Model.DataTypes;
-using Model.Internal;
 
 namespace Model.Internal
 {
-    internal class AStar : IAStar
+    internal class AStar
     {
         private List<FieldCell> _path;
 
