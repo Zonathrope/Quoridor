@@ -11,6 +11,7 @@
 
     <ItemGroup>
       <Compile Remove="AStar\**" />
+      <Compile Remove="Internal\AStarMock.cs" />
     </ItemGroup>
 
     <ItemGroup>

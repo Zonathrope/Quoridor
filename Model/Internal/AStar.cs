@@ -24,10 +24,9 @@ namespace Model.Internal
                 FieldCell node = openSet[0];
                 for (int i = 1; i < openSet.Count; i++)
                 {
-                    if (openSet[i].FCost < node.FCost || openSet[i].FCost == node.FCost)
+                    if (openSet[i].FCost < node.FCost || openSet[i].FCost == node.FCost && openSet[i].HCost < node.HCost) 
                     {
-                        if (openSet[i].HCost < node.HCost)
-                            node = openSet[i];
+                        node = openSet[i];
                     }
                 }
 
@@ -81,19 +80,8 @@ namespace Model.Internal
         int GetDistance(FieldCell nodeA, FieldCell nodeB)
         {
             int dstX, dstY;
-
-            if (nodeA.Position.X >= nodeB.Position.X)
-            {
-                dstX = nodeA.Position.X - nodeB.Position.X;
-            }
-            else dstX = nodeB.Position.X - nodeA.Position.X;
-
-            if (nodeA.Position.Y >= nodeB.Position.Y)
-            {
-                dstY = nodeA.Position.Y - nodeB.Position.Y;
-            }
-            else dstY = nodeB.Position.Y - nodeA.Position.Y;
-
+            dstX = Math.Abs(nodeA.Position.X - nodeB.Position.X);
+            dstY = Math.Abs(nodeA.Position.Y - nodeB.Position.Y);
             return dstX + dstY;
         }
 
