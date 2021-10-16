@@ -16,6 +16,11 @@ namespace Model
 
         private Field _field;
 
+        public Field GetField()
+        {
+            return _field;
+        }
+        
         //TODO replace with actual implementation
         private IAStar _aStar = new AStar();
         private PlayerNumber _currentPlayer;
@@ -27,10 +32,10 @@ namespace Model
         private event Action<PlayerPlacedWallEventArgs> PlayerPlacedWallEvent;
 
 
-        public GameModel(IPlayerView player1, IPlayerView player2)
+        public GameModel()
         {
-            AttachEventsToPlayer(player1);
-            AttachEventsToPlayer(player2);
+            //AttachEventsToPlayer(player1);
+            //AttachEventsToPlayer(player2);
             _field = new Field();
             Player1WallAmount = GameConstants.StartWallAmount;
             Player2WallAmount = GameConstants.StartWallAmount;

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Model.DataTypes;
+using Model.Internal;
 
 namespace Model
 {
@@ -22,6 +23,7 @@ namespace Model
         CellPosition Player2Position{ get; }
         int Player1WallAmount { get; }
         int Player2WallAmount { get; }
+        Field GetField();
         List<WallPosition> PlacedWalls { get; }
     }
 }

@@ -3,7 +3,7 @@ using Model.DataTypes;
 
 namespace Model.Internal
 {
-    internal class FieldCell
+    public class FieldCell
     {
         public CellPosition Position { get; }
         public int FCost { get; set; }
