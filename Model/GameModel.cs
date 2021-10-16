@@ -22,7 +22,7 @@ namespace Model
         }
         
         //TODO replace with actual implementation
-        private IAStar _aStar = new AStar();
+        private AStar _aStar = new ();
         private PlayerNumber _currentPlayer;
 
         private event Action GameStartedEvent;
@@ -224,24 +224,6 @@ namespace Model
                 Player1WallAmount--;
             else
                 Player2WallAmount--;
-        }
-
-        internal List<FieldCell> TestFindPath(CellPosition startPos, CellPosition endPos)
-        {
-            var aStar = (AStar) _aStar;
-            if (TestIsReachable(startPos, endPos))
-            {
-                return aStar.FindPath(_field.FieldMatrix[startPos.X, startPos.Y],
-                    _field.FieldMatrix[endPos.X, endPos.Y]);
-            }
-        
-            return null;
-        }
-        
-        internal bool TestIsReachable(CellPosition startPos, CellPosition endPos)
-        {
-            return _aStar.WayExists(_field.FieldMatrix[startPos.X, startPos.Y].Position,
-                _field.FieldMatrix[endPos.X, endPos.Y].Position, _field);
         }
     }
 }

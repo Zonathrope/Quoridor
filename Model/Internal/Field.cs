@@ -120,7 +120,7 @@ namespace Model.Internal
                 throw new IncorrectWallPositionException(
                     $"({newWallPosition.TopLeftCell} is not correct wall position");
             }
-            if (PlacedWalls.Any(newWallPosition.IsEqualByPlace))
+            if (OverlapsWithPlacedWalls(newWallPosition))
             {
                 throw new WallPlaceTakenException(
                     $"There is already wall at {newWallPosition.TopLeftCell}");
@@ -130,6 +130,48 @@ namespace Model.Internal
             BlockWays(newWall: newWallPosition);
         }
 
+        // TODO overlook if it can be written shorter
+        private bool OverlapsWithPlacedWalls(WallPosition newWall)
+        {
+            if (PlacedWalls.Any(newWall.IsEqualByPlace))
+                return true;
+            if (newWall.Orientation == WallOrientation.Horizontal)
+            {
+                foreach (WallPosition placedWall in PlacedWalls)
+                {
+                    CellPosition cellToRight = null;
+                    CellPosition cellToLeft = null;
+                    try
+                    {
+                        cellToRight = placedWall.TopLeftCell.Shifted(1, 0);
+                        cellToLeft = placedWall.TopLeftCell.Shifted(-1, 0);
+                    }
+                    catch (ArgumentOutOfRangeException e){}
+                    if (newWall.TopLeftCell == cellToLeft || newWall.TopLeftCell == cellToRight)
+                        return true;
+                }
+            }
+            else
+            {
+                foreach (WallPosition placedWall in PlacedWalls)
+                {
+                    CellPosition cellAbove = null;
+                    CellPosition cellBelow = null;
+                    try
+                    {
+                        cellAbove = placedWall.TopLeftCell.Shifted(0, 1);
+                        cellBelow = placedWall.TopLeftCell.Shifted(0, -1);
+                    }
+                    catch (ArgumentOutOfRangeException e){}
+
+                    if (newWall.TopLeftCell == cellAbove || newWall.TopLeftCell == cellBelow)
+                        return true;
+                }
+            }
+
+            return false;
+        }
+        
         //TODO ask if it is ok that exception is documented here, but not in calling method
         /// <exception cref="NoSuchWallException">passed wall wasn't placed.</exception>
         public void RemoveWall(WallPosition wallPosition)
@@ -145,13 +187,13 @@ namespace Model.Internal
             CellsAroundWall cells = GetCellsAroundWall(newWall);
             if (newWall.Orientation == WallOrientation.Horizontal)
             {
-                BlockWayBetweenCells(cells.TopLeftCell, cells.TopRightCell);
-                BlockWayBetweenCells(cells.BottomLeftCell, cells.BottomRightCell);
+                BlockWayBetweenCells(cells.TopLeftCell, cells.BottomLeftCell);
+                BlockWayBetweenCells(cells.TopRightCell, cells.BottomRightCell);
             }
             else
             {
-                BlockWayBetweenCells(cells.TopLeftCell, cells.BottomLeftCell);
-                BlockWayBetweenCells(cells.TopRightCell, cells.BottomRightCell);
+                BlockWayBetweenCells(cells.TopLeftCell, cells.TopRightCell);
+                BlockWayBetweenCells(cells.BottomLeftCell, cells.BottomRightCell);
             }
         }
 
@@ -173,15 +215,16 @@ namespace Model.Internal
             CellsAroundWall cells = GetCellsAroundWall(removedWall);
             if (removedWall.Orientation == WallOrientation.Horizontal)
             {
-                RestoreWayBetweenCells(cells.TopLeftCell, cells.TopRightCell);
-                RestoreWayBetweenCells(cells.BottomLeftCell, cells.BottomRightCell);
-            }
-            else
-            {
                 RestoreWayBetweenCells(cells.TopLeftCell, cells.BottomLeftCell);
                 RestoreWayBetweenCells(cells.TopRightCell, cells.BottomRightCell);
             }
+            else
+            {
+                RestoreWayBetweenCells(cells.TopLeftCell, cells.TopRightCell);
+                RestoreWayBetweenCells(cells.BottomLeftCell, cells.BottomRightCell);
+            }
         }
+
         private void BlockWayBetweenCells(FieldCell cell1, FieldCell cell2)
         {
             cell1.RemoveReachableNeighbour(cell2);

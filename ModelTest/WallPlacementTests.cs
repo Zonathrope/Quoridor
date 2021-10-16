@@ -138,5 +138,17 @@ namespace ModelTest
                         _player1StartPos.Shifted(0, -1)));
             });
         }
+        
+        [Test]
+        public void Cant_overlap_walls()
+        {
+            var firstWallPosition = new WallPosition(WallOrientation.Horizontal, new CellPosition(0, 0));
+            var secondWallPosition = new WallPosition(WallOrientation.Horizontal, new CellPosition(1, 0));
+            _gameModel.PlaceWall(PlayerNumber.First, firstWallPosition);
+            Assert.Throws<WallPlaceTakenException>(() =>
+            {
+                _gameModel.PlaceWall(PlayerNumber.Second, secondWallPosition);
+            });
+        }
     }
 }
