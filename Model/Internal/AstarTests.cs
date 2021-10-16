@@ -3,10 +3,10 @@ using Model.DataTypes;
 using Model.Internal;
 using Moq;
 
-namespace Model
+namespace Model.Internal
 {
     
-    public class Test
+    internal class AstarTests
     {
         private static GameModel _gameModel;
 
@@ -14,7 +14,7 @@ namespace Model
         { 
             AStar_pathfinding();
         }
-        public static void AStar_pathfinding()
+        private static void AStar_pathfinding()
         {
             var player1Mock = Mock.Of<IPlayerView>();
             var player2Mock = Mock.Of<IPlayerView>();
