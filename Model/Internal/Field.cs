@@ -140,64 +140,49 @@ namespace Model.Internal
             RestoreWays(removedWall:wallPosition);
         }
 
-        // private void BlockWays(WallPosition newWall)
-        // {
-        //     CellsAroundWall cells = GetCellsAroundWall(newWall);
-        //     if (newWall.Orientation == WallOrientation.Horizontal)
-        //     {
-        //         BlockWayBetweenCells(cells.TopLeftCell, cells.TopRightCell);
-        //         BlockWayBetweenCells(cells.BottomLeftCell, cells.BottomRightCell);
-        //     }
-        //     else
-        //     {
-        //         BlockWayBetweenCells(cells.TopLeftCell, cells.BottomLeftCell);
-        //         BlockWayBetweenCells(cells.TopRightCell, cells.BottomRightCell);
-        //     }
-        // }
-        //
-        // private CellsAroundWall GetCellsAroundWall(WallPosition wallPosition)
-        // {
-        //     CellPosition topLeftCell     = wallPosition.TopLeftCell;
-        //     CellPosition topRightCell    = topLeftCell.Shifted(1, 0);
-        //     CellPosition bottomRightCell = topLeftCell.Shifted(1, 1);
-        //     CellPosition bottomLeftCell  = topLeftCell.Shifted(0, 1);
-        //     return new CellsAroundWall(
-        //         CellByPosition(topLeftCell),
-        //         CellByPosition(topRightCell),
-        //         CellByPosition(bottomRightCell),
-        //         CellByPosition(bottomLeftCell));
-        // }
         private void BlockWays(WallPosition newWall)
         {
+            CellsAroundWall cells = GetCellsAroundWall(newWall);
             if (newWall.Orientation == WallOrientation.Horizontal)
             {
-                BlockWayBetweenCells(_fieldMatrix[newWall.TopLeftCell.Y, newWall.TopLeftCell.X], 
-                    _fieldMatrix[newWall.TopLeftCell.Y + 1, newWall.TopLeftCell.X]);
-                BlockWayBetweenCells(_fieldMatrix[newWall.TopLeftCell.Y, newWall.TopLeftCell.X + 1], 
-                    _fieldMatrix[newWall.TopLeftCell.Y + 1, newWall.TopLeftCell.X + 1]);
-            } else {
-                BlockWayBetweenCells(_fieldMatrix[newWall.TopLeftCell.Y, newWall.TopLeftCell.X], 
-                    _fieldMatrix[newWall.TopLeftCell.Y, newWall.TopLeftCell.X + 1]);
-                BlockWayBetweenCells(_fieldMatrix[newWall.TopLeftCell.Y + 1, newWall.TopLeftCell.X], 
-                    _fieldMatrix[newWall.TopLeftCell.Y + 1, newWall.TopLeftCell.X + 1]);
+                BlockWayBetweenCells(cells.TopLeftCell, cells.BottomLeftCell);
+                BlockWayBetweenCells(cells.TopRightCell, cells.BottomRightCell);
+            }
+            else
+            {
+                BlockWayBetweenCells(cells.TopLeftCell, cells.TopRightCell);
+                BlockWayBetweenCells(cells.BottomLeftCell, cells.BottomRightCell);
             }
         }
-        
+
+        private CellsAroundWall GetCellsAroundWall(WallPosition wallPosition)
+        {
+            CellPosition topLeftCell     = wallPosition.TopLeftCell;
+            CellPosition topRightCell    = topLeftCell.Shifted(1, 0);
+            CellPosition bottomRightCell = topLeftCell.Shifted(1, 1);
+            CellPosition bottomLeftCell  = topLeftCell.Shifted(0, 1);
+            return new CellsAroundWall(
+                CellByPosition(topLeftCell),
+                CellByPosition(topRightCell),
+                CellByPosition(bottomRightCell),
+                CellByPosition(bottomLeftCell));
+        }
+
         private void RestoreWays(WallPosition removedWall)
         {
+            CellsAroundWall cells = GetCellsAroundWall(removedWall);
             if (removedWall.Orientation == WallOrientation.Horizontal)
             {
-                RestoreWayBetweenCells(_fieldMatrix[removedWall.TopLeftCell.Y, removedWall.TopLeftCell.X], 
-                    _fieldMatrix[removedWall.TopLeftCell.Y + 1, removedWall.TopLeftCell.X]);
-                RestoreWayBetweenCells(_fieldMatrix[removedWall.TopLeftCell.Y, removedWall.TopLeftCell.X + 1], 
-                    _fieldMatrix[removedWall.TopLeftCell.Y + 1, removedWall.TopLeftCell.X + 1]);
-            } else {
-                RestoreWayBetweenCells(_fieldMatrix[removedWall.TopLeftCell.Y, removedWall.TopLeftCell.X], 
-                    _fieldMatrix[removedWall.TopLeftCell.Y, removedWall.TopLeftCell.X + 1]);
-                RestoreWayBetweenCells(_fieldMatrix[removedWall.TopLeftCell.Y + 1, removedWall.TopLeftCell.X], 
-                    _fieldMatrix[removedWall.TopLeftCell.Y + 1, removedWall.TopLeftCell.X + 1]);
+                RestoreWayBetweenCells(cells.TopLeftCell, cells.BottomLeftCell);
+                RestoreWayBetweenCells(cells.TopRightCell, cells.BottomRightCell);
+            }
+            else
+            {
+                RestoreWayBetweenCells(cells.TopLeftCell, cells.TopRightCell);
+                RestoreWayBetweenCells(cells.BottomLeftCell, cells.BottomRightCell);
             }
         }
+
         private void BlockWayBetweenCells(FieldCell cell1, FieldCell cell2)
         {
             cell1.RemoveReachableNeighbour(cell2);
