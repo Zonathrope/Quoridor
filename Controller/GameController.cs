@@ -51,7 +51,7 @@ namespace Controller
                         GameBoard[i, j] = (DrawConstants.EmptyVWall);
                     }
 
-                    if (j != 17 && j % 2 != 0)
+                    if (j % 2 != 0)
                     {
                         GameBoard[i, j] = (DrawConstants.EmptyHWall);
                     }
@@ -60,7 +60,7 @@ namespace Controller
 
             foreach (var (wallOrientation, topLeftCell) in _gameModel.PlacedWalls)
             {
-                if (wallOrientation == WallOrientation.Horizontal)
+                if (wallOrientation == WallOrientation.Vertical)
                 {
                     GameBoard[topLeftCell.Y * 2 + 1, topLeftCell.X * 2] = DrawConstants.TopDownWall;
                     GameBoard[topLeftCell.Y * 2 + 1, topLeftCell.X * 2 + 1] = DrawConstants.TopDownWall;
@@ -166,7 +166,7 @@ namespace Controller
                     _drawer.DrawBoard(GameBoard);
                     _drawer.DrawWallOption();
                     var input = ValidateWallPlacementInput();
-                    var orientation = input[2] == "H" ? WallOrientation.Horizontal : WallOrientation.Vertical;
+                    var orientation = input[2] == "V" ? WallOrientation.Horizontal : WallOrientation.Vertical;
                     _gameModel.PlaceWall(_playerNumber, new WallPosition(orientation, new CellPosition(int.Parse(input[0]), int.Parse(input[1]))));
                     _playerNumber = _playerNumber == PlayerNumber.First ? PlayerNumber.Second : PlayerNumber.First;
                     HandleTurn();
