@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Model.DataTypes;
+using Model.Internal;
 
 namespace Model.Internal
 {
-    internal class AStar
+    internal class AStar : IAStar
     {
         private List<FieldCell> _path;
 
@@ -23,9 +24,10 @@ namespace Model.Internal
                 FieldCell node = openSet[0];
                 for (int i = 1; i < openSet.Count; i++)
                 {
-                    if (openSet[i].FCost < node.FCost || openSet[i].FCost == node.FCost && openSet[i].HCost < node.HCost) 
+                    if (openSet[i].FCost < node.FCost || openSet[i].FCost == node.FCost)
                     {
-                        node = openSet[i];
+                        if (openSet[i].HCost < node.HCost)
+                            node = openSet[i];
                     }
                 }
 
@@ -79,8 +81,19 @@ namespace Model.Internal
         int GetDistance(FieldCell nodeA, FieldCell nodeB)
         {
             int dstX, dstY;
-            dstX = Math.Abs(nodeA.Position.X - nodeB.Position.X);
-            dstY = Math.Abs(nodeA.Position.Y - nodeB.Position.Y);
+
+            if (nodeA.Position.X >= nodeB.Position.X)
+            {
+                dstX = nodeA.Position.X - nodeB.Position.X;
+            }
+            else dstX = nodeB.Position.X - nodeA.Position.X;
+
+            if (nodeA.Position.Y >= nodeB.Position.Y)
+            {
+                dstY = nodeA.Position.Y - nodeB.Position.Y;
+            }
+            else dstY = nodeB.Position.Y - nodeA.Position.Y;
+
             return dstX + dstY;
         }
 
