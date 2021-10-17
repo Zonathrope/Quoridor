@@ -58,11 +58,6 @@ namespace Controller
             Console.WriteLine(player == PlayerNumber.First ? "Player 2 WIN!" : "Player 1 WIN!");
         }
 
-        public void EndGame()
-        {
-            throw new NotImplementedException();
-        }
-
         public void ClearConsole()
         {
             Console.Clear();

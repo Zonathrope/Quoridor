@@ -8,7 +8,7 @@ namespace Controller
     class GameController
     {
         private PlayerNumber _playerNumber;
-        private readonly IGameModel _gameModel;
+        private IGameModel _gameModel;
         private int _gamemode;
         private readonly Drawer _drawer = new();
         private string[,] GameBoard { get; }
@@ -23,7 +23,7 @@ namespace Controller
 
         public GameController(IGameModel model)
         {
-            this._gameModel = model;
+            _gameModel = model;
             GameBoard = new string[17, 17];
         }
 
@@ -59,7 +59,6 @@ namespace Controller
                     }
                 }
             }
-
             foreach (var (wallOrientation, topLeftCell) in _gameModel.PlacedWalls)
             {
                 if (wallOrientation == WallOrientation.Vertical)
@@ -81,14 +80,13 @@ namespace Controller
         
         private void ChooseGameMode()
         {
-            UpdateBoard();
             _drawer.ChooseGameMode();
-            var playerInput = this.ValidateInput();
-            switch (playerInput)
+            var input = ValidateInput();
+            switch (input[0])
             {
                 case "1": //run against bot
                     _gamemode = 1;
-                    HandleTurnAgainstBot();
+                    HandleTurn();
                 break;
                 case "2": //run against yourself
                     _gamemode = 2;
@@ -102,46 +100,6 @@ namespace Controller
             }
         }
 
-        private void HandleTurnAgainstBot()
-        {
-            if (_playerNumber == PlayerNumber.First)
-            {
-                HandleTurn();
-            }
-            else
-            {
-                Random rng = new Random();
-                var botChoose = rng.Next(1, 3);
-                switch (botChoose)
-                {
-                case 1:
-                    var move = rng.Next(1, _gameModel.GetCellsAvailableForMove(_playerNumber).Count);
-                    _gameModel.MovePlayer(_playerNumber, new CellPosition(
-                        _gameModel.GetCellsAvailableForMove(_playerNumber)[move - 1].X,
-                        _gameModel.GetCellsAvailableForMove(_playerNumber)[move - 1].Y)
-                    );
-                    _playerNumber = _playerNumber == PlayerNumber.First ? PlayerNumber.Second : PlayerNumber.First;
-                    break;
-                case 2 when _gameModel.Player2WallAmount > 0:
-                    while (true)
-                    {
-                        try
-                        {
-                            var orientation = rng.Next(0, 2) == 0 ? WallOrientation.Horizontal : WallOrientation.Vertical;
-                            _gameModel.PlaceWall(_playerNumber, new WallPosition(orientation,
-                                new CellPosition(rng.Next(0, 9), rng.Next(0, 9))));
-                            _playerNumber = _playerNumber == PlayerNumber.First ? PlayerNumber.Second : PlayerNumber.First;
-                            break;
-                        }
-                        catch (Exception e) {}
-                    }
-                    break;
-                }
-                HandleTurn();
-            }
-        }
-
-
         private void HandleTurn()
         {
             while (true)
@@ -152,21 +110,30 @@ namespace Controller
                     StartGame();
                     return;
                 }
-                UpdateBoard();
-                _drawer.DrawBoard(GameBoard);
-                var isPlayerHasWalls = _playerNumber == PlayerNumber.First
-                    ? _gameModel.Player1WallAmount > 0
-                    : _gameModel.Player2WallAmount > 0;
-                _drawer.DrawTurnOptions(isPlayerHasWalls);
-                var input = ValidateInput();
-                switch (input)
+                if (_gamemode == 1 && _playerNumber == PlayerNumber.Second)
                 {
-                    case "1":
-                        PlayerMovement();
-                        return;
-                    case "2" when isPlayerHasWalls:
-                        PlaceWall();
-                        break;
+                    _gameModel = Bot.BotTurn(_gameModel);
+                    _playerNumber = _playerNumber == PlayerNumber.First ? PlayerNumber.Second : PlayerNumber.First;
+                    HandleTurn();
+                } 
+                else 
+                {
+                    UpdateBoard();
+                    _drawer.DrawBoard(GameBoard);
+                    var isPlayerHasWalls = _playerNumber == PlayerNumber.First
+                        ? _gameModel.Player1WallAmount > 0
+                        : _gameModel.Player2WallAmount > 0;
+                    _drawer.DrawTurnOptions(isPlayerHasWalls);
+                    var input = ValidateInput();
+                    switch (input[0])
+                    {
+                        case "1":
+                            PlayerMovement();
+                            return;
+                        case "2" when isPlayerHasWalls:
+                            PlaceWall();
+                            break;
+                    }
                 }
             }
         }
@@ -179,22 +146,13 @@ namespace Controller
                 {
                     _drawer.DrawBoard(GameBoard);
                     _drawer.DrawMoveOptions(_gameModel.GetCellsAvailableForMove(_playerNumber));
-                    var input = Int32.Parse(ValidateInput());
+                    var input = ValidateInput();
                     _gameModel.MovePlayer(_playerNumber, new CellPosition(
-                        _gameModel.GetCellsAvailableForMove(_playerNumber)[input - 1].X,
-                        _gameModel.GetCellsAvailableForMove(_playerNumber)[input - 1].Y)
+                        _gameModel.GetCellsAvailableForMove(_playerNumber)[Int32.Parse(input[0]) - 1].X,
+                        _gameModel.GetCellsAvailableForMove(_playerNumber)[Int32.Parse(input[0]) - 1].Y)
                     );
                     _playerNumber = _playerNumber == PlayerNumber.First ? PlayerNumber.Second : PlayerNumber.First;
-
-                    if (_gamemode == 1)
-                    {
-                        HandleTurnAgainstBot();
-                    }
-                    else
-                    {
-                        HandleTurn();
-                    }
-                    return;
+                    HandleTurn();
                 }
                 catch (Exception e)
                 {
@@ -214,13 +172,12 @@ namespace Controller
                 {
                     _drawer.DrawBoard(GameBoard);
                     _drawer.DrawWallOption();
-                    var input = ValidateWallPlacementInput();
+                    var input = ValidateInput();
                     var orientation = input[2] == "V" ? WallOrientation.Horizontal : WallOrientation.Vertical;
                     _gameModel.PlaceWall(_playerNumber, new WallPosition(orientation,
                         new CellPosition(int.Parse(input[0]), int.Parse(input[1]))));
                     _playerNumber = _playerNumber == PlayerNumber.First ? PlayerNumber.Second : PlayerNumber.First;
                     HandleTurn();
-                    return;
                 }
                 catch (Exception e)
                 {
@@ -239,7 +196,7 @@ namespace Controller
                    || GameConstants.Player2WinLine.Any(winingPos => winingPos == pos2);
         }
 
-        private string[] ValidateWallPlacementInput()
+        private string[] ValidateInput()
         {
             while (true)
             {
@@ -253,18 +210,18 @@ namespace Controller
             }
         }
 
-        private string ValidateInput()
-        {
-            while (true)
-            {
-                var input = Console.ReadLine()?.Trim(Trim.trimValues);
-                if (input != "")
-                {
-                    Console.Clear();
-                    return input;
-                }
-                Console.WriteLine("Empty inputs arent allowed");
-            }
-        }
+        // private string ValidateInput()
+        // {
+        //     while (true)
+        //     {
+        //         var input = Console.ReadLine()?.Trim(Trim.trimValues);
+        //         if (input != "")
+        //         {
+        //             Console.Clear();
+        //             return input;
+        //         }
+        //         Console.WriteLine("Empty inputs arent allowed");
+        //     }
+        // }
     }
 }
