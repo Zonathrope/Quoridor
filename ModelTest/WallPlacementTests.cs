@@ -123,19 +123,19 @@ namespace ModelTest
         }
 
         [Test]
+        //TODO make normal comment with wall positions schemes
         public void Players_cant_block_way_for_player2_by_walls()
         {
-            _gameModel.PlaceWall(PlayerNumber.First,
-                new WallPosition(WallOrientation.Vertical,
-                    _player1StartPos.Shifted(-1, -1)));
-            _gameModel.PlaceWall(PlayerNumber.Second,
-                new WallPosition(WallOrientation.Vertical,
-                    _player1StartPos.Shifted(1, -1)));
-            Assert.Throws<WallBlocksPathForPlayerException>(() =>
+            var wall1 = new WallPosition(WallOrientation.Vertical, _player1StartPos.Shifted(-2, -1));
+            var wall2 = new WallPosition(WallOrientation.Horizontal, _player1StartPos.Shifted(-1, -2));
+            var wall3 = new WallPosition(WallOrientation.Horizontal, _player1StartPos.Shifted(1, -2));
+            var wall4 = new WallPosition(WallOrientation.Vertical, _player1StartPos.Shifted(2, -1));
+            _gameModel.PlaceWall(PlayerNumber.First, wall1);
+            _gameModel.PlaceWall(PlayerNumber.Second, wall2);
+            _gameModel.PlaceWall(PlayerNumber.First, wall3);
+                    Assert.Throws<WallBlocksPathForPlayerException>(() =>
             {
-                _gameModel.PlaceWall(PlayerNumber.First,
-                    new WallPosition(WallOrientation.Horizontal,
-                        _player1StartPos.Shifted(0, -1)));
+                _gameModel.PlaceWall(PlayerNumber.Second, wall4);
             });
         }
         
