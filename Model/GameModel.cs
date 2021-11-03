@@ -18,31 +18,15 @@ namespace Model
 
         //TODO replace with actual implementation
         private AStar _aStar = new ();
+        private IView _view;
         private PlayerNumber _currentPlayer;
 
-        private event Action GameStartedEvent;
-        private event Action GameEndedEvent;
-        private event Action<PlayerNumber> PlayerWonEvent;
-        private event Action<PlayerMovedEventArgs> PlayerMovedEvent;
-        private event Action<PlayerPlacedWallEventArgs> PlayerPlacedWallEvent;
-
-
-        public GameModel(IPlayerView player1, IPlayerView player2)
+        public GameModel(IView view)
         {
-            AttachEventsToPlayer(player1);
-            AttachEventsToPlayer(player2);
+            _view = view;
             _field = new Field();
             Player1WallAmount = GameConstants.StartWallAmount;
             Player2WallAmount = GameConstants.StartWallAmount;
-        }
-
-        private void AttachEventsToPlayer(IPlayerView player)
-        {
-            this.GameStartedEvent += player.HandleGameStartedEvent;
-            this.GameEndedEvent += player.HandleGameEndedEvent;
-            this.PlayerWonEvent += player.HandlePlayerWonEvent;
-            this.PlayerMovedEvent += player.HandlePlayerMovedEvent;
-            this.PlayerPlacedWallEvent += player.HandlePlayerPlacedWallEvent;
         }
 
         public void StartNewGame()
@@ -51,12 +35,12 @@ namespace Model
             _currentPlayer = PlayerNumber.First;
             Player1WallAmount = GameConstants.StartWallAmount;
             Player2WallAmount = GameConstants.StartWallAmount;
-            GameStartedEvent?.Invoke();
+            _view.HandleGameStartedEvent();
         }
 
         public void EndGame()
         {
-            GameEndedEvent?.Invoke();
+            _view.HandleGameEndedEvent();
         }
 
         public void MovePlayer(PlayerNumber playerNumber, CellPosition newPosition)
@@ -71,7 +55,7 @@ namespace Model
             }
 
             _field.MovePlayer(playerNumber, newPosition);
-            PlayerMovedEvent?.Invoke(new PlayerMovedEventArgs(playerNumber, newPosition));
+            _view.HandlePlayerMovedEvent(playerNumber, newPosition);
             if (IsOnWinningPosition(playerNumber))
             {
                 HandleWin(playerNumber);
@@ -162,7 +146,7 @@ namespace Model
 
         private void HandleWin(PlayerNumber winner)
         {
-            PlayerWonEvent?.Invoke(winner);
+            _view.HandlePlayerWonEvent(winner);
         }
 
         public void PlaceWall(PlayerNumber playerPlacing, WallPosition wallPosition)
@@ -183,7 +167,7 @@ namespace Model
             }
 
             DecrementPlayerWallAmount(playerPlacing);
-            PlayerPlacedWallEvent?.Invoke(new PlayerPlacedWallEventArgs(playerPlacing, wallPosition));
+            _view.HandlePlayerPlacedWallEvent(playerPlacing, wallPosition);
             SwitchCurrentPlayer();
         }
 

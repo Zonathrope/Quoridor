@@ -6,7 +6,7 @@ using NUnit.Framework;
 
 namespace ModelTest
 {
-    class MyEventHandler: IPlayerView
+    class MyView: IView
     {
         public bool GameStared { set; get; }
         public bool GameEnded { set; get; }
@@ -29,22 +29,22 @@ namespace ModelTest
             GameWinner = winnerNumber;
         }
 
-        public void HandlePlayerMovedEvent(PlayerMovedEventArgs args)
+        public void HandlePlayerMovedEvent(PlayerNumber playerNumber, CellPosition newPosition)
         {
-            LastMove = new Tuple<PlayerNumber, CellPosition>(args.PlayerNumber, args.Position);
+            LastMove = new Tuple<PlayerNumber, CellPosition>(playerNumber, newPosition);
         }
 
-        public void HandlePlayerPlacedWallEvent(PlayerPlacedWallEventArgs args)
+        public void HandlePlayerPlacedWallEvent(PlayerNumber playerPlacing, WallPosition wallPosition)
         {
-            LastWallPlacement = new Tuple<PlayerNumber, WallPosition>(args.PlayerNumber, args.WallPosition);
+            LastWallPlacement = new Tuple<PlayerNumber, WallPosition>(playerPlacing, wallPosition);
         }
     }
+
     // TODO maybe separate tests abstract class
     [TestFixture]
     public class EventsTests
     {
-        private MyEventHandler _player1Handler;
-        private MyEventHandler _player2Handler;
+        private MyView view;
         private CellPosition _player1StartPos;
         private CellPosition _player2StartPos;
         private IGameModel _gameModel;
@@ -52,9 +52,8 @@ namespace ModelTest
         [SetUp]
         public void Setup()
         {
-            _player1Handler = new MyEventHandler();
-            _player2Handler = new MyEventHandler();
-            _gameModel = new GameModel(_player1Handler, _player2Handler);
+            view = new MyView();
+            _gameModel = new GameModel(view);
             _player1StartPos = GameConstants.Player1StartPosition;
             _player2StartPos = GameConstants.Player2StartPosition;
         }
@@ -63,7 +62,7 @@ namespace ModelTest
         public void Players_receive_game_started_event()
         {
             _gameModel.StartNewGame();
-            Assert.IsTrue(_player1Handler.GameStared && _player2Handler.GameStared);
+            Assert.IsTrue(view.GameStared);
         }
         
         [Test]
@@ -71,7 +70,7 @@ namespace ModelTest
         {
             _gameModel.StartNewGame();
             _gameModel.EndGame();
-            Assert.IsTrue(_player1Handler.GameEnded && _player2Handler.GameEnded);
+            Assert.IsTrue(view.GameEnded);
         }
 
         [Test]
@@ -80,8 +79,7 @@ namespace ModelTest
             _gameModel.StartNewGame();
             MovePlayer1ToFinish();
             Assert.IsTrue(
-                _player1Handler.GameWinner == PlayerNumber.First && 
-                _player2Handler.GameWinner == PlayerNumber.First); 
+                view.GameWinner == PlayerNumber.First); 
         }
 
         private void MovePlayer1ToFinish()
@@ -125,8 +123,7 @@ namespace ModelTest
             var movePosition = _player1StartPos.Shifted(0, -1);
             _gameModel.MovePlayer(PlayerNumber.First, movePosition);
             var lastMove = new Tuple<PlayerNumber, CellPosition>(PlayerNumber.First, movePosition);
-            Assert.AreEqual(_player1Handler.LastMove, lastMove);
-            Assert.AreEqual(_player2Handler.LastMove, lastMove);
+            Assert.AreEqual(view.LastMove, lastMove);
         }
         
         [Test]
@@ -138,8 +135,7 @@ namespace ModelTest
             _gameModel.MovePlayer(PlayerNumber.First, movePosition1);
             _gameModel.MovePlayer(PlayerNumber.Second, movePosition2);
             var lastMove = new Tuple<PlayerNumber, CellPosition>(PlayerNumber.Second, movePosition2);
-            Assert.AreEqual(_player1Handler.LastMove, lastMove);
-            Assert.AreEqual(_player2Handler.LastMove, lastMove);
+            Assert.AreEqual(view.LastMove, lastMove);
         }
         
         [Test]
@@ -149,8 +145,7 @@ namespace ModelTest
             var wallPosition = new WallPosition(WallOrientation.Horizontal, new CellPosition(0, 0));
             _gameModel.PlaceWall(PlayerNumber.First, wallPosition);
             var lastWall = new Tuple<PlayerNumber, WallPosition>(PlayerNumber.First, wallPosition);
-            Assert.AreEqual(_player1Handler.LastWallPlacement, lastWall);
-            Assert.AreEqual(_player2Handler.LastWallPlacement, lastWall);
+            Assert.AreEqual(view.LastWallPlacement, lastWall);
         }
         
         [Test]
@@ -162,8 +157,7 @@ namespace ModelTest
             _gameModel.PlaceWall(PlayerNumber.First, wallPosition1);
             _gameModel.PlaceWall(PlayerNumber.Second, wallPosition2);
             var lastWall = new Tuple<PlayerNumber, WallPosition>(PlayerNumber.Second, wallPosition2);
-            Assert.AreEqual(_player1Handler.LastWallPlacement, lastWall);
-            Assert.AreEqual(_player2Handler.LastWallPlacement, lastWall);
+            Assert.AreEqual(view.LastWallPlacement, lastWall);
         }
     }
 }

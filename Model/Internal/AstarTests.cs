@@ -16,9 +16,9 @@ namespace Model.Internal
         }
         private static void AStar_pathfinding()
         {
-            var player1Mock = Mock.Of<IPlayerView>();
-            var player2Mock = Mock.Of<IPlayerView>();
-            _gameModel = new GameModel(player1Mock, player2Mock);
+            var player1Mock = Mock.Of<IView>();
+            var player2Mock = Mock.Of<IView>();
+            _gameModel = new GameModel(player1Mock);
             Field field = new Field();
             AStar aStar = new AStar();
 
