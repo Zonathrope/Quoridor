@@ -7,7 +7,7 @@ namespace Model
         void HandleGameStartedEvent();
         void HandleGameEndedEvent();
         void HandlePlayerWonEvent(PlayerNumber winnerNumber);
-        void HandlePlayerMovedEvent(PlayerNumber playerNumber, CellPosition newPosition);
+        void HandlePlayerMovedEvent(PlayerNumber playerNumber, CellPosition newPosition, bool isJump = false);
         void HandlePlayerPlacedWallEvent(PlayerNumber playerPlacing, WallPosition wallPosition);
     }
 }

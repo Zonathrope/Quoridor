@@ -29,7 +29,7 @@ namespace ModelTest
             GameWinner = winnerNumber;
         }
 
-        public void HandlePlayerMovedEvent(PlayerNumber playerNumber, CellPosition newPosition)
+        public void HandlePlayerMovedEvent(PlayerNumber playerNumber, CellPosition newPosition, bool isJump = false)
         {
             LastMove = new Tuple<PlayerNumber, CellPosition>(playerNumber, newPosition);
         }

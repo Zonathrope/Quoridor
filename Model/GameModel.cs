@@ -58,8 +58,9 @@ namespace Model
             }
 
             _field.MovePlayer(playerNumber, newPosition);
+            bool wasJump = IsJump(playerNumber, newPosition);
             if (drawInView == DrawInView.Yes)
-                _view.HandlePlayerMovedEvent(playerNumber, newPosition);
+                _view.HandlePlayerMovedEvent(playerNumber, newPosition, wasJump);
             if (IsOnWinningPosition(playerNumber))
             {
                 HandleWin(playerNumber, drawInView);
@@ -129,6 +130,14 @@ namespace Model
             }
 
             return availableCells;
+        }
+
+        private bool IsJump(PlayerNumber playerNumber, CellPosition newPosition)
+        {
+            var playerPosition = GetPlayerPosition(playerNumber);
+            var opponentPosition = GetPlayerPosition(GetOppositePlayerNumber(playerNumber));
+            var jumpPositions = GetCellsAvailableFromFaceToFaceSituation(playerPosition, opponentPosition);
+            return jumpPositions.Contains(newPosition);
         }
 
         private void SwitchCurrentPlayer()
