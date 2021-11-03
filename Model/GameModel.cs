@@ -29,21 +29,24 @@ namespace Model
             Player2WallAmount = GameConstants.StartWallAmount;
         }
 
-        public void StartNewGame()
+        public void StartNewGame(DrawInView drawInView = DrawInView.Yes)
         {
             _field = new Field();
             _currentPlayer = PlayerNumber.First;
             Player1WallAmount = GameConstants.StartWallAmount;
             Player2WallAmount = GameConstants.StartWallAmount;
-            _view.HandleGameStartedEvent();
+            if (drawInView == DrawInView.Yes)
+                _view.HandleGameStartedEvent();
         }
 
-        public void EndGame()
+        public void EndGame(DrawInView drawInView = DrawInView.Yes)
         {
-            _view.HandleGameEndedEvent();
+            if (drawInView == DrawInView.Yes)
+               _view.HandleGameEndedEvent();
         }
 
-        public void MovePlayer(PlayerNumber playerNumber, CellPosition newPosition)
+        public void MovePlayer(
+            PlayerNumber playerNumber, CellPosition newPosition, DrawInView drawInView = DrawInView.Yes)
         {
             if (!IsPlayersTurn(playerNumber))
                 throw new AnotherPlayerTurnException($"It is player {_currentPlayer} turn");
@@ -55,10 +58,11 @@ namespace Model
             }
 
             _field.MovePlayer(playerNumber, newPosition);
-            _view.HandlePlayerMovedEvent(playerNumber, newPosition);
+            if (drawInView == DrawInView.Yes)
+                _view.HandlePlayerMovedEvent(playerNumber, newPosition);
             if (IsOnWinningPosition(playerNumber))
             {
-                HandleWin(playerNumber);
+                HandleWin(playerNumber, drawInView);
             }
 
             SwitchCurrentPlayer();
@@ -144,12 +148,14 @@ namespace Model
             return playerPosition.Y == GameConstants.FieldEndCoordinate;
         }
 
-        private void HandleWin(PlayerNumber winner)
+        private void HandleWin(PlayerNumber winner, DrawInView drawInView)
         {
-            _view.HandlePlayerWonEvent(winner);
+            if (drawInView == DrawInView.Yes)
+                _view.HandlePlayerWonEvent(winner);
         }
 
-        public void PlaceWall(PlayerNumber playerPlacing, WallPosition wallPosition)
+        public void PlaceWall(
+            PlayerNumber playerPlacing, WallPosition wallPosition, DrawInView drawInView = DrawInView.Yes)
         {
             if (!IsPlayersTurn(playerPlacing))
                 throw new AnotherPlayerTurnException($"It is player {_currentPlayer} turn");
@@ -167,7 +173,8 @@ namespace Model
             }
 
             DecrementPlayerWallAmount(playerPlacing);
-            _view.HandlePlayerPlacedWallEvent(playerPlacing, wallPosition);
+            if (drawInView == DrawInView.Yes)
+                _view.HandlePlayerPlacedWallEvent(playerPlacing, wallPosition);
             SwitchCurrentPlayer();
         }
 
