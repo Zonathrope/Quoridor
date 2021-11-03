@@ -8,6 +8,7 @@ namespace Model
 {
     public class GameModel : IGameModel
     {
+        public bool GameEnded { get; private set; }
         public CellPosition Player1Position => _field.Player1Position;
         public CellPosition Player2Position => _field.Player2Position;
         public int Player1WallAmount { get; private set; }
@@ -31,6 +32,7 @@ namespace Model
 
         public void StartNewGame(DrawInView drawInView = DrawInView.Yes)
         {
+            GameEnded = false;
             _field = new Field();
             _currentPlayer = PlayerNumber.First;
             Player1WallAmount = GameConstants.StartWallAmount;
@@ -41,6 +43,7 @@ namespace Model
 
         public void EndGame(DrawInView drawInView = DrawInView.Yes)
         {
+            GameEnded = true;
             if (drawInView == DrawInView.Yes)
                _view.HandleGameEndedEvent();
         }
@@ -161,6 +164,7 @@ namespace Model
         {
             if (drawInView == DrawInView.Yes)
                 _view.HandlePlayerWonEvent(winner);
+            EndGame();
         }
 
         public void PlaceWall(

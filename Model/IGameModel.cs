@@ -23,6 +23,7 @@ namespace Model
         int Player1WallAmount { get; }
         int Player2WallAmount { get; }
         List<WallPosition> PlacedWalls { get; }
+        public bool GameEnded { get; }
     }
     
     public enum DrawInView { Yes, No}
