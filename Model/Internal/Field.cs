@@ -10,10 +10,12 @@ namespace Model.Internal
         private record CellsAroundWall(FieldCell TopLeftCell, FieldCell TopRightCell,
             FieldCell BottomRightCell, FieldCell BottomLeftCell);
 
+        public int positionValue;
         public CellPosition Player1Position { get; private set; }
         public CellPosition Player2Position { get; private set; }
         internal FieldCell[,] FieldMatrix => _fieldMatrix;
         private FieldCell[,] _fieldMatrix = new FieldCell[GameConstants.FieldSize,GameConstants.FieldSize];
+        private IAStar _aStar = new AStar();
         public List<WallPosition> PlacedWalls { get; } = new ();
 
 
@@ -54,11 +56,11 @@ namespace Model.Internal
             {
                 neighbours.Add(CellByPosition(cellPosition.Shifted(0, -1)));
             }
-            if (cellPosition.X != GameConstants.FieldEndCoordinate)
+            if (cellPosition.X != 8)
             {
                 neighbours.Add(CellByPosition(cellPosition.Shifted(1, 0)));
             }
-            if (cellPosition.Y != GameConstants.FieldEndCoordinate)
+            if (cellPosition.Y != 8)
             {
                 neighbours.Add(CellByPosition(cellPosition.Shifted(0, 1)));
             }
@@ -108,7 +110,7 @@ namespace Model.Internal
 
         private static bool IsInFieldCoordinatesRange(int value)
         {
-            return value is >= 0 and < GameConstants.FieldSize;
+            return value is >= 0 and < 9;
         }
 
         /// <exception cref="IncorrectWallPositionException">Caller pass invalid position.</exception>
@@ -125,9 +127,28 @@ namespace Model.Internal
                 throw new WallPlaceTakenException(
                     $"There is already wall at {newWallPosition.TopLeftCell}");
             }
-
+            BlockWays(newWallPosition);
+            if (!BothPlayersHaveWayToLastLine())
+            {
+                RemoveWall(newWallPosition);
+                throw new WallBlocksPathForPlayerException(
+                    $"Wall at {newWallPosition.TopLeftCell} blocks way for players");
+            }
             PlacedWalls.Add(newWallPosition);
-            BlockWays(newWall: newWallPosition);
+        }
+        private bool BothPlayersHaveWayToLastLine()
+        {
+            CellPosition[] winLine1 = GetPlayerWinLine(PlayerNumber.First);
+            CellPosition[] winLine2 = GetPlayerWinLine(PlayerNumber.Second);
+            return winLine1.Any(winCell => _aStar.WayExists(Player1Position, winCell, this)) && 
+                   winLine2.Any(winCell => _aStar.WayExists(Player2Position, winCell, this));
+        }
+        
+        private CellPosition[] GetPlayerWinLine(PlayerNumber playerNumber)
+        {
+            return playerNumber == PlayerNumber.First
+                ? GameConstants.Player1WinLine
+                : GameConstants.Player2WinLine;
         }
 
         //TODO ask if it is ok that exception is documented here, but not in calling method
@@ -142,44 +163,37 @@ namespace Model.Internal
 
         private void BlockWays(WallPosition newWall)
         {
-            CellsAroundWall cells = GetCellsAroundWall(newWall);
             if (newWall.Orientation == WallOrientation.Horizontal)
             {
-                BlockWayBetweenCells(cells.TopLeftCell, cells.TopRightCell);
-                BlockWayBetweenCells(cells.BottomLeftCell, cells.BottomRightCell);
+                BlockWayBetweenCells(_fieldMatrix[newWall.TopLeftCell.Y, newWall.TopLeftCell.X], 
+                    _fieldMatrix[newWall.TopLeftCell.Y + 1, newWall.TopLeftCell.X]);
+                BlockWayBetweenCells(_fieldMatrix[newWall.TopLeftCell.Y, newWall.TopLeftCell.X + 1], 
+                    _fieldMatrix[newWall.TopLeftCell.Y + 1, newWall.TopLeftCell.X + 1]);
             }
             else
             {
-                BlockWayBetweenCells(cells.TopLeftCell, cells.BottomLeftCell);
-                BlockWayBetweenCells(cells.TopRightCell, cells.BottomRightCell);
+                BlockWayBetweenCells(_fieldMatrix[newWall.TopLeftCell.Y, newWall.TopLeftCell.X], 
+                    _fieldMatrix[newWall.TopLeftCell.Y, newWall.TopLeftCell.X + 1]);
+                BlockWayBetweenCells(_fieldMatrix[newWall.TopLeftCell.Y + 1, newWall.TopLeftCell.X], 
+                    _fieldMatrix[newWall.TopLeftCell.Y + 1, newWall.TopLeftCell.X + 1]);
             }
-        }
-
-        private CellsAroundWall GetCellsAroundWall(WallPosition wallPosition)
-        {
-            CellPosition topLeftCell     = wallPosition.TopLeftCell;
-            CellPosition topRightCell    = topLeftCell.Shifted(1, 0);
-            CellPosition bottomRightCell = topLeftCell.Shifted(1, 1);
-            CellPosition bottomLeftCell  = topLeftCell.Shifted(0, 1);
-            return new CellsAroundWall(
-                CellByPosition(topLeftCell),
-                CellByPosition(topRightCell),
-                CellByPosition(bottomRightCell),
-                CellByPosition(bottomLeftCell));
         }
 
         private void RestoreWays(WallPosition removedWall)
         {
-            CellsAroundWall cells = GetCellsAroundWall(removedWall);
             if (removedWall.Orientation == WallOrientation.Horizontal)
             {
-                RestoreWayBetweenCells(cells.TopLeftCell, cells.TopRightCell);
-                RestoreWayBetweenCells(cells.BottomLeftCell, cells.BottomRightCell);
+                RestoreWayBetweenCells(_fieldMatrix[removedWall.TopLeftCell.Y, removedWall.TopLeftCell.X], 
+                    _fieldMatrix[removedWall.TopLeftCell.Y + 1, removedWall.TopLeftCell.X]);
+                RestoreWayBetweenCells(_fieldMatrix[removedWall.TopLeftCell.Y, removedWall.TopLeftCell.X + 1], 
+                    _fieldMatrix[removedWall.TopLeftCell.Y + 1, removedWall.TopLeftCell.X + 1]);
             }
             else
             {
-                RestoreWayBetweenCells(cells.TopLeftCell, cells.BottomLeftCell);
-                RestoreWayBetweenCells(cells.TopRightCell, cells.BottomRightCell);
+                RestoreWayBetweenCells(_fieldMatrix[removedWall.TopLeftCell.Y, removedWall.TopLeftCell.X], 
+                    _fieldMatrix[removedWall.TopLeftCell.Y, removedWall.TopLeftCell.X + 1]);
+                RestoreWayBetweenCells(_fieldMatrix[removedWall.TopLeftCell.Y + 1, removedWall.TopLeftCell.X], 
+                    _fieldMatrix[removedWall.TopLeftCell.Y + 1, removedWall.TopLeftCell.X + 1]);
             }
         }
         private void BlockWayBetweenCells(FieldCell cell1, FieldCell cell2)
@@ -196,7 +210,6 @@ namespace Model.Internal
 
         private bool IsValidWallPosition(WallPosition wallPosition)
         {
-            CellPosition topLeftCell = wallPosition.TopLeftCell;
             CellPosition bottomRightCell;
             //Exception will fire if top left cell is on field bottom or right edge
             try
@@ -207,7 +220,7 @@ namespace Model.Internal
             {
                 return false;
             }
-            return IsOnField(topLeftCell) && IsOnField(bottomRightCell);
+            return IsOnField(wallPosition.TopLeftCell) && IsOnField(bottomRightCell);
         }
 
         public bool IsCellTaken(CellPosition cell)

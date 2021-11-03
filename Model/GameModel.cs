@@ -20,9 +20,6 @@ namespace Model
         {
             return _field;
         }
-        
-        //TODO replace with actual implementation
-        private IAStar _aStar = new AStar();
         private PlayerNumber _currentPlayer;
 
         private event Action GameStartedEvent;
@@ -162,7 +159,7 @@ namespace Model
                 return playerPosition.Y == 0;
             }
 
-            return playerPosition.Y == GameConstants.FieldEndCoordinate;
+            return playerPosition.Y == 8;
         }
 
         private void HandleWin(PlayerNumber winner)
@@ -179,14 +176,6 @@ namespace Model
                 throw new NoWallsLeftException($"Player {playerPlacing} has no walls left");
 
             _field.PlaceWall(wallPosition);
-            if (!BothPlayersHaveWayToLastLine())
-            {
-                _field.RemoveWall(wallPosition);
-                var wallDirection = wallPosition.Orientation == WallOrientation.Horizontal ? "Horizontal" : "Vertical";
-                throw new WallBlocksPathForPlayerException(
-                    $"{wallDirection} wall at {wallPosition.TopLeftCell} blocks way for players");
-            }
-
             DecrementPlayerWallAmount(playerPlacing);
             PlayerPlacedWallEvent?.Invoke(new PlayerPlacedWallEventArgs(playerPlacing, wallPosition));
             SwitchCurrentPlayer();
@@ -198,50 +187,12 @@ namespace Model
             return wallAmount != 0;
         }
 
-        //TODO think if last line is good name
-        private bool BothPlayersHaveWayToLastLine()
-        {
-            return PlayerHasWayToLastLine(PlayerNumber.First) && PlayerHasWayToLastLine(PlayerNumber.Second);
-        }
-
-        private bool PlayerHasWayToLastLine(PlayerNumber playerNumber)
-        {
-            CellPosition playerCell = GetPlayerPosition(playerNumber);
-            CellPosition[] winLine = GetPlayerWinLine(playerNumber);
-            return winLine.Any(winCell => _aStar.WayExists(playerCell, winCell, _field));
-        }
-
-        private CellPosition[] GetPlayerWinLine(PlayerNumber playerNumber)
-        {
-            return playerNumber == PlayerNumber.First
-                ? GameConstants.Player1WinLine
-                : GameConstants.Player2WinLine;
-        }
-
         private void DecrementPlayerWallAmount(PlayerNumber playerNumber)
         {
             if (playerNumber == PlayerNumber.First)
                 Player1WallAmount--;
             else
                 Player2WallAmount--;
-        }
-
-        internal List<FieldCell> TestFindPath(CellPosition startPos, CellPosition endPos)
-        {
-            var aStar = (AStar) _aStar;
-            if (TestIsReachable(startPos, endPos))
-            {
-                return aStar.FindPath(_field.FieldMatrix[startPos.X, startPos.Y],
-                    _field.FieldMatrix[endPos.X, endPos.Y]);
-            }
-        
-            return null;
-        }
-        
-        internal bool TestIsReachable(CellPosition startPos, CellPosition endPos)
-        {
-            return _aStar.WayExists(_field.FieldMatrix[startPos.X, startPos.Y].Position,
-                _field.FieldMatrix[endPos.X, endPos.Y].Position, _field);
         }
     }
 }
