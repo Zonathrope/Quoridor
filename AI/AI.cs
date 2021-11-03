@@ -6,25 +6,25 @@ using Model.Internal;
 
 namespace AI
 {
-    public class AI
+    public class Ai
     {
-        private AStar _aStar = new AStar();
+        private readonly AStar _aStar = new AStar();
         public Field Negamax(Field position, int depth, int alpha, int beta, int color)
         {
             if (depth == 0 || CheckWin(position, color))
             {
-                position.positionValue = Sev(position) * color;
+                position.PositionValue = Sev(position, color);
                 return position;
             }
-            var childPositions = generatePositions(position);
-            childPositions = orderPositions(childPositions);
+            var childPositions = GeneratePositions(position, color);
+            //childPositions = orderPositions(childPositions);
             var value = -999;
             Field bestPosition = null;
             foreach (Field childPosition in childPositions)
             {
-                value = Math.Max(value, -Negamax(childPosition, depth - 1, -alpha, -beta, -color).positionValue);
-                position.positionValue = value;
-                if (bestPosition == null || bestPosition.positionValue < value) {
+                value = Math.Max(value, -Negamax(childPosition, depth - 1, -alpha, -beta, -color).PositionValue);
+                position.PositionValue = value;
+                if (bestPosition == null || bestPosition.PositionValue <= value) {
                     bestPosition = position;
                 }
                 alpha = Math.Max(alpha, value);
@@ -33,15 +33,91 @@ namespace AI
             return bestPosition;
         }
 
-        private LinkedList<Field> orderPositions(object childPositions)
+        private LinkedList<Field> OrderPositions(object childPositions)
         {
             throw new System.NotImplementedException();
         }
 
-        private LinkedList<Field> generatePositions(Field position)
+        private LinkedList<Field> GeneratePositions(Field position, int color)
         {
-            throw new System.NotImplementedException();
+            PlayerNumber currentPlayer = color == 1 ? PlayerNumber.First : PlayerNumber.Second;
+            LinkedList<Field> possiblePositions = new LinkedList<Field>();
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    if (!position.PlacedWalls.Contains(new WallPosition(WallOrientation.Horizontal, new CellPosition(i,j))))
+                    {
+                        try
+                        {
+                            Field newPosition1 = new Field(position);
+                            WallPosition wall1Position = new WallPosition(WallOrientation.Vertical, new CellPosition(i, j));
+                            newPosition1.PlaceWall(wall1Position, currentPlayer);
+                            newPosition1.Move = new PlaceWall(wall1Position);
+                            possiblePositions.AddLast(newPosition1);
+                        }
+                        catch (Exception e) { }
+                        try
+                        {
+                            Field newPosition2 = new Field(position);
+                            WallPosition wall2Position = new WallPosition(WallOrientation.Horizontal, new CellPosition(i,j));
+                            newPosition2.PlaceWall(wall2Position, currentPlayer);
+                            newPosition2.Move = new PlaceWall(wall2Position);
+                            possiblePositions.AddLast(newPosition2);
+                        }
+                        catch (Exception e) { }
+                        
+                    }
+                    
+                } 
+            }
+
+            foreach (var availablePositions in position.GetCellsForMove(currentPlayer))
+            {
+                Field newPosition = new Field(position);
+                newPosition.MovePlayer(currentPlayer, availablePositions);
+                newPosition.Move = new MovePlayer(availablePositions);
+            }
+
+            return possiblePositions;
         }
+
+        // string StringifyWallMove(WallPosition position)
+        // {
+        //     string wallMove = "";
+        //     switch (position.TopLeftCell.X)
+        //     {
+        //         case 0:
+        //             wallMove += "S";
+        //             break;
+        //         case 1:
+        //             wallMove += "T";
+        //             break;
+        //         case 2:
+        //             wallMove += "U";
+        //             break;
+        //         case 3:
+        //             wallMove += "V";
+        //             break;
+        //         case 4:
+        //             wallMove += "W";
+        //             break;
+        //         case 5:
+        //             wallMove += "X";
+        //             break;
+        //         case 6:
+        //             wallMove += "Y";
+        //             break;
+        //         case 7:
+        //             wallMove += "Z";
+        //             break;
+        //     }
+        //
+        //     var orientation = position.Orientation == WallOrientation.Horizontal ? "h" : "v";
+        //     wallMove += position.TopLeftCell.Y + orientation;
+        //     
+        //     return wallMove;
+        // }
 
         bool CheckWin(Field position, int color)
         {
@@ -53,8 +129,9 @@ namespace AI
             return playerPosition.Y == 8;
         }
 
-        int Sev(Field position)
+        int Sev(Field position, int color)
         {
+            int res;
             int player1MinLenght = 0;
             int player2MinLenght = 0;
             foreach (CellPosition winCell in GameConstants.Player1WinLine)
@@ -64,16 +141,22 @@ namespace AI
                 {
                     player1MinLenght = lenght;
                 }
-            }
+            }   
             foreach (CellPosition winCell in GameConstants.Player2WinLine)
             {
-                int lenght = _aStar.FindPath(position.Player2Position, winCell, position).Count;
-                if (lenght < player2MinLenght)
-                {
-                    player2MinLenght = lenght;
-                }
-            }
-            return 1;
+                  int lenght = _aStar.FindPath(position.Player2Position, winCell, position).Count;
+                  if (lenght < player2MinLenght)
+                  {
+                      player2MinLenght = lenght;
+                  }
+            }  
+            if (color == 1)
+            {
+                res = player1MinLenght - player2MinLenght + position.Player1WallAmount; //need theory testing
+                
+            } else res = player2MinLenght - player1MinLenght + position.Player2WallAmount;
+            
+            return  res;
         }
     }
     

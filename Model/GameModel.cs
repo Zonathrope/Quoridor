@@ -10,8 +10,7 @@ namespace Model
     {
         public CellPosition Player1Position => _field.Player1Position;
         public CellPosition Player2Position => _field.Player2Position;
-        public int Player1WallAmount { get; private set; }
-        public int Player2WallAmount { get; private set; }
+        
         public List<WallPosition> PlacedWalls => _field.PlacedWalls;
 
         private Field _field;
@@ -34,8 +33,7 @@ namespace Model
             //AttachEventsToPlayer(player1);
             //AttachEventsToPlayer(player2);
             _field = new Field();
-            Player1WallAmount = GameConstants.StartWallAmount;
-            Player2WallAmount = GameConstants.StartWallAmount;
+            
         }
 
         private void AttachEventsToPlayer(IPlayerView player)
@@ -51,8 +49,6 @@ namespace Model
         {
             _field = new Field();
             _currentPlayer = PlayerNumber.First;
-            Player1WallAmount = GameConstants.StartWallAmount;
-            Player2WallAmount = GameConstants.StartWallAmount;
             GameStartedEvent?.Invoke();
         }
 
@@ -65,8 +61,8 @@ namespace Model
         {
             if (!IsPlayersTurn(playerNumber))
                 throw new AnotherPlayerTurnException($"It is player {_currentPlayer} turn");
-
-            if (!GetCellsAvailableForMove(playerNumber).Contains(newPosition))
+            
+            if (!_field.GetCellsForMove(playerNumber).Contains(newPosition))
             {
                 throw new IncorrectPlayerPositionException(
                     $"Can't move from {GetPlayerPosition(playerNumber)} to {newPosition}");
@@ -87,20 +83,7 @@ namespace Model
             return playerNumber == _currentPlayer;
         }
 
-        public List<CellPosition> GetCellsAvailableForMove(PlayerNumber playerNumber)
-        {
-            CellPosition playerCurrentPosition = GetPlayerPosition(playerNumber);
-            CellPosition opponentPosition = GetPlayerPosition(GetOppositePlayerNumber(playerNumber));
-            List<CellPosition> reachableCells = _field.GetReachableNeighbours(playerCurrentPosition);
-            if (reachableCells.Contains(opponentPosition))
-            {
-                reachableCells.Remove(opponentPosition);
-                reachableCells.AddRange(
-                    GetCellsAvailableFromFaceToFaceSituation(playerCurrentPosition, opponentPosition));
-            }
-
-            return reachableCells;
-        }
+        
 
         private static PlayerNumber GetOppositePlayerNumber(PlayerNumber playerNumber)
         {
@@ -122,28 +105,7 @@ namespace Model
         /// </summary>
         /// <returns>Cells available for player to move due face to face situation.
         /// Don't include cells available by regular rules</returns>
-        private List<CellPosition> GetCellsAvailableFromFaceToFaceSituation(
-            CellPosition playerPosition, CellPosition opponentPosition)
-        {
-            var availableCells = new List<CellPosition>();
-            int positionDifferenceX = opponentPosition.X - playerPosition.X;
-            int positionDifferenceY = opponentPosition.Y - playerPosition.Y;
-            // Cell behind opponent is acquired by finding next cell from player position in opponents direction
-            CellPosition cellBehindOpponent = opponentPosition.Shifted(positionDifferenceX, positionDifferenceY);
-            if (_field.WayBetweenExists(opponentPosition, cellBehindOpponent))
-            {
-                availableCells.Add(cellBehindOpponent);
-            }
-            else
-            {
-                List<CellPosition> opponentNeighbours = _field.GetReachableNeighbours(opponentPosition);
-                opponentNeighbours.Remove(playerPosition);
-                opponentNeighbours.Remove(cellBehindOpponent);
-                availableCells.AddRange(opponentNeighbours);
-            }
-
-            return availableCells;
-        }
+        
 
         private void SwitchCurrentPlayer()
         {
@@ -175,25 +137,18 @@ namespace Model
             if (!PlayerHasWalls(playerPlacing))
                 throw new NoWallsLeftException($"Player {playerPlacing} has no walls left");
 
-            _field.PlaceWall(wallPosition);
-            DecrementPlayerWallAmount(playerPlacing);
+            _field.PlaceWall(wallPosition, playerPlacing);
             PlayerPlacedWallEvent?.Invoke(new PlayerPlacedWallEventArgs(playerPlacing, wallPosition));
             SwitchCurrentPlayer();
         }
 
         private bool PlayerHasWalls(PlayerNumber playerNumber)
         {
-            int wallAmount = playerNumber == PlayerNumber.First ? Player1WallAmount : Player2WallAmount;
+            int wallAmount = playerNumber == PlayerNumber.First ? _field.Player1WallAmount : _field.Player2WallAmount;
             return wallAmount != 0;
         }
 
-        private void DecrementPlayerWallAmount(PlayerNumber playerNumber)
-        {
-            if (playerNumber == PlayerNumber.First)
-                Player1WallAmount--;
-            else
-                Player2WallAmount--;
-        }
+        
     }
 }
 
