@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "Model\Model.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelTest", "ModelTest\ModelTest.csproj", "{A7FAD2E1-4CEF-4456-9DDD-2A45AF82B318}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuoridorWithAIController", "QuoridorWithAIController\QuoridorWithAIController.csproj", "{C5FE9D87-7717-4E39-9F50-41B6A270FA6E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -38,5 +40,17 @@ Global
 		{A7FAD2E1-4CEF-4456-9DDD-2A45AF82B318}.Release|x64.Build.0 = Release|Any CPU
 		{A7FAD2E1-4CEF-4456-9DDD-2A45AF82B318}.Release|x86.ActiveCfg = Release|Any CPU
 		{A7FAD2E1-4CEF-4456-9DDD-2A45AF82B318}.Release|x86.Build.0 = Release|Any CPU
+		{C5FE9D87-7717-4E39-9F50-41B6A270FA6E}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{C5FE9D87-7717-4E39-9F50-41B6A270FA6E}.Debug|ARM.Build.0 = Debug|Any CPU
+		{C5FE9D87-7717-4E39-9F50-41B6A270FA6E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C5FE9D87-7717-4E39-9F50-41B6A270FA6E}.Debug|x64.Build.0 = Debug|Any CPU
+		{C5FE9D87-7717-4E39-9F50-41B6A270FA6E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C5FE9D87-7717-4E39-9F50-41B6A270FA6E}.Debug|x86.Build.0 = Debug|Any CPU
+		{C5FE9D87-7717-4E39-9F50-41B6A270FA6E}.Release|ARM.ActiveCfg = Release|Any CPU
+		{C5FE9D87-7717-4E39-9F50-41B6A270FA6E}.Release|ARM.Build.0 = Release|Any CPU
+		{C5FE9D87-7717-4E39-9F50-41B6A270FA6E}.Release|x64.ActiveCfg = Release|Any CPU
+		{C5FE9D87-7717-4E39-9F50-41B6A270FA6E}.Release|x64.Build.0 = Release|Any CPU
+		{C5FE9D87-7717-4E39-9F50-41B6A270FA6E}.Release|x86.ActiveCfg = Release|Any CPU
+		{C5FE9D87-7717-4E39-9F50-41B6A270FA6E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
