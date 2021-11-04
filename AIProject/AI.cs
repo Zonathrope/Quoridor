@@ -8,6 +8,7 @@ namespace AIProject
 {
     public class Ai
     {
+        Field _bestPosition = null;
         private readonly AStar _aStar = new AStar();
         public Field Negamax(Field position, int depth, int alpha, int beta, int color)
         {
@@ -19,18 +20,19 @@ namespace AIProject
             var childPositions = GeneratePositions(position, color);
             //childPositions = orderPositions(childPositions);
             var value = -999;
-            Field bestPosition = null;
+            
             foreach (Field childPosition in childPositions)
             {
                 value = Math.Max(value, -Negamax(childPosition, depth - 1, -alpha, -beta, -color).PositionValue);
                 position.PositionValue = value;
-                if (bestPosition == null || bestPosition.PositionValue <= value) {
-                    bestPosition = position;
+                if (_bestPosition == null || _bestPosition.PositionValue < value) {
+                    _bestPosition = new Field(childPosition);
+                    _bestPosition.PositionValue = value;
                 }
                 alpha = Math.Max(alpha, value);
                 if (alpha >= beta) break;
             }
-            return bestPosition;
+            return _bestPosition;
         }
 
         private LinkedList<Field> OrderPositions(object childPositions)
@@ -76,7 +78,7 @@ namespace AIProject
                 Field newPosition = new Field(position);
                 newPosition.MovePlayer(currentPlayer, availablePositions);
                 newPosition.Move = new MovePlayer(availablePositions);
-                possiblePositions.AddFirst(newPosition);
+                possiblePositions.AddLast(newPosition);
             }
 
             return possiblePositions;
@@ -131,9 +133,8 @@ namespace AIProject
 
         int Sev(Field position, int color)
         {
-            int res;
-            int player1MinLenght = 999;
-            int player2MinLenght = 999;
+            int player1MinLenght = 99;
+            int player2MinLenght = 99;
             foreach (CellPosition winCell in GameConstants.Player1WinLine)
             {
                 int lenght = _aStar.FindPath(position.Player1Position, winCell, position).Count;

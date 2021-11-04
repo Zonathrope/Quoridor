@@ -21,8 +21,10 @@ namespace Controller
             _playerNumber = PlayerNumber.First;
             _gameModel.StartNewGame();
             Ai skynet = new Ai(); 
-            Console.WriteLine(skynet.Negamax(_gameModel.GetField(), 1,-999, +999, 1).Move.ToString());
+            Console.WriteLine(skynet.Negamax(_gameModel.GetField(), 2,-999, +999, 1).Move.ToString());
             //Console.WriteLine("123");
+            // Field test = new Field(_gameModel.GetField());
+            // test.Move = new MovePlayer(new CellPosition(123,123));
             Console.ReadLine();
             _drawer.ShowStartInfo();
             ChooseGameMode();
