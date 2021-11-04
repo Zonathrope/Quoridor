@@ -152,9 +152,9 @@ namespace AI
             }  
             if (color == 1)
             {
-                res = (10 - player1MinLenght) - (10 - player2MinLenght) - (10 - position.Player1WallAmount); //need theory testing
+                res = (position.Player1WallAmount + (10 - player1MinLenght)) - (position.Player2WallAmount + (10 - player2MinLenght)); //need theory testing
                 
-            } else res = (10 - player2MinLenght) - (10 - player1MinLenght) - (10 - position.Player2WallAmount);
+            } else res = (position.Player2WallAmount + (10 - player2MinLenght)) - (position.Player1WallAmount + (10 - player1MinLenght));
             
             return  res;
         }
