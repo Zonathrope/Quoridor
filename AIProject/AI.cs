@@ -84,43 +84,6 @@ namespace AIProject
             return possiblePositions;
         }
 
-        // string StringifyWallMove(WallPosition position)
-        // {
-        //     string wallMove = "";
-        //     switch (position.TopLeftCell.X)
-        //     {
-        //         case 0:
-        //             wallMove += "S";
-        //             break;
-        //         case 1:
-        //             wallMove += "T";
-        //             break;
-        //         case 2:
-        //             wallMove += "U";
-        //             break;
-        //         case 3:
-        //             wallMove += "V";
-        //             break;
-        //         case 4:
-        //             wallMove += "W";
-        //             break;
-        //         case 5:
-        //             wallMove += "X";
-        //             break;
-        //         case 6:
-        //             wallMove += "Y";
-        //             break;
-        //         case 7:
-        //             wallMove += "Z";
-        //             break;
-        //     }
-        //
-        //     var orientation = position.Orientation == WallOrientation.Horizontal ? "h" : "v";
-        //     wallMove += position.TopLeftCell.Y + orientation;
-        //     
-        //     return wallMove;
-        // }
-
         bool CheckWin(Field position, int color)
         {
             CellPosition playerPosition = color == 1 ? position.Player1Position : position.Player2Position;
