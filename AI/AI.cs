@@ -37,7 +37,6 @@ namespace AI
         {
             throw new System.NotImplementedException();
         }
-
         private LinkedList<Field> GeneratePositions(Field position, int color)
         {
             PlayerNumber currentPlayer = color == 1 ? PlayerNumber.First : PlayerNumber.Second;
@@ -54,7 +53,7 @@ namespace AI
                             WallPosition wall1Position = new WallPosition(WallOrientation.Vertical, new CellPosition(i, j));
                             newPosition1.PlaceWall(wall1Position, currentPlayer);
                             newPosition1.Move = new PlaceWall(wall1Position);
-                            possiblePositions.AddLast(newPosition1);
+                            possiblePositions.AddFirst(newPosition1);
                         }
                         catch (Exception e) { }
                         try
@@ -63,7 +62,7 @@ namespace AI
                             WallPosition wall2Position = new WallPosition(WallOrientation.Horizontal, new CellPosition(i,j));
                             newPosition2.PlaceWall(wall2Position, currentPlayer);
                             newPosition2.Move = new PlaceWall(wall2Position);
-                            possiblePositions.AddLast(newPosition2);
+                            possiblePositions.AddFirst(newPosition2);
                         }
                         catch (Exception e) { }
                         
@@ -77,6 +76,7 @@ namespace AI
                 Field newPosition = new Field(position);
                 newPosition.MovePlayer(currentPlayer, availablePositions);
                 newPosition.Move = new MovePlayer(availablePositions);
+                possiblePositions.AddLast(newPosition);
             }
 
             return possiblePositions;
@@ -152,9 +152,9 @@ namespace AI
             }  
             if (color == 1)
             {
-                res = player1MinLenght - player2MinLenght + position.Player1WallAmount; //need theory testing
+                res = (10 - player1MinLenght) - (10 - player2MinLenght) - (10 - position.Player1WallAmount); //need theory testing
                 
-            } else res = player2MinLenght - player1MinLenght + position.Player2WallAmount;
+            } else res = (10 - player2MinLenght) - (10 - player1MinLenght) - (10 - position.Player2WallAmount);
             
             return  res;
         }
