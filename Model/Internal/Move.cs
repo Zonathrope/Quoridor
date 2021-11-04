@@ -13,6 +13,11 @@ namespace Model.Internal
         {
             Position = position;
         }
+
+        public override string ToString()
+        {
+            return Position.X + " " + Position.Y;
+        }
     }
 
     public class PlaceWall : Move
@@ -21,6 +26,11 @@ namespace Model.Internal
         public PlaceWall(WallPosition position)
         {
             Position = position;
+        }
+        
+        public override string ToString()
+        {
+            return Position.TopLeftCell.X + " " + Position.TopLeftCell.Y + " " + Position.Orientation;
         }
     }
 }

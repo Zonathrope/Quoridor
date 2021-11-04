@@ -8,7 +8,7 @@ namespace Model.Internal
     public class Field
     {
         public int PositionValue;
-        public Move Move;
+        public Move Move = new PlaceWall(new WallPosition(WallOrientation.Vertical, new CellPosition(99,99)));
         public CellPosition Player1Position { get; private set; }
         public CellPosition Player2Position { get; private set; }
         internal FieldCell[,] FieldMatrix => _fieldMatrix;
@@ -21,12 +21,12 @@ namespace Model.Internal
 
         public Field(Field other) {
             this.Move = other.Move;
-            this.Player1Position = other.Player1Position;
-            this.Player2Position = other.Player2Position;
+            this.Player1Position = new CellPosition(other.Player1Position.X, other.Player1Position.Y);
+            this.Player2Position = new CellPosition(other.Player2Position.X, other.Player2Position.Y);
             this.Player1WallAmount = other.Player1WallAmount;
             this.Player2WallAmount = other.Player2WallAmount;
-            this._fieldMatrix = other._fieldMatrix;
-            this.PlacedWalls = other.PlacedWalls;
+            this._fieldMatrix = CopyFieldMatrix(other._fieldMatrix);
+            this.PlacedWalls = new List<WallPosition>(other.PlacedWalls);
         }
         public Field()
         {
@@ -50,6 +50,29 @@ namespace Model.Internal
             {
                 AddNeighboursToCell(cell);
             }
+        }
+        private FieldCell[,] CopyFieldMatrix(FieldCell[,] oldField)
+        {
+            FieldCell[,] newMatrix = new FieldCell[9,9];
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    newMatrix[j, i] = new FieldCell(i,j);
+                    
+                }
+            }
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    foreach (FieldCell neighbour in oldField[j,i].ReachableNeighbours)
+                    {
+                        newMatrix[j, i].ReachableNeighbours.Add(newMatrix[neighbour.Position.Y,neighbour.Position.X]);
+                    }
+                }
+            }
+            return newMatrix;
         }
 
         /// <summary>Add cell neighbours as reachable neighbours</summary>
@@ -138,6 +161,11 @@ namespace Model.Internal
                 throw new WallPlaceTakenException(
                     $"There is already wall at {newWallPosition.TopLeftCell}");
             }
+            if (OverlapsWithPlacedWalls(newWallPosition))
+            {
+                throw new WallPlaceTakenException(
+                    $"There is already wall at {newWallPosition.TopLeftCell}");
+            }
             BlockWays(newWallPosition);
             if (!BothPlayersHaveWayToLastLine())
             {
@@ -145,6 +173,7 @@ namespace Model.Internal
                 throw new WallBlocksPathForPlayerException(
                     $"Wall at {newWallPosition.TopLeftCell} blocks way for players");
             }
+            
             DecrementPlayerWallAmount(playerPlacing);
             PlacedWalls.Add(newWallPosition);
         }
@@ -239,7 +268,47 @@ namespace Model.Internal
         {
             return cell == Player1Position || cell == Player2Position;
         }
+        
+        private bool OverlapsWithPlacedWalls(WallPosition newWall)
+        {
+            if (PlacedWalls.Any(newWall.IsEqualByPlace))
+                return true;
+            if (newWall.Orientation == WallOrientation.Horizontal)
+            {
+                foreach (WallPosition placedWall in PlacedWalls)
+                {
+                    CellPosition cellToRight = null;
+                    CellPosition cellToLeft = null;
+                    try
+                    {
+                        cellToRight = placedWall.TopLeftCell.Shifted(1, 0);
+                        cellToLeft = placedWall.TopLeftCell.Shifted(-1, 0);
+                    }
+                    catch (ArgumentOutOfRangeException e){}
+                    if (newWall.TopLeftCell == cellToLeft || newWall.TopLeftCell == cellToRight)
+                        return true;
+                }
+            }
+            else
+            {
+                foreach (WallPosition placedWall in PlacedWalls)
+                {
+                    CellPosition cellAbove = null;
+                    CellPosition cellBelow = null;
+                    try
+                    {
+                        cellAbove = placedWall.TopLeftCell.Shifted(0, 1);
+                        cellBelow = placedWall.TopLeftCell.Shifted(0, -1);
+                    }
+                    catch (ArgumentOutOfRangeException e){}
 
+                    if (newWall.TopLeftCell == cellAbove || newWall.TopLeftCell == cellBelow)
+                        return true;
+                }
+            }
+
+            return false;
+        }
         public List<CellPosition> GetReachableNeighbours(CellPosition cellPosition)
         {
             return CellByPosition(cellPosition)

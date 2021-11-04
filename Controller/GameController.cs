@@ -4,6 +4,7 @@ using AIProject;
 using Model;
 using Model.DataTypes;
 using Controller.Constants;
+using Model.Internal;
 
 namespace Controller
 {
@@ -20,8 +21,7 @@ namespace Controller
             _playerNumber = PlayerNumber.First;
             _gameModel.StartNewGame();
             Ai skynet = new Ai(); 
-            Console.WriteLine(skynet.Negamax(_gameModel.GetField(), 1,-999, +999, 1).Move);
-            
+            Console.WriteLine(skynet.Negamax(_gameModel.GetField(), 1,-999, +999, 1).Move.ToString());
             //Console.WriteLine("123");
             Console.ReadLine();
             _drawer.ShowStartInfo();

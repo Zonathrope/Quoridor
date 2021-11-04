@@ -132,8 +132,8 @@ namespace AIProject
         int Sev(Field position, int color)
         {
             int res;
-            int player1MinLenght = 0;
-            int player2MinLenght = 0;
+            int player1MinLenght = 999;
+            int player2MinLenght = 999;
             foreach (CellPosition winCell in GameConstants.Player1WinLine)
             {
                 int lenght = _aStar.FindPath(position.Player1Position, winCell, position).Count;
@@ -152,11 +152,9 @@ namespace AIProject
             }  
             if (color == 1)
             {
-                res = (position.Player1WallAmount + (10 - player1MinLenght)) - (position.Player2WallAmount + (10 - player2MinLenght)); //need theory testing
-                
-            } else res = (position.Player2WallAmount + (10 - player2MinLenght)) - (position.Player1WallAmount + (10 - player1MinLenght));
-            
-            return  res;
+                return (position.Player1WallAmount + (8 - player1MinLenght)) - (position.Player2WallAmount + (8 - player2MinLenght)); //need theory testing
+            } 
+            return (position.Player2WallAmount + (8 - player2MinLenght)) - (position.Player1WallAmount + (8 - player1MinLenght));
         }
     }
     

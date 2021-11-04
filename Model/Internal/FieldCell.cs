@@ -6,7 +6,7 @@ namespace Model.Internal
     public class FieldCell
     {
         public CellPosition Position { get; }
-        public List<FieldCell> ReachableNeighbours { get; } = new ();
+        public List<FieldCell> ReachableNeighbours { get; set; } = new ();
 
         public FieldCell(int x, int y)
         {
