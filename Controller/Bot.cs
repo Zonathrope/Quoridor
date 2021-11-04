@@ -13,13 +13,13 @@ namespace Controller
                 switch (botChoose)
                 {
                     case 1:
-                        var move = rng.Next(1, model.GetCellsAvailableForMove(PlayerNumber.Second).Count);
+                        var move = rng.Next(1, model.GetField().GetCellsForMove(PlayerNumber.Second).Count);
                         model.MovePlayer(PlayerNumber.Second, new CellPosition(
-                            model.GetCellsAvailableForMove(PlayerNumber.Second)[move - 1].X,
-                            model.GetCellsAvailableForMove(PlayerNumber.Second)[move - 1].Y)
+                            model.GetField().GetCellsForMove(PlayerNumber.Second)[move - 1].X,
+                            model.GetField().GetCellsForMove(PlayerNumber.Second)[move - 1].Y)
                         );
                         break;
-                    case 2 when model.Player2WallAmount > 0:
+                    case 2 when model.GetField().Player2WallAmount > 0:
                         while (true)
                         {
                             try

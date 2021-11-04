@@ -71,7 +71,14 @@ namespace Model.Internal
             {
                 for (int j = 0; j < 9; j++)
                 {
-                    newMatrix[j, i].Position = new CellPosition(i,j);
+                    newMatrix[j, i] = new AStarCell(new CellPosition(i,j));
+                    
+                }
+            }
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
                     foreach (FieldCell neighbour in fieldMatrix[j,i].ReachableNeighbours)
                     {
                         newMatrix[j, i].ReachableNeighbours.Add(newMatrix[neighbour.Position.Y,neighbour.Position.X]);
@@ -104,6 +111,7 @@ namespace Model.Internal
 
         public bool WayExists(CellPosition start, CellPosition end, Field field)
         {
+            _currentField = ConvertField(field.FieldMatrix);
             AStarCell startCell = _currentField[start.Y, start.X];
             AStarCell endCell = _currentField[end.Y, end.X];
             HashSet<AStarCell> openSet = new HashSet<AStarCell>();

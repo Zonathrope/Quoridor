@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AI
+namespace AIProject
 {
     class Program
     {

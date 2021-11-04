@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
+using AIProject;
 using Model;
 using Model.DataTypes;
+using Controller.Constants;
 
 namespace Controller
 {
@@ -16,8 +18,13 @@ namespace Controller
         public void StartGame()
         {
             _playerNumber = PlayerNumber.First;
-            _drawer.ShowStartInfo();
             _gameModel.StartNewGame();
+            Ai skynet = new Ai(); 
+            Console.WriteLine(skynet.Negamax(_gameModel.GetField(), 1,-999, +999, 1).Move);
+            
+            //Console.WriteLine("123");
+            Console.ReadLine();
+            _drawer.ShowStartInfo();
             ChooseGameMode();
         }
 
@@ -121,8 +128,8 @@ namespace Controller
                     UpdateBoard();
                     _drawer.DrawBoard(GameBoard);
                     var isPlayerHasWalls = _playerNumber == PlayerNumber.First
-                        ? _gameModel.Player1WallAmount > 0
-                        : _gameModel.Player2WallAmount > 0;
+                        ? _gameModel.GetField().Player1WallAmount > 0
+                        : _gameModel.GetField().Player2WallAmount > 0;
                     _drawer.DrawTurnOptions(isPlayerHasWalls);
                     var input = ValidateInput();
                     switch (input[0])
@@ -145,11 +152,11 @@ namespace Controller
                 try
                 {
                     _drawer.DrawBoard(GameBoard);
-                    _drawer.DrawMoveOptions(_gameModel.GetCellsAvailableForMove(_playerNumber));
+                    _drawer.DrawMoveOptions(_gameModel.GetField().GetCellsForMove(_playerNumber));
                     var input = ValidateInput();
                     _gameModel.MovePlayer(_playerNumber, new CellPosition(
-                        _gameModel.GetCellsAvailableForMove(_playerNumber)[Int32.Parse(input[0]) - 1].X,
-                        _gameModel.GetCellsAvailableForMove(_playerNumber)[Int32.Parse(input[0]) - 1].Y)
+                        _gameModel.GetField().GetCellsForMove(_playerNumber)[Int32.Parse(input[0]) - 1].X,
+                        _gameModel.GetField().GetCellsForMove(_playerNumber)[Int32.Parse(input[0]) - 1].Y)
                     );
                     _playerNumber = _playerNumber == PlayerNumber.First ? PlayerNumber.Second : PlayerNumber.First;
                     HandleTurn();

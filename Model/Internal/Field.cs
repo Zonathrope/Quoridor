@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AI;
 using Model.DataTypes;
 
 namespace Model.Internal
@@ -24,8 +23,10 @@ namespace Model.Internal
             this.Move = other.Move;
             this.Player1Position = other.Player1Position;
             this.Player2Position = other.Player2Position;
+            this.Player1WallAmount = other.Player1WallAmount;
+            this.Player2WallAmount = other.Player2WallAmount;
             this._fieldMatrix = other._fieldMatrix;
-            this.PlacedWalls = PlacedWalls;
+            this.PlacedWalls = other.PlacedWalls;
         }
         public Field()
         {

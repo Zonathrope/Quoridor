@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AIProject\AIProject.csproj" />
     <ProjectReference Include="..\Model\Model.csproj" />
   </ItemGroup>
 

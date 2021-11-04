@@ -4,7 +4,7 @@ using Model;
 using Model.DataTypes;
 using Model.Internal;
 
-namespace AI
+namespace AIProject
 {
     public class Ai
     {
@@ -76,7 +76,7 @@ namespace AI
                 Field newPosition = new Field(position);
                 newPosition.MovePlayer(currentPlayer, availablePositions);
                 newPosition.Move = new MovePlayer(availablePositions);
-                possiblePositions.AddLast(newPosition);
+                possiblePositions.AddFirst(newPosition);
             }
 
             return possiblePositions;

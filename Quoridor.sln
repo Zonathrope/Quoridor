@@ -6,7 +6,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Model", "Model\Model.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Controller", "Controller\Controller.csproj", "{450CE554-9640-4589-8BC5-DA705E10821C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AI", "AI\AI.csproj", "{77CCE1CE-0EEE-4341-B86F-5B0DA250B759}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIProject", "AIProject\AIProject.csproj", "{77CCE1CE-0EEE-4341-B86F-5B0DA250B759}"
 EndProject
 Global
 		GlobalSection(SolutionConfigurationPlatforms) = preSolution

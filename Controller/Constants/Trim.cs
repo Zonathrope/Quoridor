@@ -1,7 +1,7 @@
-﻿namespace Controller
+﻿namespace Controller.Constants
 {
     public static class Trim
     {
-        public static readonly char[] trimValues = {' '};
+        public static readonly char[] TrimValues = {' '};
     }
 }

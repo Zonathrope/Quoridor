@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-namespace AI
+
+namespace AIProject
 
 {
     public class TreeNode<T>

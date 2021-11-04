@@ -1,4 +1,4 @@
-﻿namespace Controller
+﻿namespace Controller.Constants
 {
     public static class DrawConstants
     {
