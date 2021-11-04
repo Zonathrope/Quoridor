@@ -13,40 +13,12 @@ namespace QuoridorWithAIController
             throw new NotImplementedException();
         }
     }
-    
-    internal class ViewMock : IView
-    {
-        public void HandleGameStartedEvent()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void HandleGameEndedEvent()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void HandlePlayerWonEvent(PlayerNumber winnerNumber)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void HandlePlayerMovedEvent(PlayerNumber playerNumber, CellPosition newPosition, bool isJump = false)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void HandlePlayerPlacedWallEvent(PlayerNumber playerPlacing, WallPosition wallPosition)
-        {
-            throw new NotImplementedException();
-        }
-    }
 
     internal class Controller
     {
         //TODO make more flexible
         private IAI _ai = new AIMock();
-        private IView _view = new ViewMock();
+        private IView _view = new View.View();
         private IGameModel _gameModel;
         private PlayerNumber _aiPlayerNumber;
 
