@@ -48,9 +48,9 @@ namespace QuoridorWithAIController
         private IAI _ai = new AIMock();
         private IView _view = new ViewMock();
         private IGameModel _gameModel;
-        private PlayerNumber _AINumber;
+        private PlayerNumber _aiPlayerNumber;
 
-        private readonly Dictionary<Char, int> letterToXCordinate = new()
+        private readonly Dictionary<char, int> _letterToXCoordinate = new()
         {
             {'A', 0}, {'B', 1}, {'C', 2}, {'D', 3}, {'E', 4}, {'F', 5}, {'G', 6}, {'H', 7}, {'I', 8},
             {'S', 0}, {'T', 1}, {'U', 2}, {'V', 3}, {'W', 4}, {'X', 5}, {'Y', 6}, {'Z', 7}
@@ -63,12 +63,12 @@ namespace QuoridorWithAIController
 
         public void Start()
         {
-            string startInput = Console.ReadLine();
-            _AINumber = startInput == "black" ? PlayerNumber.First : PlayerNumber.Second;
-            if (_AINumber == PlayerNumber.Second)
+            string playingSide = Console.ReadLine();
+            _aiPlayerNumber = playingSide == "black" ? PlayerNumber.First : PlayerNumber.Second;
+            if (_aiPlayerNumber == PlayerNumber.Second)
             {
                 string opponentInput = Console.ReadLine();
-                HandleOpponentMove(opponentInput);
+                HandleOpponentInput(opponentInput);
             }
 
             while (!_gameModel.GameEnded)
@@ -76,7 +76,7 @@ namespace QuoridorWithAIController
                 Object move = _ai.GetMove();
                 HandleAIMove(move);
                 string opponentInput = Console.ReadLine();
-                HandleOpponentMove(opponentInput);
+                HandleOpponentInput(opponentInput);
             }
         }
 
@@ -85,12 +85,12 @@ namespace QuoridorWithAIController
             throw new NotImplementedException();
         }
 
-        private void HandleOpponentMove(string move)
+        private void HandleOpponentInput(string move)
         {
             string[] moveParts = move.Split(' ');
             string command = moveParts[0];
             string location = moveParts[1];
-            PlayerNumber opponentNumber = GetOppositePlayer(_AINumber);
+            PlayerNumber opponentNumber = GetOppositePlayer(_aiPlayerNumber);
             if (command is "move" or "jump")
                 HandleOpponentMovePlayer(opponentNumber, location);
             else
@@ -103,27 +103,27 @@ namespace QuoridorWithAIController
             _gameModel.MovePlayer(opponentNumber, newPosition, DrawInView.No);
         }
 
-        private CellPosition ParseCellPosition(string location)
+        private CellPosition ParseCellPosition(string coordinates)
         {
-            char letter = location[0];
-            string number = location[1].ToString();
-            int x = letterToXCordinate[letter];
+            char letter = coordinates[0];
+            string number = coordinates[1].ToString();
+            int x = _letterToXCoordinate[letter];
             // -1 to shift to zero indexing
             int y = Int32.Parse(number) - 1;
             return new CellPosition(x, y);
         }
 
-        private void HandleOpponentPlaceWall(PlayerNumber opponentNumber, string location)
+        private void HandleOpponentPlaceWall(PlayerNumber opponentNumber, string wallCoordinates)
         {
-            WallPosition wallPosition = ParseWallPosition(location);
+            WallPosition wallPosition = ParseWallPosition(wallCoordinates);
             _gameModel.PlaceWall(opponentNumber, wallPosition);
         }
 
-        private WallPosition ParseWallPosition(string location)
+        private WallPosition ParseWallPosition(string wallCoordinates)
         {
-            string cellPositionString = location.Substring(0, 2);
-            CellPosition cellPosition = ParseCellPosition(cellPositionString);
-            char wallOrientationChar = location[2];
+            string coordinates = wallCoordinates.Substring(0, 2);
+            CellPosition cellPosition = ParseCellPosition(coordinates);
+            char wallOrientationChar = wallCoordinates[2];
             WallOrientation wallOrientation =
                 wallOrientationChar == 'h'
                     ? WallOrientation.Horizontal
