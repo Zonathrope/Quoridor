@@ -7,7 +7,6 @@ namespace Model.Internal
 {
     public class Field
     {
-        public int PositionValue;
         public Move Move = new PlaceWall(new WallPosition(WallOrientation.Vertical, new CellPosition(99,99)));
         public CellPosition Player1Position { get; private set; }
         public CellPosition Player2Position { get; private set; }
@@ -19,7 +18,8 @@ namespace Model.Internal
         public int Player1WallAmount { get; private set; }
         public int Player2WallAmount { get; private set; }
 
-        public Field(Field other) {
+        public Field(Field other)
+        {
             this.Move = other.Move;
             this.Player1Position = new CellPosition(other.Player1Position.X, other.Player1Position.Y);
             this.Player2Position = new CellPosition(other.Player2Position.X, other.Player2Position.Y);
@@ -54,17 +54,17 @@ namespace Model.Internal
         private FieldCell[,] CopyFieldMatrix(FieldCell[,] oldField)
         {
             FieldCell[,] newMatrix = new FieldCell[9,9];
-            for (int i = 0; i < 9; i++)
+            for (int j = 0; j < 9; j++)
             {
-                for (int j = 0; j < 9; j++)
+                for (int i = 0; i < 9; i++)
                 {
                     newMatrix[j, i] = new FieldCell(i,j);
                     
                 }
             }
-            for (int i = 0; i < 9; i++)
+            for (int j = 0; j < 9; j++)
             {
-                for (int j = 0; j < 9; j++)
+                for (int i = 0; i < 9; i++)
                 {
                     foreach (FieldCell neighbour in oldField[j,i].ReachableNeighbours)
                     {
@@ -351,19 +351,22 @@ namespace Model.Internal
             int positionDifferenceX = opponentPosition.X - playerPosition.X;
             int positionDifferenceY = opponentPosition.Y - playerPosition.Y;
             // Cell behind opponent is acquired by finding next cell from player position in opponents direction
-            CellPosition cellBehindOpponent = opponentPosition.Shifted(positionDifferenceX, positionDifferenceY);
-            if (WayBetweenExists(opponentPosition, cellBehindOpponent))
+            if (opponentPosition.X is < 8 and > 0 && opponentPosition.Y is < 8 and > 0)
             {
-                availableCells.Add(cellBehindOpponent);
+                CellPosition cellBehindOpponent = opponentPosition.Shifted(positionDifferenceX, positionDifferenceY);
+                if (WayBetweenExists(opponentPosition, cellBehindOpponent))
+                {
+                    availableCells.Add(cellBehindOpponent);
+                }
+                else
+                {
+                    List<CellPosition> opponentNeighbours = GetReachableNeighbours(opponentPosition);
+                    opponentNeighbours.Remove(playerPosition);
+                    opponentNeighbours.Remove(cellBehindOpponent);
+                    availableCells.AddRange(opponentNeighbours);
+                }  
             }
-            else
-            {
-                List<CellPosition> opponentNeighbours = GetReachableNeighbours(opponentPosition);
-                opponentNeighbours.Remove(playerPosition);
-                opponentNeighbours.Remove(cellBehindOpponent);
-                availableCells.AddRange(opponentNeighbours);
-            }
-
+            
             reachableCells.AddRange(availableCells);
             return reachableCells;
         }

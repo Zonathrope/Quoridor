@@ -4,6 +4,8 @@ namespace Model.Internal
 {
     public abstract class Move
     {
+        public int MoveValue;
+        
     }
 
     public class MovePlayer : Move
@@ -14,6 +16,10 @@ namespace Model.Internal
             Position = position;
         }
 
+        public MovePlayer(MovePlayer other)
+        {
+            this.Position = new CellPosition(other.Position.X, other.Position.Y);
+        }
         public override string ToString()
         {
             return Position.X + " " + Position.Y;
@@ -27,7 +33,12 @@ namespace Model.Internal
         {
             Position = position;
         }
-        
+
+        public PlaceWall(PlaceWall other)
+        {
+            this.Position = new WallPosition(other.Position.Orientation,
+                new CellPosition(other.Position.TopLeftCell.X, other.Position.TopLeftCell.Y));
+        }
         public override string ToString()
         {
             return Position.TopLeftCell.X + " " + Position.TopLeftCell.Y + " " + Position.Orientation;

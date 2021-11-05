@@ -8,79 +8,93 @@ namespace AIProject
 {
     public class Ai
     {
-        Field _bestPosition = null;
+        public Ai(int startDepth)
+        {
+            _startDepth = startDepth;
+        }
         private readonly AStar _aStar = new AStar();
-        public Field Negamax(Field position, int depth, int alpha, int beta, int color)
+        private readonly int _startDepth;
+        public Move Negamax(Field position, int depth, int alpha, int beta, int color)
         {
             if (depth == 0 || CheckWin(position, color))
             {
-                position.PositionValue = Sev(position, color);
-                return position;
+                position.Move.MoveValue = Sev(position, color);
+                return position.Move;
             }
-            var childPositions = GeneratePositions(position, color);
+            var childPositions = GeneratePositions(position, color, depth);
             //childPositions = orderPositions(childPositions);
             var value = -999;
             
             foreach (Field childPosition in childPositions)
             {
-                value = Math.Max(value, -Negamax(childPosition, depth - 1, -alpha, -beta, -color).PositionValue);
-                position.PositionValue = value;
-                if (_bestPosition == null || _bestPosition.PositionValue < value) {
-                    _bestPosition = new Field(childPosition);
-                    _bestPosition.PositionValue = value;
+                int negamaxRes = -(Negamax(childPosition, depth - 1, -beta, -alpha, -color).MoveValue);
+                if (negamaxRes > value && depth == _startDepth)
+                {
+                    if (childPosition.Move is MovePlayer move)
+                    {
+                        position.Move = new MovePlayer(move);
+                    } else position.Move = new PlaceWall((PlaceWall) childPosition.Move);
+                    
                 }
+                value = Math.Max(value, negamaxRes);
+                position.Move.MoveValue = value;
+                //Console.WriteLine("d:" + (depth - 1) + " v:" + negamaxRes + " m:" + childPosition.Move);
                 alpha = Math.Max(alpha, value);
                 if (alpha >= beta) break;
             }
-            return _bestPosition;
+            return position.Move;
         }
 
         private LinkedList<Field> OrderPositions(object childPositions)
         {
             throw new System.NotImplementedException();
         }
-        private LinkedList<Field> GeneratePositions(Field position, int color)
+        private LinkedList<Field> GeneratePositions(Field position, int color, int depth)
         {
+            
             PlayerNumber currentPlayer = color == 1 ? PlayerNumber.First : PlayerNumber.Second;
             LinkedList<Field> possiblePositions = new LinkedList<Field>();
-            for (int i = 0; i < 8; i++)
-            {
-                for (int j = 0; j < 8; j++)
-                {
-                    if (!position.PlacedWalls.Contains(new WallPosition(WallOrientation.Horizontal, new CellPosition(i,j))))
-                    {
-                        try
-                        {
-                            Field newPosition1 = new Field(position);
-                            WallPosition wall1Position = new WallPosition(WallOrientation.Vertical, new CellPosition(i, j));
-                            newPosition1.PlaceWall(wall1Position, currentPlayer);
-                            newPosition1.Move = new PlaceWall(wall1Position);
-                            possiblePositions.AddFirst(newPosition1);
-                        }
-                        catch (Exception e) { }
-                        try
-                        {
-                            Field newPosition2 = new Field(position);
-                            WallPosition wall2Position = new WallPosition(WallOrientation.Horizontal, new CellPosition(i,j));
-                            newPosition2.PlaceWall(wall2Position, currentPlayer);
-                            newPosition2.Move = new PlaceWall(wall2Position);
-                            possiblePositions.AddFirst(newPosition2);
-                        }
-                        catch (Exception e) { }
-                        
-                    }
-                    
-                } 
-            }
-
+            
             foreach (var availablePositions in position.GetCellsForMove(currentPlayer))
             {
                 Field newPosition = new Field(position);
                 newPosition.MovePlayer(currentPlayer, availablePositions);
                 newPosition.Move = new MovePlayer(availablePositions);
                 possiblePositions.AddLast(newPosition);
+                //possiblePositions.AddFirst(newPosition);
             }
-
+            if (depth == _startDepth)
+            {
+                for (int i = 0; i < 8; i++)
+                {
+                    for (int j = 0; j < 8; j++)
+                    {
+                        if (!position.PlacedWalls.Contains(new WallPosition(WallOrientation.Horizontal, new CellPosition(i,j))))
+                        {
+                            try
+                            {
+                                Field newPosition1 = new Field(position);
+                                WallPosition wall1Position = new WallPosition(WallOrientation.Vertical, new CellPosition(i, j));
+                                newPosition1.PlaceWall(wall1Position, currentPlayer);
+                                newPosition1.Move = new PlaceWall(wall1Position);
+                                possiblePositions.AddLast(newPosition1);
+                            }
+                            catch (Exception e) { }
+                            try
+                            {
+                                Field newPosition2 = new Field(position);
+                                WallPosition wall2Position = new WallPosition(WallOrientation.Horizontal, new CellPosition(i,j));
+                                newPosition2.PlaceWall(wall2Position, currentPlayer);
+                                newPosition2.Move = new PlaceWall(wall2Position);
+                                possiblePositions.AddLast(newPosition2);
+                            }
+                            catch (Exception e) { }
+                            
+                        }
+                        
+                    } 
+                }
+            }
             return possiblePositions;
         }
 
@@ -94,7 +108,7 @@ namespace AIProject
             return playerPosition.Y == 8;
         }
 
-        int Sev(Field position, int color)
+        public int Sev(Field position, int color)
         {
             int player1MinLenght = 99;
             int player2MinLenght = 99;
