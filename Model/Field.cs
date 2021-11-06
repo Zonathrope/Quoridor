@@ -351,6 +351,8 @@ namespace Model
         /// <returns>cells available for jump</returns>
         public List<CellPosition> GetCellsForJump(PlayerNumber playerNumber)
         {
+            if (!IsJumpSituation(playerNumber))
+                return new List<CellPosition>();
             CellPosition playerPosition = GetPlayerPosition(playerNumber);
             CellPosition opponentPosition = GetPlayerPosition(GameModel.GetOppositePlayerNumber(playerNumber));
             List<CellPosition> jumpCells = new();
