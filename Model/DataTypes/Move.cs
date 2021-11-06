@@ -1,6 +1,4 @@
-﻿using Model.DataTypes;
-
-namespace Model
+﻿namespace Model.DataTypes
 {
     public abstract class Move
     {
