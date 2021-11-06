@@ -1,4 +1,4 @@
-﻿namespace Quoridor.View.Constants
+﻿namespace Quoridor.OldView.Constants
 {
     public static class DrawConstants
     {
