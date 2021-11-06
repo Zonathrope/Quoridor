@@ -1,46 +1,105 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Model;
 using Model.DataTypes;
 using Model.Internal;
-
 namespace AIProject
 {
-    public class Ai
+    public class AI3
     {
-        public Ai(int startDepth)
+         public AI3(int startDepth)
         {
             _startDepth = startDepth;
         }
         private readonly AStar _aStar = new AStar();
         private readonly int _startDepth;
-        public Move Negamax(Field position, int depth, int alpha, int beta, int color)
+        private readonly HashSet<ttEntry> _entryTable = new HashSet<ttEntry>();
+        public Move Negascout(Field position, int depth, int alpha, int beta, int color)
         {
+            var alphaOrig = alpha;
+            ttEntry entry = TranspositionTableLookup(position);
+            if (entry != null && entry.Depth >= depth)
+            {
+                switch (entry.Flag)
+                {
+                    case EntryFlag.EXACT:
+                        return entry.Value;
+                    case EntryFlag.LOWERBOUND:
+                        alpha = Math.Max(alpha, entry.Value.MoveValue);
+                        break;
+                    case EntryFlag.UPPERBOUND:
+                        beta = Math.Min(beta, entry.Value.MoveValue);
+                        break;
+                }
+                if (alpha >= beta)
+                {
+                    return entry.Value;
+                }
+                
+            }
+            
             if (depth == 0 || CheckWin(position, color))
             {
                 position.Move.MoveValue = Sev(position, color);
                 return position.Move;
             }
             var childPositions = GeneratePositions(position, color, depth);
-            var value = -99;
-            
+            var counter = 0;
+            int negamaxRes = 0;
             foreach (Field childPosition in childPositions)
             {
-                int negamaxRes = -(Negamax(childPosition, depth - 1, -beta, -alpha, -color).MoveValue);
-                
-                if (negamaxRes > value && depth == _startDepth)
+                if (counter == 0)
+                {
+                    negamaxRes = -(Negascout(childPosition, depth - 1, -beta, -alpha, -color).MoveValue); 
+                }
+                else
+                {
+                    negamaxRes = -(Negascout(childPosition, depth - 1, -alpha - 1, -alpha, -color).MoveValue);
+                    if (negamaxRes > alpha && negamaxRes < beta)
+                    {
+                        negamaxRes = -(Negascout(childPosition, depth - 1, -beta, -alpha, -color).MoveValue); 
+                    }
+                }
+                if (negamaxRes > alpha && depth == _startDepth)
                 {
                     if (childPosition.Move is MovePlayer move)
                     {
                         position.Move = new MovePlayer(move);
                     } else position.Move = new PlaceWall((PlaceWall) childPosition.Move);
                 }
-                value = Math.Max(value, negamaxRes);
-                position.Move.MoveValue = value;
+                alpha = Math.Max(alpha, negamaxRes);
+                position.Move.MoveValue = alpha;
+                
                 //Console.WriteLine("d:" + (depth - 1) + " v:" + negamaxRes + " m:" + childPosition.Move);
-                alpha = Math.Max(alpha, value);
+                counter++;
+                
+                alpha = Math.Max(alpha, negamaxRes);
                 if (alpha >= beta) break;
             }
+
+            if (entry != null)
+            {
+                entry.Value = position.Move;
+                entry.Value.MoveValue = negamaxRes;
+                if (entry.Value.MoveValue <= alphaOrig)
+                {
+                    entry.Flag = EntryFlag.UPPERBOUND;
+                }
+                else if (entry.Value.MoveValue >= beta)
+                {
+                    entry.Flag = EntryFlag.UPPERBOUND;
+                }
+                else
+                {
+                    entry.Flag = EntryFlag.EXACT;
+                }
+
+                entry.Depth = depth;
+                entry.Position = new Field(position);
+                _entryTable.Add(entry);
+            }
+
             return position.Move;
         }
         private LinkedList<Field> GeneratePositions(Field position, int color, int depth)
@@ -96,29 +155,20 @@ namespace AIProject
 
         private int Sev(Field position, int color)
         {
-            int player1MinLenght = 99;
-            int player2MinLenght = 99;
-            foreach (CellPosition winCell in GameConstants.Player1WinLine)
-            {
-                int lenght = _aStar.FindPath(position.Player1Position, winCell, position).Count;
-                if (lenght < player1MinLenght)
-                {
-                    player1MinLenght = lenght;
-                }
-            }   
-            foreach (CellPosition winCell in GameConstants.Player2WinLine)
-            {
-                  int lenght = _aStar.FindPath(position.Player2Position, winCell, position).Count;
-                  if (lenght < player2MinLenght)
-                  {
-                      player2MinLenght = lenght;
-                  }
-            }  
+            int player1MinLenght = GameConstants.Player1WinLine.Select(winCell => 
+                _aStar.FindPath(position.Player1Position, winCell, position).Count).Prepend(99).Min();
+            int player2MinLenght = GameConstants.Player2WinLine.Select(winCell => 
+                _aStar.FindPath(position.Player2Position, winCell, position).Count).Prepend(99).Min();
             if (color == 1)
             {
                 return (position.Player1WallAmount + (8 - player1MinLenght)) - (position.Player2WallAmount + (8 - player2MinLenght)); //need theory testing
             } 
             return (position.Player2WallAmount + (8 - player2MinLenght)) - (position.Player1WallAmount + (8 - player1MinLenght));
+        }
+
+        private ttEntry TranspositionTableLookup(Field position)
+        {
+            return _entryTable.FirstOrDefault(entry => entry.Position.Equals(position));
         }
     }
 }

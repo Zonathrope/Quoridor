@@ -6,15 +6,15 @@ using Model.Internal;
 
 namespace AIProject
 {
-    public class Ai
+    public class AI2
     {
-        public Ai(int startDepth)
+        public AI2(int startDepth)
         {
             _startDepth = startDepth;
         }
         private readonly AStar _aStar = new AStar();
         private readonly int _startDepth;
-        public Move Negamax(Field position, int depth, int alpha, int beta, int color)
+        public Move Negascout(Field position, int depth, int alpha, int beta, int color)
         {
             if (depth == 0 || CheckWin(position, color))
             {
@@ -22,23 +22,36 @@ namespace AIProject
                 return position.Move;
             }
             var childPositions = GeneratePositions(position, color, depth);
-            var value = -99;
-            
+            var counter = 0;
             foreach (Field childPosition in childPositions)
             {
-                int negamaxRes = -(Negamax(childPosition, depth - 1, -beta, -alpha, -color).MoveValue);
-                
-                if (negamaxRes > value && depth == _startDepth)
+                int negamaxRes;
+                if (counter == 0)
+                {
+                    negamaxRes = -(Negascout(childPosition, depth - 1, -beta, -alpha, -color).MoveValue); 
+                }
+                else
+                {
+                    negamaxRes = -(Negascout(childPosition, depth - 1, -alpha - 1, -alpha, -color).MoveValue);
+                    if (negamaxRes > alpha && negamaxRes < beta)
+                    {
+                        negamaxRes = -(Negascout(childPosition, depth - 1, -beta, -alpha, -color).MoveValue); 
+                    }
+                }
+                if (negamaxRes > alpha && depth == _startDepth)
                 {
                     if (childPosition.Move is MovePlayer move)
                     {
                         position.Move = new MovePlayer(move);
                     } else position.Move = new PlaceWall((PlaceWall) childPosition.Move);
                 }
-                value = Math.Max(value, negamaxRes);
-                position.Move.MoveValue = value;
+                alpha = Math.Max(alpha, negamaxRes);
+                position.Move.MoveValue = alpha;
+                
                 //Console.WriteLine("d:" + (depth - 1) + " v:" + negamaxRes + " m:" + childPosition.Move);
-                alpha = Math.Max(alpha, value);
+                counter++;
+                
+                alpha = Math.Max(alpha, negamaxRes);
                 if (alpha >= beta) break;
             }
             return position.Move;
