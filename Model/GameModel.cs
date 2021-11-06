@@ -111,8 +111,6 @@ namespace Model
 
         private bool IsJump(PlayerNumber playerNumber, CellPosition newPosition)
         {
-            var playerPosition = GetPlayerPosition(playerNumber);
-            var opponentPosition = GetPlayerPosition(GetOppositePlayerNumber(playerNumber));
             var jumpPositions = _field.GetCellsForJump(playerNumber);
             return jumpPositions.Contains(newPosition);
         }
