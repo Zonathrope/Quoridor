@@ -13,6 +13,17 @@ namespace AIProject
         }
         private readonly AStar _aStar = new AStar();
         private readonly int _startDepth;
+        private const int StartAlpha = -999;
+        private const int StartBeta = 999;
+        public Move GetMove(Field position, PlayerNumber playerNumber)
+        {
+            int color = PlayerToColor(playerNumber);
+            return Negascout(position, _startDepth, StartAlpha, StartBeta, color);
+        }
+        private int PlayerToColor(PlayerNumber playerNumber)
+        {
+            return playerNumber == PlayerNumber.First ? 1 : -1;
+        }
         public Move Negascout(Field position, int depth, int alpha, int beta, int color)
         {
             if (depth == 0 || CheckWin(position, color))
