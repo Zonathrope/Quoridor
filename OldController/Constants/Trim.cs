@@ -1,4 +1,4 @@
-﻿namespace Controller.Constants
+﻿namespace OldController.Constants
 {
     public static class Trim
     {

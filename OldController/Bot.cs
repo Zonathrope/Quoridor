@@ -2,7 +2,7 @@
 using Model;
 using Model.DataTypes;
 
-namespace Controller
+namespace OldController
 {
     public class Bot
     {
