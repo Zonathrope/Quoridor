@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Model;
 using Model.DataTypes;
-using Model.Internal;
 
 namespace AIProject
 {
