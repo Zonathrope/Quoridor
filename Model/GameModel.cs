@@ -70,10 +70,10 @@ namespace Model
                     $"Can't move from {GetPlayerPosition(playerNumber)} to {newPosition}");
             }
 
+            bool isJump = IsJump(playerNumber, newPosition);
             _field.MovePlayer(playerNumber, newPosition);
-            bool wasJump = IsJump(playerNumber, newPosition);
             if (drawInView == DrawInView.Yes)
-                _view.HandlePlayerMovedEvent(playerNumber, newPosition, wasJump);
+                _view.HandlePlayerMovedEvent(playerNumber, newPosition, isJump);
             if (IsOnWinningPosition(playerNumber))
             {
                 HandleWin(playerNumber, drawInView);
