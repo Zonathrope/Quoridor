@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Model.DataTypes;
-using Model.Internal;
 
 namespace Model
 {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Model.DataTypes;
 
-namespace Model.Internal
+namespace Model
 {
     public class AStarCell
     {

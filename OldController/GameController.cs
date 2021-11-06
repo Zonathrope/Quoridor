@@ -3,7 +3,6 @@ using System.Linq;
 using AIProject;
 using Model;
 using Model.DataTypes;
-using Model.Internal;
 using OldController.Constants;
 
 namespace OldController

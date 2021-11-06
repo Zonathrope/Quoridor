@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Model.DataTypes;
-using Model.Internal;
 
 namespace Model
 {

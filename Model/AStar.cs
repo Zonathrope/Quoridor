@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Model.DataTypes;
 
-namespace Model.Internal
+namespace Model
 {
     public class AStar : IAStar
     {
