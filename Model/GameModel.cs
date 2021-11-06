@@ -13,15 +13,26 @@ namespace Model
         public CellPosition Player2Position => _field.Player2Position;
         public int Player1WallAmount { get; private set; }
         public int Player2WallAmount { get; private set; }
+        public Field GetField()
+        {
+            return _field;
+        }
+
         public List<WallPosition> PlacedWalls => _field.PlacedWalls;
 
         private Field _field;
 
         //TODO replace with actual implementation
-        private AStar _aStar = new ();
         private IView _view;
         private PlayerNumber _currentPlayer;
 
+        public GameModel()
+        {
+            _view = null;
+            _field = new Field();
+            Player1WallAmount = GameConstants.StartWallAmount;
+            Player2WallAmount = GameConstants.StartWallAmount;
+        }
         public GameModel(IView view)
         {
             _view = view;
@@ -53,8 +64,8 @@ namespace Model
         {
             if (!IsPlayersTurn(playerNumber))
                 throw new AnotherPlayerTurnException($"It is player {_currentPlayer} turn");
-
-            if (!GetCellsAvailableForMove(playerNumber).Contains(newPosition))
+            
+            if (!_field.GetCellsForMove(playerNumber).Contains(newPosition))
             {
                 throw new IncorrectPlayerPositionException(
                     $"Can't move from {GetPlayerPosition(playerNumber)} to {newPosition}");
@@ -77,21 +88,6 @@ namespace Model
             return playerNumber == _currentPlayer;
         }
 
-        public List<CellPosition> GetCellsAvailableForMove(PlayerNumber playerNumber)
-        {
-            CellPosition playerCurrentPosition = GetPlayerPosition(playerNumber);
-            CellPosition opponentPosition = GetPlayerPosition(GetOppositePlayerNumber(playerNumber));
-            List<CellPosition> reachableCells = _field.GetReachableNeighbours(playerCurrentPosition);
-            if (reachableCells.Contains(opponentPosition))
-            {
-                reachableCells.Remove(opponentPosition);
-                reachableCells.AddRange(
-                    GetCellsAvailableFromFaceToFaceSituation(playerCurrentPosition, opponentPosition));
-            }
-
-            return reachableCells;
-        }
-
         private static PlayerNumber GetOppositePlayerNumber(PlayerNumber playerNumber)
         {
             return playerNumber == PlayerNumber.First
@@ -112,34 +108,13 @@ namespace Model
         /// </summary>
         /// <returns>Cells available for player to move due face to face situation.
         /// Don't include cells available by regular rules</returns>
-        private List<CellPosition> GetCellsAvailableFromFaceToFaceSituation(
-            CellPosition playerPosition, CellPosition opponentPosition)
-        {
-            var availableCells = new List<CellPosition>();
-            int positionDifferenceX = opponentPosition.X - playerPosition.X;
-            int positionDifferenceY = opponentPosition.Y - playerPosition.Y;
-            // Cell behind opponent is acquired by finding next cell from player position in opponents direction
-            CellPosition cellBehindOpponent = opponentPosition.Shifted(positionDifferenceX, positionDifferenceY);
-            if (_field.WayBetweenExists(opponentPosition, cellBehindOpponent))
-            {
-                availableCells.Add(cellBehindOpponent);
-            }
-            else
-            {
-                List<CellPosition> opponentNeighbours = _field.GetReachableNeighbours(opponentPosition);
-                opponentNeighbours.Remove(playerPosition);
-                opponentNeighbours.Remove(cellBehindOpponent);
-                availableCells.AddRange(opponentNeighbours);
-            }
-
-            return availableCells;
-        }
+        
 
         private bool IsJump(PlayerNumber playerNumber, CellPosition newPosition)
         {
             var playerPosition = GetPlayerPosition(playerNumber);
             var opponentPosition = GetPlayerPosition(GetOppositePlayerNumber(playerNumber));
-            var jumpPositions = GetCellsAvailableFromFaceToFaceSituation(playerPosition, opponentPosition);
+            var jumpPositions = _field.GetCellsForJump(playerNumber);
             return jumpPositions.Contains(newPosition);
         }
 
@@ -156,7 +131,6 @@ namespace Model
             {
                 return playerPosition.Y == 0;
             }
-
             return playerPosition.Y == GameConstants.FieldEndCoordinate;
         }
 
@@ -175,54 +149,20 @@ namespace Model
 
             if (!PlayerHasWalls(playerPlacing))
                 throw new NoWallsLeftException($"Player {playerPlacing} has no walls left");
-
-            _field.PlaceWall(wallPosition);
-            if (!BothPlayersHaveWayToLastLine())
-            {
-                _field.RemoveWall(wallPosition);
-                var wallDirection = wallPosition.Orientation == WallOrientation.Horizontal ? "Horizontal" : "Vertical";
-                throw new WallBlocksPathForPlayerException(
-                    $"{wallDirection} wall at {wallPosition.TopLeftCell} blocks way for players");
-            }
-
-            DecrementPlayerWallAmount(playerPlacing);
-            if (drawInView == DrawInView.Yes)
-                _view.HandlePlayerPlacedWallEvent(playerPlacing, wallPosition);
+            
+            _field.PlaceWall(wallPosition, playerPlacing);
             SwitchCurrentPlayer();
+        }
+
+        public List<CellPosition> GetCellsAvailableForMove(PlayerNumber playerNumber)
+        {
+            return _field.GetCellsForJump(playerNumber).Union(_field.GetCellsForMove(playerNumber)).ToList();
         }
 
         private bool PlayerHasWalls(PlayerNumber playerNumber)
         {
             int wallAmount = playerNumber == PlayerNumber.First ? Player1WallAmount : Player2WallAmount;
             return wallAmount != 0;
-        }
-
-        //TODO think if last line is good name
-        private bool BothPlayersHaveWayToLastLine()
-        {
-            return PlayerHasWayToLastLine(PlayerNumber.First) && PlayerHasWayToLastLine(PlayerNumber.Second);
-        }
-
-        private bool PlayerHasWayToLastLine(PlayerNumber playerNumber)
-        {
-            CellPosition playerCell = GetPlayerPosition(playerNumber);
-            CellPosition[] winLine = GetPlayerWinLine(playerNumber);
-            return winLine.Any(winCell => _aStar.WayExists(playerCell, winCell, _field));
-        }
-
-        private CellPosition[] GetPlayerWinLine(PlayerNumber playerNumber)
-        {
-            return playerNumber == PlayerNumber.First
-                ? GameConstants.Player1WinLine
-                : GameConstants.Player2WinLine;
-        }
-
-        private void DecrementPlayerWallAmount(PlayerNumber playerNumber)
-        {
-            if (playerNumber == PlayerNumber.First)
-                Player1WallAmount--;
-            else
-                Player2WallAmount--;
         }
     }
 }

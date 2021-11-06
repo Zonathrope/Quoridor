@@ -3,21 +3,19 @@ using Model.DataTypes;
 
 namespace Model.Internal
 {
-    internal class FieldCell
+    public class FieldCell
     {
         public CellPosition Position { get; }
-        public int FCost { get; set; }
+        public List<FieldCell> ReachableNeighbours { get; set; } = new ();
         public int HCost { get; set; }
         public int GCost { get; set; }
+        
+        public int FCost => HCost + GCost;
         public FieldCell Parent { get; set; }
-        public List<FieldCell> ReachableNeighbours { get; } = new ();
-
         public FieldCell(int x, int y)
         {
             Position = new CellPosition(x, y);
-            GCost = FCost + HCost;
         }
-
         public void AddReachableNeighbour(FieldCell neighbour)
         {
             ReachableNeighbours.Add(neighbour);

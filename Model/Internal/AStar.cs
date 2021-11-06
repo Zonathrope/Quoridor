@@ -5,14 +5,15 @@ using Model.DataTypes;
 
 namespace Model.Internal
 {
-    internal class AStar
+    public class AStar : IAStar
     {
-        private List<FieldCell> _path;
+        private List<CellPosition> _path;
 
-        public List<FieldCell> FindPath(FieldCell startPos, FieldCell targetPos)
+        public List<CellPosition> FindPath(CellPosition startPos, CellPosition targetPos, Field field)
         {
-            FieldCell startNode = startPos;
-            FieldCell targetNode = targetPos;
+            //_currentField = ConvertField(field.FieldMatrix);
+            FieldCell startNode = field.FieldMatrix[startPos.Y, startPos.X];
+            FieldCell targetNode = field.FieldMatrix[targetPos.Y, targetPos.X];
 
             List<FieldCell> openSet = new List<FieldCell>();
             HashSet<FieldCell> closedSet = new HashSet<FieldCell>();
@@ -23,7 +24,7 @@ namespace Model.Internal
                 FieldCell node = openSet[0];
                 for (int i = 1; i < openSet.Count; i++)
                 {
-                    if (openSet[i].FCost < node.FCost || openSet[i].FCost == node.FCost && openSet[i].HCost < node.HCost) 
+                    if ((openSet[i].FCost < node.FCost || openSet[i].FCost == node.FCost) && openSet[i].HCost < node.HCost)
                     {
                         node = openSet[i];
                     }
@@ -38,6 +39,7 @@ namespace Model.Internal
                     return _path;
                 }
 
+                
                 foreach (FieldCell neighbour in node.ReachableNeighbours)
                 {
                     if (closedSet.Contains(neighbour))
@@ -61,14 +63,39 @@ namespace Model.Internal
             return _path;
         }
 
+        private AStarCell[,] ConvertField(FieldCell[,] fieldMatrix)
+        {
+            AStarCell[,] newMatrix = new AStarCell[9,9];
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    newMatrix[j, i] = new AStarCell(i,j);
+                    
+                }
+            }
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    foreach (FieldCell neighbour in fieldMatrix[j,i].ReachableNeighbours)
+                    {
+                        newMatrix[j, i].ReachableNeighbours.Add(newMatrix[neighbour.Position.Y,neighbour.Position.X]);
+                    }
+                }
+            }
+            
+            return newMatrix;
+        }
+
         void RetracePath(FieldCell startNode, FieldCell endNode)
         {
-            List<FieldCell> path = new List<FieldCell>();
+            List<CellPosition> path = new List<CellPosition>();
             FieldCell currentNode = endNode;
 
             while (currentNode != startNode)
             {
-                path.Add(currentNode);
+                path.Add(currentNode.Position);
                 currentNode = currentNode.Parent;
             }
 
@@ -78,16 +105,14 @@ namespace Model.Internal
 
         int GetDistance(FieldCell nodeA, FieldCell nodeB)
         {
-            int dstX, dstY;
-            dstX = Math.Abs(nodeA.Position.X - nodeB.Position.X);
-            dstY = Math.Abs(nodeA.Position.Y - nodeB.Position.Y);
-            return dstX + dstY;
+            return Math.Abs(nodeA.Position.X - nodeB.Position.X) + Math.Abs(nodeA.Position.Y - nodeB.Position.Y);
         }
 
         public bool WayExists(CellPosition start, CellPosition end, Field field)
         {
-            FieldCell startCell = field.CellByPosition(start);
-            FieldCell endCell = field.CellByPosition(end);
+            //_currentField = ConvertField(field.FieldMatrix);
+            FieldCell startCell = field.FieldMatrix[start.Y, start.X];
+            FieldCell endCell = field.FieldMatrix[end.Y, end.X];
             HashSet<FieldCell> openSet = new HashSet<FieldCell>();
             HashSet<FieldCell> closedSet = new HashSet<FieldCell>();
             if (start == end)
