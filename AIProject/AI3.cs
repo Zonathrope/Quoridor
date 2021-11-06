@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Model;
 using Model.DataTypes;
-using Model.Internal;
+
 namespace AIProject
 {
     public class AI3

@@ -1,5 +1,5 @@
-﻿using Model.DataTypes;
-using Model.Internal;
+﻿using Model;
+using Model.DataTypes;
 
 namespace AIProject
 {
