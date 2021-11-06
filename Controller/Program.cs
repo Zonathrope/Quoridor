@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace QuoridorWithAIController
+﻿namespace QuoridorWithAIController
 {
     class Program
     {
