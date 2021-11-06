@@ -305,7 +305,7 @@ namespace Model
             return false;
         }
 
-        public List<CellPosition> GetReachableNeighbours(CellPosition cellPosition)
+        private List<CellPosition> GetReachableNeighbours(CellPosition cellPosition)
         {
             return CellByPosition(cellPosition)
                 .ReachableNeighbours
@@ -333,7 +333,7 @@ namespace Model
             return reachableCells;
         }
 
-        public bool IsJumpSituation(List<CellPosition> reachableCells, CellPosition opponentPosition)
+        private bool IsJumpSituation(List<CellPosition> reachableCells, CellPosition opponentPosition)
         {
             return reachableCells.Contains(opponentPosition);
         }
