@@ -10,17 +10,27 @@ namespace AIProject
         static void Main(string[] args)
         {
             IGameModel gameModel = new GameModel();
-            
-            Ai skynet = new Ai(5);
+            Ai skynet = new Ai(7);
             AStar astar = new AStar();
-            Console.WriteLine(skynet.Negamax(gameModel.GetField(), 5,-999, +999, 1).ToString());
-            //gameModel.GetField().MovePlayer(PlayerNumber.First, new CellPosition(3,8));
             
-            //gameModel.GetField().MovePlayer(PlayerNumber.First, new CellPosition(4,7));
-            //gameModel.GetField().MovePlayer(PlayerNumber.Second, new CellPosition(4,1));
-            //Console.WriteLine(skynet.Sev(gameModel.GetField(), 1));
+            //gameModel.PlaceWall(PlayerNumber.First, new WallPosition(WallOrientation.Horizontal, new CellPosition(1,0)));
+            //gameModel.PlaceWall(PlayerNumber.Second, new WallPosition(WallOrientation.Vertical, new CellPosition(0,1)));
+            //gameModel.PlaceWall(PlayerNumber.First, new WallPosition(WallOrientation.Horizontal, new CellPosition(1,2)));
+            //gameModel.PlaceWall(PlayerNumber.Second, new WallPosition(WallOrientation.Vertical, new CellPosition(2,1)));
             
-            Console.ReadLine();
+            System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
+            
+            //var count = astar.FindPath(new CellPosition(8,8), new CellPosition(1,1), gameModel.GetField()).Count;
+            
+            Console.WriteLine(skynet.Negamax(gameModel.GetField(), 7,-999, +999, 1).ToString());
+            
+            //astar.WayExists(new CellPosition(8, 8), new CellPosition(1, 1), gameModel.GetField());
+            sw.Stop();
+            Console.WriteLine(       sw.Elapsed.TotalSeconds + " Sec    / " +
+                                 ((float)sw.Elapsed.TotalSeconds / (float)60).ToString("N2") + 
+                                 " min" );
+            //Console.WriteLine(count);
+            //Environment.Exit(0);
         }
     }
 }

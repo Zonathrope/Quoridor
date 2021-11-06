@@ -12,7 +12,7 @@ namespace Model.Internal
         public CellPosition Player2Position { get; private set; }
         internal FieldCell[,] FieldMatrix => _fieldMatrix;
         private FieldCell[,] _fieldMatrix = new FieldCell[GameConstants.FieldSize,GameConstants.FieldSize];
-        private IAStar _aStar = new AStar();
+        
         public List<WallPosition> PlacedWalls { get; } = new ();
         
         public int Player1WallAmount { get; private set; }
@@ -25,6 +25,7 @@ namespace Model.Internal
             this.Player2Position = new CellPosition(other.Player2Position.X, other.Player2Position.Y);
             this.Player1WallAmount = other.Player1WallAmount;
             this.Player2WallAmount = other.Player2WallAmount;
+            
             this._fieldMatrix = CopyFieldMatrix(other._fieldMatrix);
             this.PlacedWalls = new List<WallPosition>(other.PlacedWalls);
         }
@@ -179,10 +180,11 @@ namespace Model.Internal
         }
         private bool BothPlayersHaveWayToLastLine()
         {
+        IAStar aStar = new AStar();
             CellPosition[] winLine1 = GetPlayerWinLine(PlayerNumber.First);
             CellPosition[] winLine2 = GetPlayerWinLine(PlayerNumber.Second);
-            return winLine1.Any(winCell => _aStar.WayExists(Player1Position, winCell, this)) && 
-                   winLine2.Any(winCell => _aStar.WayExists(Player2Position, winCell, this));
+            return winLine1.Any(winCell => aStar.WayExists(Player1Position, winCell, this)) && 
+                   winLine2.Any(winCell => aStar.WayExists(Player2Position, winCell, this));
         }
         
         private CellPosition[] GetPlayerWinLine(PlayerNumber playerNumber)
@@ -194,7 +196,7 @@ namespace Model.Internal
 
         //TODO ask if it is ok that exception is documented here, but not in calling method
         /// <exception cref="NoSuchWallException">passed wall wasn't placed.</exception>
-        public void RemoveWall(WallPosition wallPosition)
+        private void RemoveWall(WallPosition wallPosition)
         {
             if (!PlacedWalls.Contains(wallPosition))
                 throw new NoSuchWallException($"There is no {wallPosition} among placed walls");
@@ -264,7 +266,7 @@ namespace Model.Internal
             return IsOnField(wallPosition.TopLeftCell) && IsOnField(bottomRightCell);
         }
 
-        public bool IsCellTaken(CellPosition cell)
+        private bool IsCellTaken(CellPosition cell)
         {
             return cell == Player1Position || cell == Player2Position;
         }
@@ -351,21 +353,19 @@ namespace Model.Internal
             int positionDifferenceX = opponentPosition.X - playerPosition.X;
             int positionDifferenceY = opponentPosition.Y - playerPosition.Y;
             // Cell behind opponent is acquired by finding next cell from player position in opponents direction
-            if (opponentPosition.X is < 8 and > 0 && opponentPosition.Y is < 8 and > 0)
+            CellPosition cellBehindOpponent = opponentPosition.Shifted(positionDifferenceX, positionDifferenceY);
+            if (WayBetweenExists(opponentPosition, cellBehindOpponent))
             {
-                CellPosition cellBehindOpponent = opponentPosition.Shifted(positionDifferenceX, positionDifferenceY);
-                if (WayBetweenExists(opponentPosition, cellBehindOpponent))
-                {
-                    availableCells.Add(cellBehindOpponent);
-                }
-                else
-                {
-                    List<CellPosition> opponentNeighbours = GetReachableNeighbours(opponentPosition);
-                    opponentNeighbours.Remove(playerPosition);
-                    opponentNeighbours.Remove(cellBehindOpponent);
-                    availableCells.AddRange(opponentNeighbours);
-                }  
+                availableCells.Add(cellBehindOpponent);
             }
+            else
+            {
+                List<CellPosition> opponentNeighbours = GetReachableNeighbours(opponentPosition);
+                opponentNeighbours.Remove(playerPosition);
+                opponentNeighbours.Remove(cellBehindOpponent);
+                availableCells.AddRange(opponentNeighbours);
+            }  
+            
             
             reachableCells.AddRange(availableCells);
             return reachableCells;

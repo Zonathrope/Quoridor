@@ -5,20 +5,17 @@ namespace Model.Internal
 {
     public class AStarCell
     {
-        public CellPosition Position { get; set; }
+        public CellPosition Position { get; }
         public int HCost { get; set; }
         public int GCost { get; set; }
+        
+        public int FCost => HCost + GCost;
         public AStarCell Parent { get; set; }
         public readonly List<AStarCell> ReachableNeighbours = new ();
 
-        public AStarCell(CellPosition position)
+        public AStarCell(int x, int y)
         {
-            Position = position;
-        }
-
-        public int FCost()
-        {
-            return HCost + GCost;
+            Position = new CellPosition(x, y);
         }
     }
 }

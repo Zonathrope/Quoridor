@@ -8,24 +8,23 @@ namespace Model.Internal
     public class AStar : IAStar
     {
         private List<CellPosition> _path;
-        private AStarCell[,] _currentField;
 
         public List<CellPosition> FindPath(CellPosition startPos, CellPosition targetPos, Field field)
         {
-            _currentField = ConvertField(field.FieldMatrix);
-            AStarCell startNode = _currentField[startPos.Y, startPos.X];
-            AStarCell targetNode =_currentField[targetPos.Y, targetPos.X];
+            //_currentField = ConvertField(field.FieldMatrix);
+            FieldCell startNode = field.FieldMatrix[startPos.Y, startPos.X];
+            FieldCell targetNode = field.FieldMatrix[targetPos.Y, targetPos.X];
 
-            List<AStarCell> openSet = new List<AStarCell>();
-            HashSet<AStarCell> closedSet = new HashSet<AStarCell>();
+            List<FieldCell> openSet = new List<FieldCell>();
+            HashSet<FieldCell> closedSet = new HashSet<FieldCell>();
             openSet.Add(startNode);
 
             while (openSet.Count > 0)
             {
-                AStarCell node = openSet[0];
+                FieldCell node = openSet[0];
                 for (int i = 1; i < openSet.Count; i++)
                 {
-                    if ((openSet[i].FCost() < node.FCost() || openSet[i].FCost() == node.FCost()) && openSet[i].HCost < node.HCost)
+                    if ((openSet[i].FCost < node.FCost || openSet[i].FCost == node.FCost) && openSet[i].HCost < node.HCost)
                     {
                         node = openSet[i];
                     }
@@ -41,7 +40,7 @@ namespace Model.Internal
                 }
 
                 
-                foreach (AStarCell neighbour in node.ReachableNeighbours)
+                foreach (FieldCell neighbour in node.ReachableNeighbours)
                 {
                     if (closedSet.Contains(neighbour))
                     {
@@ -71,7 +70,7 @@ namespace Model.Internal
             {
                 for (int j = 0; j < 9; j++)
                 {
-                    newMatrix[j, i] = new AStarCell(new CellPosition(i,j));
+                    newMatrix[j, i] = new AStarCell(i,j);
                     
                 }
             }
@@ -89,10 +88,10 @@ namespace Model.Internal
             return newMatrix;
         }
 
-        void RetracePath(AStarCell startNode, AStarCell endNode)
+        void RetracePath(FieldCell startNode, FieldCell endNode)
         {
             List<CellPosition> path = new List<CellPosition>();
-            AStarCell currentNode = endNode;
+            FieldCell currentNode = endNode;
 
             while (currentNode != startNode)
             {
@@ -104,18 +103,18 @@ namespace Model.Internal
             _path = path;
         }
 
-        int GetDistance(AStarCell nodeA, AStarCell nodeB)
+        int GetDistance(FieldCell nodeA, FieldCell nodeB)
         {
             return Math.Abs(nodeA.Position.X - nodeB.Position.X) + Math.Abs(nodeA.Position.Y - nodeB.Position.Y);
         }
 
         public bool WayExists(CellPosition start, CellPosition end, Field field)
         {
-            _currentField = ConvertField(field.FieldMatrix);
-            AStarCell startCell = _currentField[start.Y, start.X];
-            AStarCell endCell = _currentField[end.Y, end.X];
-            HashSet<AStarCell> openSet = new HashSet<AStarCell>();
-            HashSet<AStarCell> closedSet = new HashSet<AStarCell>();
+            //_currentField = ConvertField(field.FieldMatrix);
+            FieldCell startCell = field.FieldMatrix[start.Y, start.X];
+            FieldCell endCell = field.FieldMatrix[end.Y, end.X];
+            HashSet<FieldCell> openSet = new HashSet<FieldCell>();
+            HashSet<FieldCell> closedSet = new HashSet<FieldCell>();
             if (start == end)
             {
                 throw new Exception("They are the same nodes");
@@ -125,11 +124,11 @@ namespace Model.Internal
             return NeighbourLinkSearch(openSet, closedSet, endCell);
         }
 
-        private bool NeighbourLinkSearch(HashSet<AStarCell> openSet, HashSet<AStarCell> closedSet, AStarCell end)
+        private bool NeighbourLinkSearch(HashSet<FieldCell> openSet, HashSet<FieldCell> closedSet, FieldCell end)
         {
             while (openSet.Count > 0)
             {
-                foreach (AStarCell node in openSet.ToList())
+                foreach (FieldCell node in openSet.ToList())
                 {
                     if (node == end)
                     {
@@ -138,7 +137,7 @@ namespace Model.Internal
 
                     openSet.Remove(node);
                     closedSet.Add(node);
-                    foreach (AStarCell neighbour in node.ReachableNeighbours)
+                    foreach (FieldCell neighbour in node.ReachableNeighbours)
                     {
                         if (neighbour == end)
                         {
