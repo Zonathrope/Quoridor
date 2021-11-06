@@ -4,7 +4,7 @@ VisualStudioVersion = 16.0.31624.102
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Model", "Model\Model.csproj", "{D624806C-B598-4C03-B01C-5B25770EFD24}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Controller", "Controller\Controller.csproj", "{450CE554-9640-4589-8BC5-DA705E10821C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OldController", "OldController\OldController.csproj", "{450CE554-9640-4589-8BC5-DA705E10821C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIProject", "AIProject\AIProject.csproj", "{77CCE1CE-0EEE-4341-B86F-5B0DA250B759}"
 EndProject
