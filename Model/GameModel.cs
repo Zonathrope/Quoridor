@@ -63,14 +63,13 @@ namespace Model
         {
             if (!IsPlayersTurn(playerNumber))
                 throw new AnotherPlayerTurnException($"It is player {_currentPlayer} turn");
-            
             if (!_field.GetCellsForMove(playerNumber).Contains(newPosition))
             {
                 throw new IncorrectPlayerPositionException(
                     $"Can't move from {GetPlayerPosition(playerNumber)} to {newPosition}");
             }
 
-            bool isJump = IsJump(playerNumber, newPosition);
+            bool isJump = _field.GetCellsForJump(playerNumber).Contains(newPosition);
             _field.MovePlayer(playerNumber, newPosition);
             if (drawInView == DrawInView.Yes)
                 _view.HandlePlayerMovedEvent(playerNumber, newPosition, isJump);
@@ -87,7 +86,7 @@ namespace Model
             return playerNumber == _currentPlayer;
         }
 
-        private static PlayerNumber GetOppositePlayerNumber(PlayerNumber playerNumber)
+        internal static PlayerNumber GetOppositePlayerNumber(PlayerNumber playerNumber)
         {
             return playerNumber == PlayerNumber.First
                 ? PlayerNumber.Second
@@ -107,13 +106,6 @@ namespace Model
         /// </summary>
         /// <returns>Cells available for player to move due face to face situation.
         /// Don't include cells available by regular rules</returns>
-        
-
-        private bool IsJump(PlayerNumber playerNumber, CellPosition newPosition)
-        {
-            var jumpPositions = _field.GetCellsForJump(playerNumber);
-            return jumpPositions.Contains(newPosition);
-        }
 
         private void SwitchCurrentPlayer()
         {
