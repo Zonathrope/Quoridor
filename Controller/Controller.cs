@@ -44,9 +44,12 @@ namespace QuoridorWithAIController
             }
         }
 
-        private void HandleAIMove(object move)
+        private void HandleAIMove(Move move)
         {
-            throw new NotImplementedException();
+            if (move is MovePlayer movePlayer)
+                _gameModel.MovePlayer(_aiPlayerNumber, movePlayer.Position);
+            else if (move is PlaceWall placeWall)
+                _gameModel.PlaceWall(_aiPlayerNumber, placeWall.Position);
         }
 
         private void HandleOpponentInput(string move)
