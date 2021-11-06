@@ -10,7 +10,7 @@ namespace AIProject
         private readonly AStar _aStar = new AStar();
         private readonly int _startDepth;
         private const int StartAlpha = -999;
-        private const int StartBeta = -999;
+        private const int StartBeta = 999;
 
         public Ai(int startDepth)
         {
