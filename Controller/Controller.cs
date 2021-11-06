@@ -40,6 +40,8 @@ namespace QuoridorWithAIController
                 Move move = _ai.GetMove(_gameModel.GetField(), _aiPlayerNumber);
                 HandleAIMove(move);
                 string opponentInput = Console.ReadLine();
+                if (opponentInput is "Win" or "Loss")
+                    break;
                 HandleOpponentInput(opponentInput);
             }
         }
