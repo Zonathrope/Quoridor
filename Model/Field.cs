@@ -323,47 +323,60 @@ namespace Model
         
         public List<CellPosition> GetCellsForMove(PlayerNumber playerNumber)
         {
-            CellPosition playerCurrentPosition = playerNumber == PlayerNumber.First ? Player1Position : Player2Position;
-            CellPosition opponentPosition = playerNumber == PlayerNumber.First ? Player2Position : Player1Position;
-            List<CellPosition> reachableCells = GetReachableNeighbours(playerCurrentPosition);
-            if (IsJumpSituation(reachableCells, opponentPosition))
+            List<CellPosition> availableMoves = GetCellsForRegularMove(playerNumber);
+            if (IsJumpSituation(playerNumber))
             {
-                return GetCellsForJump(playerNumber);
+                availableMoves.AddRange(GetCellsForJump(playerNumber));
             }
-            return reachableCells;
+            return availableMoves;
         }
 
-        private bool IsJumpSituation(List<CellPosition> reachableCells, CellPosition opponentPosition)
+        private bool IsJumpSituation(PlayerNumber playerNumber)
         {
-            return reachableCells.Contains(opponentPosition);
+            var playerPosition = GetPlayerPosition(playerNumber);
+            var opponentPosition = GetPlayerPosition(GameModel.GetOppositePlayerNumber(playerNumber));
+            return GetReachableNeighbours(playerPosition).Contains(opponentPosition);
         }
+
+        /// <returns>cells available for regular move action</returns>
+        private List<CellPosition> GetCellsForRegularMove(PlayerNumber playerNumber)
+        {
+            var result = GetReachableNeighbours(GetPlayerPosition(playerNumber));
+            var opponentPosition = GetPlayerPosition(GameModel.GetOppositePlayerNumber(playerNumber));
+            if (result.Contains(opponentPosition))
+                result.Remove(opponentPosition);
+            return result;
+        }
+
+        /// <returns>cells available for jump</returns>
         public List<CellPosition> GetCellsForJump(PlayerNumber playerNumber)
         {
-            CellPosition playerPosition = playerNumber == PlayerNumber.First ? Player1Position : Player2Position;
-            CellPosition opponentPosition = playerNumber == PlayerNumber.First ? Player2Position : Player1Position;
-            List<CellPosition> reachableCells = GetReachableNeighbours(playerPosition);
-            reachableCells.Remove(opponentPosition);
-            var availableCells = new List<CellPosition>();
+            CellPosition playerPosition = GetPlayerPosition(playerNumber);
+            CellPosition opponentPosition = GetPlayerPosition(GameModel.GetOppositePlayerNumber(playerNumber));
+            List<CellPosition> jumpCells = new();
             int positionDifferenceX = opponentPosition.X - playerPosition.X;
             int positionDifferenceY = opponentPosition.Y - playerPosition.Y;
             // Cell behind opponent is acquired by finding next cell from player position in opponents direction
             CellPosition cellBehindOpponent = opponentPosition.Shifted(positionDifferenceX, positionDifferenceY);
             if (WayBetweenExists(opponentPosition, cellBehindOpponent))
             {
-                availableCells.Add(cellBehindOpponent);
+                jumpCells.Add(cellBehindOpponent);
             }
             else
             {
                 List<CellPosition> opponentNeighbours = GetReachableNeighbours(opponentPosition);
                 opponentNeighbours.Remove(playerPosition);
                 opponentNeighbours.Remove(cellBehindOpponent);
-                availableCells.AddRange(opponentNeighbours);
+                jumpCells.AddRange(opponentNeighbours);
             }  
-            
-            
-            reachableCells.AddRange(availableCells);
-            return reachableCells;
+            return jumpCells;
         }
+
+        private CellPosition GetPlayerPosition(PlayerNumber playerNumber)
+        {
+            return playerNumber == PlayerNumber.First ? Player1Position : Player2Position;
+        }
+
         private void DecrementPlayerWallAmount(PlayerNumber playerNumber)
         {
             if (playerNumber == PlayerNumber.First)
