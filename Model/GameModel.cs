@@ -69,8 +69,8 @@ namespace Model
                 throw new IncorrectPlayerPositionException(
                     $"Can't move from {GetPlayerPosition(playerNumber)} to {newPosition}");
             }
-
-            bool isJump = IsJump(playerNumber, newPosition);
+            
+            bool isJump = IsJump(playerNumber);
             _field.MovePlayer(playerNumber, newPosition);
             if (drawInView == DrawInView.Yes)
                 _view.HandlePlayerMovedEvent(playerNumber, newPosition, isJump);
@@ -109,12 +109,13 @@ namespace Model
         /// Don't include cells available by regular rules</returns>
         
 
-        private bool IsJump(PlayerNumber playerNumber, CellPosition newPosition)
+        private bool IsJump(PlayerNumber playerNumber)
         {
-            var jumpPositions = _field.GetCellsForJump(playerNumber);
-            return jumpPositions.Contains(newPosition);
+            List<CellPosition> reachableCells = _field.GetReachableNeighbours(GetPlayerPosition(playerNumber));
+            return _field.IsJumpSituation(reachableCells, GetPlayerPosition(playerNumber));
         }
 
+        
         private void SwitchCurrentPlayer()
         {
             _currentPlayer = GetOppositePlayerNumber(_currentPlayer);
