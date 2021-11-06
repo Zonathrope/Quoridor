@@ -11,7 +11,6 @@ namespace Model
 
         public List<CellPosition> FindPath(CellPosition startPos, CellPosition targetPos, Field field)
         {
-            //_currentField = ConvertField(field.FieldMatrix);
             FieldCell startNode = field.FieldMatrix[startPos.Y, startPos.X];
             FieldCell targetNode = field.FieldMatrix[targetPos.Y, targetPos.X];
 
@@ -38,7 +37,6 @@ namespace Model
                     RetracePath(startNode, targetNode);
                     return _path;
                 }
-
                 
                 foreach (FieldCell neighbour in node.ReachableNeighbours)
                 {
@@ -53,7 +51,6 @@ namespace Model
                         neighbour.GCost = newCostToNeighbour;
                         neighbour.HCost = GetDistance(neighbour, targetNode);
                         neighbour.Parent = node;
-
                         if (!openSet.Contains(neighbour))
                             openSet.Add(neighbour);
                     }
@@ -62,32 +59,7 @@ namespace Model
 
             return _path;
         }
-
-        private AStarCell[,] ConvertField(FieldCell[,] fieldMatrix)
-        {
-            AStarCell[,] newMatrix = new AStarCell[9,9];
-            for (int i = 0; i < 9; i++)
-            {
-                for (int j = 0; j < 9; j++)
-                {
-                    newMatrix[j, i] = new AStarCell(i,j);
-                    
-                }
-            }
-            for (int i = 0; i < 9; i++)
-            {
-                for (int j = 0; j < 9; j++)
-                {
-                    foreach (FieldCell neighbour in fieldMatrix[j,i].ReachableNeighbours)
-                    {
-                        newMatrix[j, i].ReachableNeighbours.Add(newMatrix[neighbour.Position.Y,neighbour.Position.X]);
-                    }
-                }
-            }
-            
-            return newMatrix;
-        }
-
+        
         void RetracePath(FieldCell startNode, FieldCell endNode)
         {
             List<CellPosition> path = new List<CellPosition>();
@@ -110,7 +82,6 @@ namespace Model
 
         public bool WayExists(CellPosition start, CellPosition end, Field field)
         {
-            //_currentField = ConvertField(field.FieldMatrix);
             FieldCell startCell = field.FieldMatrix[start.Y, start.X];
             FieldCell endCell = field.FieldMatrix[end.Y, end.X];
             HashSet<FieldCell> openSet = new HashSet<FieldCell>();

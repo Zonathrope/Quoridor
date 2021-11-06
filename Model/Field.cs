@@ -11,8 +11,7 @@ namespace Model
         public CellPosition Player1Position { get; private set; }
         public CellPosition Player2Position { get; private set; }
         internal FieldCell[,] FieldMatrix => _fieldMatrix;
-        private FieldCell[,] _fieldMatrix = new FieldCell[GameConstants.FieldSize,GameConstants.FieldSize];
-        
+        private readonly FieldCell[,] _fieldMatrix = new FieldCell[GameConstants.FieldSize,GameConstants.FieldSize];
         public List<WallPosition> PlacedWalls { get; } = new ();
         
         public int Player1WallAmount { get; private set; }
@@ -25,7 +24,6 @@ namespace Model
             this.Player2Position = new CellPosition(other.Player2Position.X, other.Player2Position.Y);
             this.Player1WallAmount = other.Player1WallAmount;
             this.Player2WallAmount = other.Player2WallAmount;
-            
             this._fieldMatrix = CopyFieldMatrix(other._fieldMatrix);
             this.PlacedWalls = new List<WallPosition>(other.PlacedWalls);
         }
@@ -140,12 +138,7 @@ namespace Model
 
         private static bool IsOnField(CellPosition cellPosition)
         {
-            return IsInFieldCoordinatesRange(cellPosition.X) && IsInFieldCoordinatesRange(cellPosition.Y);
-        }
-
-        private static bool IsInFieldCoordinatesRange(int value)
-        {
-            return value is >= 0 and < 9;
+            return cellPosition.X is >= 0 and < 9 && cellPosition.Y is >= 0 and < 9;
         }
 
         /// <exception cref="IncorrectWallPositionException">Caller pass invalid position.</exception>
@@ -157,16 +150,16 @@ namespace Model
                 throw new IncorrectWallPositionException(
                     $"({newWallPosition.TopLeftCell} is not correct wall position");
             }
-            if (PlacedWalls.Any(newWallPosition.IsEqualByPlace))
-            {
-                throw new WallPlaceTakenException(
-                    $"There is already wall at {newWallPosition.TopLeftCell}");
-            }
-            if (OverlapsWithPlacedWalls(newWallPosition))
-            {
-                throw new WallPlaceTakenException(
-                    $"There is already wall at {newWallPosition.TopLeftCell}");
-            }
+            // if (PlacedWalls.Any(newWallPosition.IsEqualByPlace))
+            // {
+            //     throw new WallPlaceTakenException(
+            //         $"There is already wall at {newWallPosition.TopLeftCell}");
+            // }
+            // if (OverlapsWithPlacedWalls(newWallPosition))
+            // {
+            //     throw new WallPlaceTakenException(
+            //         $"There is already wall at {newWallPosition.TopLeftCell}");
+            // }
             BlockWays(newWallPosition);
             if (!BothPlayersHaveWayToLastLine())
             {
@@ -311,7 +304,8 @@ namespace Model
 
             return false;
         }
-        public List<CellPosition> GetReachableNeighbours(CellPosition cellPosition)
+
+        private List<CellPosition> GetReachableNeighbours(CellPosition cellPosition)
         {
             return CellByPosition(cellPosition)
                 .ReachableNeighbours
@@ -319,7 +313,7 @@ namespace Model
                 .ToList();
         }
 
-        public bool WayBetweenExists(CellPosition position1, CellPosition position2)
+        private bool WayBetweenExists(CellPosition position1, CellPosition position2)
         {
             return CellByPosition(position1)
                 .ReachableNeighbours
@@ -339,7 +333,7 @@ namespace Model
             return reachableCells;
         }
 
-        public bool IsJumpSituation(List<CellPosition> reachableCells, CellPosition opponentPosition)
+        private bool IsJumpSituation(List<CellPosition> reachableCells, CellPosition opponentPosition)
         {
             return reachableCells.Contains(opponentPosition);
         }
@@ -377,6 +371,5 @@ namespace Model
             else
                 Player2WallAmount--;
         }
-        
     }
 }   
