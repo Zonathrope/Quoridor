@@ -7,12 +7,26 @@ namespace AIProject
 {
     public class Ai
     {
+        private readonly AStar _aStar = new AStar();
+        private readonly int _startDepth;
+        private const int StartAlpha = -999;
+        private const int StartBeta = -999;
+
         public Ai(int startDepth)
         {
             _startDepth = startDepth;
         }
-        private readonly AStar _aStar = new AStar();
-        private readonly int _startDepth;
+
+        public Move GetMove(Field position, PlayerNumber playerNumber)
+        {
+            int color = PlayerToColor(playerNumber);
+            return Negamax(position, _startDepth, StartAlpha, StartBeta, color);
+        }
+
+        private int PlayerToColor(PlayerNumber playerNumber)
+        {
+            return playerNumber == PlayerNumber.First ? 1 : -1;
+        }
         public Move Negamax(Field position, int depth, int alpha, int beta, int color)
         {
             if (depth == 0 || CheckWin(position, color))

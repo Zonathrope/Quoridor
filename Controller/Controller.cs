@@ -1,23 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using AIProject;
 using Model;
 using Model.DataTypes;
 
 namespace QuoridorWithAIController
 {
-    //TODO replace mocks
-    internal class AIMock : IAI
-    {
-        public Object GetMove()
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     internal class Controller
     {
-        //TODO make more flexible
-        private IAI _ai = new AIMock();
+        private const int AiSearchDepth = 7;
+        private Ai _ai = new Ai(AiSearchDepth);
         private IView _view = new View.View();
         private IGameModel _gameModel;
         private PlayerNumber _aiPlayerNumber;
@@ -45,7 +37,7 @@ namespace QuoridorWithAIController
 
             while (!_gameModel.GameEnded)
             {
-                Object move = _ai.GetMove();
+                Move move = _ai.GetMove(_gameModel.GetField(), _aiPlayerNumber);
                 HandleAIMove(move);
                 string opponentInput = Console.ReadLine();
                 HandleOpponentInput(opponentInput);
