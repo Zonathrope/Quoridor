@@ -1,7 +1,7 @@
 ﻿using System;
-using Quoridor.View.Interfaces;
+using Quoridor.OldView.Interfaces;
 
-namespace Quoridor.View
+namespace Quoridor.OldView
 {
     public class View : IView
     {

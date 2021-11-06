@@ -1,5 +1,5 @@
 ﻿
-namespace Quoridor.View.Interfaces
+namespace Quoridor.OldView.Interfaces
 {
     public interface IController
     {

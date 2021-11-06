@@ -3,10 +3,10 @@ using System.Linq;
 using AIProject;
 using Model;
 using Model.DataTypes;
-using Controller.Constants;
 using Model.Internal;
+using OldController.Constants;
 
-namespace Controller
+namespace OldController
 {
     class GameController
     {

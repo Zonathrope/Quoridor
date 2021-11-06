@@ -1,8 +1,8 @@
 ﻿using System;
-using Quoridor.View.Constants;
-using Quoridor.View.Interfaces;
+using Quoridor.OldView.Constants;
+using Quoridor.OldView.Interfaces;
 
-namespace Quoridor.View
+namespace Quoridor.OldView
 {
     public class Drawer
     {

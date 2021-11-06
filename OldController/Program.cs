@@ -1,7 +1,7 @@
 ﻿using Model;
 using System;
 
-namespace Controller
+namespace OldController
 {
     class Program
     {
