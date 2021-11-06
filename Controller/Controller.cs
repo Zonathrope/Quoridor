@@ -28,7 +28,7 @@ namespace QuoridorWithAIController
         public void Start()
         {
             string playingSide = Console.ReadLine();
-            _aiPlayerNumber = playingSide == "black" ? PlayerNumber.First : PlayerNumber.Second;
+            _aiPlayerNumber = playingSide == "white" ? PlayerNumber.First : PlayerNumber.Second;
             if (_aiPlayerNumber == PlayerNumber.Second)
             {
                 string opponentInput = Console.ReadLine();
