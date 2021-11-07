@@ -11,7 +11,6 @@ namespace Model
 
         public List<CellPosition> FindPath(CellPosition startPos, CellPosition targetPos, Field field)
         {
-            ClearFieldCosts(field);
             FieldCell startNode = field.FieldMatrix[startPos.Y, startPos.X];
             FieldCell targetNode = field.FieldMatrix[targetPos.Y, targetPos.X];
 

@@ -79,39 +79,45 @@ namespace AIProject
                 possiblePositions.AddLast(newPosition);
             }
 
-            if (depth == _startDepth) return possiblePositions;
+            //if (depth == _startDepth) return possiblePositions;
+            if ((currentPlayer != PlayerNumber.First || position.Player1WallAmount <= 0) &&
+                (currentPlayer != PlayerNumber.Second || position.Player2WallAmount <= 0)) return possiblePositions;
             for (int i = 0; i < 8; i++)
             {
                 for (int j = 0; j < 8; j++)
                 {
-                    WallPosition newWallPosition = new WallPosition(WallOrientation.Horizontal, new CellPosition(i, j));
-                    if (!position.PlacedWalls.Contains(newWallPosition))
+                    WallPosition newWallPosition =
+                        new WallPosition(WallOrientation.Horizontal, new CellPosition(i, j));
+                    if (position.PlacedWalls.Contains(newWallPosition)) continue;
+                    try
                     {
-                        try
-                        {
-                            Field newPosition1 = new Field(position);
-                            WallPosition wall1Position =
-                                new WallPosition(WallOrientation.Vertical, new CellPosition(i, j));
-                            newPosition1.PlaceWall(wall1Position, currentPlayer);
-                            newPosition1.Move = new PlaceWall(wall1Position);
-                            possiblePositions.AddLast(newPosition1);
-                        }
-                        catch (Exception e){}
+                        Field newPosition1 = new Field(position);
+                        WallPosition wall1Position =
+                            new WallPosition(WallOrientation.Vertical, new CellPosition(i, j));
+                        newPosition1.PlaceWall(wall1Position, currentPlayer);
+                        newPosition1.Move = new PlaceWall(wall1Position);
+                        possiblePositions.AddLast(newPosition1);
+                    }
+                    catch (Exception e)
+                    {
+                    }
 
-                        try
-                        {
-                            Field newPosition2 = new Field(position);
-                            WallPosition wall2Position =
-                                new WallPosition(WallOrientation.Horizontal, new CellPosition(i, j));
-                            newPosition2.PlaceWall(wall2Position, currentPlayer);
-                            newPosition2.Move = new PlaceWall(wall2Position);
-                            possiblePositions.AddLast(newPosition2);
-                        }
-                        catch (Exception e) { }
+                    try
+                    {
+                        Field newPosition2 = new Field(position);
+                        WallPosition wall2Position =
+                            new WallPosition(WallOrientation.Horizontal, new CellPosition(i, j));
+                        newPosition2.PlaceWall(wall2Position, currentPlayer);
+                        newPosition2.Move = new PlaceWall(wall2Position);
+                        possiblePositions.AddLast(newPosition2);
+                    }
+                    catch (Exception e)
+                    {
                     }
 
                 }
             }
+
             return possiblePositions;
         }
 
@@ -148,17 +154,9 @@ namespace AIProject
             
             if (color == 1)
             {
-                if (player1MinLenght == 0)
-                { return 999; } 
-                if (player2MinLenght == 0)
-                { return -999;}
-                return (position.Player1WallAmount + (8 - player1MinLenght)) - (position.Player2WallAmount + (8 - player2MinLenght)*2); //need theory testing
+                return (position.Player1WallAmount + (8 - player1MinLenght)*2) - (position.Player2WallAmount + (8 - player2MinLenght)*2); //need theory testing
             }
-            if (player1MinLenght == 0)
-            { return -999; } 
-            if (player2MinLenght == 0)
-            { return 999;}
-            return (position.Player2WallAmount + (8 - player2MinLenght)*2) - (position.Player1WallAmount + (8 - player1MinLenght));
+            return (position.Player2WallAmount + (8 - player2MinLenght)*2) - (position.Player1WallAmount + (8 - player1MinLenght)*2);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace QuoridorWithAIController
 {
     public class Controller
     {
-        private const int AiSearchDepth = 6;
+        private const int AiSearchDepth = 2;
         private AI2 _ai = new AI2(AiSearchDepth);
         private IView _view = new View.View();
         private IGameModel _gameModel;
