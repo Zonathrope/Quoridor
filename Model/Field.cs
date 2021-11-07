@@ -277,9 +277,7 @@ namespace Model
                              new CellPosition(newWall.TopLeftCell.X + 1, newWall.TopLeftCell.Y)))
                 };
             }
-            else
-            {
-                return newWall.TopLeftCell.Y switch
+            return newWall.TopLeftCell.Y switch
                 {
                     0 => PlacedWalls.Contains(new WallPosition(WallOrientation.Vertical,
                         new CellPosition(newWall.TopLeftCell.X, newWall.TopLeftCell.Y + 1))),
@@ -290,8 +288,6 @@ namespace Model
                          PlacedWalls.Contains(new WallPosition(WallOrientation.Vertical,
                              new CellPosition(newWall.TopLeftCell.X, newWall.TopLeftCell.Y + 1)))
                 };
-            }
-            return false;
         }
 
         private List<CellPosition> GetReachableNeighbours(CellPosition cellPosition)

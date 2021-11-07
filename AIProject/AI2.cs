@@ -45,7 +45,7 @@ namespace AIProject
                     negamaxRes = -(Negascout(childPosition, depth - 1, -alpha - 1, -alpha, -color).MoveValue);
                     if (negamaxRes > alpha && negamaxRes < beta)
                     {
-                        negamaxRes = -(Negascout(childPosition, depth - 1, -beta, -alpha, -color).MoveValue); 
+                        negamaxRes = -(Negascout(childPosition, depth - 1, -beta, -negamaxRes, -color).MoveValue); 
                     }
                 }
                 if (negamaxRes > alpha && depth == _startDepth)
@@ -79,7 +79,7 @@ namespace AIProject
                 possiblePositions.AddLast(newPosition);
             }
 
-            if (depth != _startDepth) return possiblePositions;
+            if (depth == _startDepth) return possiblePositions;
             for (int i = 0; i < 8; i++)
             {
                 for (int j = 0; j < 8; j++)
@@ -127,8 +127,8 @@ namespace AIProject
 
         private int Sev(Field position, int color)
         {
-            int player1MinLenght = 99;
-            int player2MinLenght = 99;
+            int player1MinLenght = 999;
+            int player2MinLenght = 999;
             foreach (CellPosition winCell in GameConstants.Player1WinLine)
             {
                 int lenght = _aStar.FindPath(position.Player1Position, winCell, position).Count;
@@ -144,12 +144,21 @@ namespace AIProject
                   {
                       player2MinLenght = lenght;
                   }
-            }  
+            }
+            
             if (color == 1)
             {
-                return (position.Player1WallAmount + (8 - player1MinLenght)) - (position.Player2WallAmount + (8 - player2MinLenght)); //need theory testing
-            } 
-            return (position.Player2WallAmount + (8 - player2MinLenght)) - (position.Player1WallAmount + (8 - player1MinLenght));
+                if (player1MinLenght == 0)
+                { return 999; } 
+                if (player2MinLenght == 0)
+                { return -999;}
+                return (position.Player1WallAmount + (8 - player1MinLenght)) - (position.Player2WallAmount + (8 - player2MinLenght)*2); //need theory testing
+            }
+            if (player1MinLenght == 0)
+            { return -999; } 
+            if (player2MinLenght == 0)
+            { return 999;}
+            return (position.Player2WallAmount + (8 - player2MinLenght)*2) - (position.Player1WallAmount + (8 - player1MinLenght));
         }
     }
 }
