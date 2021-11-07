@@ -59,16 +59,6 @@ namespace Model
 
             return _path;
         }
-
-        public void ClearFieldCosts(Field field)
-        {
-            foreach (var cell in field.FieldMatrix)
-            {
-                cell.HCost = 0;
-                cell.GCost = 0;
-                cell.Parent = null;
-            }
-        }
         void RetracePath(FieldCell startNode, FieldCell endNode)
         {
             List<CellPosition> path = new List<CellPosition>();
