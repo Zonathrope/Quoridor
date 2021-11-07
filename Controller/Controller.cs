@@ -6,9 +6,9 @@ using Model.DataTypes;
 
 namespace QuoridorWithAIController
 {
-    internal class Controller
+    public class Controller
     {
-        private const int AiSearchDepth = 7;
+        private const int AiSearchDepth = 5;
         private AI2 _ai = new AI2(AiSearchDepth);
         private IView _view = new View.View();
         private IGameModel _gameModel;
@@ -37,7 +37,7 @@ namespace QuoridorWithAIController
 
             while (!_gameModel.GameEnded)
             {
-                Move move = _ai.GetMove(_gameModel.GetField(), _aiPlayerNumber);
+                var move = _ai.GetMove(_gameModel.GetField(), _aiPlayerNumber);
                 HandleAIMove(move);
                 string opponentInput = Console.ReadLine();
                 HandleOpponentInput(opponentInput);
@@ -67,7 +67,7 @@ namespace QuoridorWithAIController
         private void HandleOpponentMovePlayer(PlayerNumber opponentNumber, string location)
         {
             CellPosition newPosition = ParseCellPosition(location);
-            _gameModel.MovePlayer(opponentNumber, newPosition, DrawInView.No);
+                _gameModel.MovePlayer(opponentNumber, newPosition, DrawInView.No);
         }
 
         private CellPosition ParseCellPosition(string coordinates)
@@ -83,7 +83,7 @@ namespace QuoridorWithAIController
         private void HandleOpponentPlaceWall(PlayerNumber opponentNumber, string wallCoordinates)
         {
             WallPosition wallPosition = ParseWallPosition(wallCoordinates);
-            _gameModel.PlaceWall(opponentNumber, wallPosition);
+            _gameModel.PlaceWall(opponentNumber, wallPosition, DrawInView.No);
         }
 
         private WallPosition ParseWallPosition(string wallCoordinates)

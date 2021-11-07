@@ -87,19 +87,27 @@ namespace AIProject
                     WallPosition newWallPosition = new WallPosition(WallOrientation.Horizontal, new CellPosition(i, j));
                     if (!position.PlacedWalls.Contains(newWallPosition))
                     {
-                        Field newPosition1 = new Field(position);
-                        WallPosition wall1Position =
-                            new WallPosition(WallOrientation.Vertical, new CellPosition(i, j));
-                        newPosition1.PlaceWall(wall1Position, currentPlayer);
-                        newPosition1.Move = new PlaceWall(wall1Position);
-                        possiblePositions.AddLast(newPosition1);
+                        try
+                        {
+                            Field newPosition1 = new Field(position);
+                            WallPosition wall1Position =
+                                new WallPosition(WallOrientation.Vertical, new CellPosition(i, j));
+                            newPosition1.PlaceWall(wall1Position, currentPlayer);
+                            newPosition1.Move = new PlaceWall(wall1Position);
+                            possiblePositions.AddLast(newPosition1);
+                        }
+                        catch (Exception e){}
 
-                        Field newPosition2 = new Field(position);
-                        WallPosition wall2Position =
-                            new WallPosition(WallOrientation.Horizontal, new CellPosition(i, j));
-                        newPosition2.PlaceWall(wall2Position, currentPlayer);
-                        newPosition2.Move = new PlaceWall(wall2Position);
-                        possiblePositions.AddLast(newPosition2);
+                        try
+                        {
+                            Field newPosition2 = new Field(position);
+                            WallPosition wall2Position =
+                                new WallPosition(WallOrientation.Horizontal, new CellPosition(i, j));
+                            newPosition2.PlaceWall(wall2Position, currentPlayer);
+                            newPosition2.Move = new PlaceWall(wall2Position);
+                            possiblePositions.AddLast(newPosition2);
+                        }
+                        catch (Exception e) { }
                     }
 
                 }

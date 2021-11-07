@@ -7,8 +7,8 @@ namespace Model
         public const int FieldSize = 9;
         public const int FieldEndCoordinate = FieldSize - 1;
         private const int FieldMiddleCoordinate = 4;
-        public static readonly CellPosition Player1StartPosition = new (FieldMiddleCoordinate, FieldEndCoordinate);
-        public static readonly CellPosition Player2StartPosition = new (FieldMiddleCoordinate, 0);
+        public static readonly CellPosition Player1StartPosition = new (4, 8);
+        public static readonly CellPosition Player2StartPosition = new (4, 0);
         public const int StartWallAmount = 10;
 
         public static readonly CellPosition[] Player1WinLine =

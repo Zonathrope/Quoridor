@@ -19,7 +19,7 @@ namespace AIProject
         {
             var alphaOrig = alpha;
             ttEntry entry = TranspositionTableLookup(position);
-            if (entry != null && entry.Depth >= depth)
+            if (entry != null && entry.Equals(position) && entry.Depth >= depth)
             {
                 switch (entry.Flag)
                 {

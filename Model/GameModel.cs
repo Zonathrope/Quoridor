@@ -58,8 +58,7 @@ namespace Model
                _view.HandleGameEndedEvent();
         }
 
-        public void MovePlayer(
-            PlayerNumber playerNumber, CellPosition newPosition, DrawInView drawInView = DrawInView.Yes)
+        public void MovePlayer(PlayerNumber playerNumber, CellPosition newPosition, DrawInView drawInView = DrawInView.Yes)
         {
             if (!IsPlayersTurn(playerNumber))
                 throw new AnotherPlayerTurnException($"It is player {_currentPlayer} turn");
@@ -130,8 +129,7 @@ namespace Model
             EndGame();
         }
 
-        public void PlaceWall(
-            PlayerNumber playerPlacing, WallPosition wallPosition, DrawInView drawInView = DrawInView.Yes)
+        public void PlaceWall(PlayerNumber playerPlacing, WallPosition wallPosition, DrawInView drawInView = DrawInView.Yes)
         {
             if (!IsPlayersTurn(playerPlacing))
                 throw new AnotherPlayerTurnException($"It is player {_currentPlayer} turn");
@@ -140,6 +138,10 @@ namespace Model
                 throw new NoWallsLeftException($"Player {playerPlacing} has no walls left");
             
             _field.PlaceWall(wallPosition, playerPlacing);
+            if (drawInView == DrawInView.Yes)
+            {
+                _view.HandlePlayerPlacedWallEvent(playerPlacing, wallPosition); 
+            }
             SwitchCurrentPlayer();
         }
 

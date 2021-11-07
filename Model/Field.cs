@@ -150,16 +150,11 @@ namespace Model
                 throw new IncorrectWallPositionException(
                     $"({newWallPosition.TopLeftCell} is not correct wall position");
             }
-            // if (PlacedWalls.Any(newWallPosition.IsEqualByPlace))
-            // {
-            //     throw new WallPlaceTakenException(
-            //         $"There is already wall at {newWallPosition.TopLeftCell}");
-            // }
-            // if (OverlapsWithPlacedWalls(newWallPosition))
-            // {
-            //     throw new WallPlaceTakenException(
-            //         $"There is already wall at {newWallPosition.TopLeftCell}");
-            // }
+            if (OverlapsWithPlacedWalls(newWallPosition))
+            {
+                throw new WallPlaceTakenException(
+                    $"There is already wall at {newWallPosition.TopLeftCell}");
+            }
             BlockWays(newWallPosition);
             if (!BothPlayersHaveWayToLastLine())
             {
@@ -189,7 +184,7 @@ namespace Model
 
         //TODO ask if it is ok that exception is documented here, but not in calling method
         /// <exception cref="NoSuchWallException">passed wall wasn't placed.</exception>
-        private void RemoveWall(WallPosition wallPosition)
+        public void RemoveWall(WallPosition wallPosition)
         {
             if (!PlacedWalls.Contains(wallPosition))
                 throw new NoSuchWallException($"There is no {wallPosition} among placed walls");
@@ -270,38 +265,59 @@ namespace Model
                 return true;
             if (newWall.Orientation == WallOrientation.Horizontal)
             {
-                foreach (WallPosition placedWall in PlacedWalls)
+                // foreach (WallPosition placedWall in PlacedWalls)
+                // {
+                //     CellPosition cellToRight = null;
+                //     CellPosition cellToLeft = null;
+                //     try
+                //     {
+                //         cellToRight = placedWall.TopLeftCell.Shifted(1, 0);
+                //         cellToLeft = placedWall.TopLeftCell.Shifted(-1, 0);
+                //     }
+                //     catch (ArgumentOutOfRangeException e){}
+                //     if (newWall.TopLeftCell == cellToLeft || newWall.TopLeftCell == cellToRight)
+                //         return true;
+                // }
+                return newWall.TopLeftCell.X switch
                 {
-                    CellPosition cellToRight = null;
-                    CellPosition cellToLeft = null;
-                    try
-                    {
-                        cellToRight = placedWall.TopLeftCell.Shifted(1, 0);
-                        cellToLeft = placedWall.TopLeftCell.Shifted(-1, 0);
-                    }
-                    catch (ArgumentOutOfRangeException e){}
-                    if (newWall.TopLeftCell == cellToLeft || newWall.TopLeftCell == cellToRight)
-                        return true;
-                }
+                    0 => PlacedWalls.Contains(new WallPosition(WallOrientation.Horizontal,
+                        new CellPosition(newWall.TopLeftCell.X + 1, newWall.TopLeftCell.Y))),
+                    7 => PlacedWalls.Contains(new WallPosition(WallOrientation.Horizontal,
+                        new CellPosition(newWall.TopLeftCell.X - 1, newWall.TopLeftCell.Y))),
+                    _ => PlacedWalls.Contains(new WallPosition(WallOrientation.Horizontal,
+                             new CellPosition(newWall.TopLeftCell.X - 1, newWall.TopLeftCell.Y))) ||
+                         PlacedWalls.Contains(new WallPosition(WallOrientation.Horizontal,
+                             new CellPosition(newWall.TopLeftCell.X + 1, newWall.TopLeftCell.Y)))
+                };
             }
             else
             {
-                foreach (WallPosition placedWall in PlacedWalls)
+                // foreach (WallPosition placedWall in PlacedWalls)
+                // {
+                //     CellPosition cellAbove = null;
+                //     CellPosition cellBelow = null;
+                //     try
+                //     {
+                //         cellAbove = placedWall.TopLeftCell.Shifted(0, 1);
+                //         cellBelow = placedWall.TopLeftCell.Shifted(0, -1);
+                //     }
+                //     catch (ArgumentOutOfRangeException e){}
+                //
+                //     if (newWall.TopLeftCell == cellAbove || newWall.TopLeftCell == cellBelow)
+                //         return true;
+                // }
+                return newWall.TopLeftCell.Y switch
                 {
-                    CellPosition cellAbove = null;
-                    CellPosition cellBelow = null;
-                    try
-                    {
-                        cellAbove = placedWall.TopLeftCell.Shifted(0, 1);
-                        cellBelow = placedWall.TopLeftCell.Shifted(0, -1);
-                    }
-                    catch (ArgumentOutOfRangeException e){}
-
-                    if (newWall.TopLeftCell == cellAbove || newWall.TopLeftCell == cellBelow)
-                        return true;
-                }
+                    0 => PlacedWalls.Contains(new WallPosition(WallOrientation.Horizontal,
+                        new CellPosition(newWall.TopLeftCell.X, newWall.TopLeftCell.Y + 1))),
+                    7 => PlacedWalls.Contains(new WallPosition(WallOrientation.Horizontal,
+                        new CellPosition(newWall.TopLeftCell.X, newWall.TopLeftCell.Y - 1))),
+                    _ => PlacedWalls.Contains(new WallPosition(WallOrientation.Horizontal,
+                             new CellPosition(newWall.TopLeftCell.X, newWall.TopLeftCell.Y - 1))) ||
+                         PlacedWalls.Contains(new WallPosition(WallOrientation.Horizontal,
+                             new CellPosition(newWall.TopLeftCell.X, newWall.TopLeftCell.Y + 1)))
+                };
             }
-
             return false;
         }
 
