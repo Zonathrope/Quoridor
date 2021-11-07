@@ -265,19 +265,6 @@ namespace Model
                 return true;
             if (newWall.Orientation == WallOrientation.Horizontal)
             {
-                // foreach (WallPosition placedWall in PlacedWalls)
-                // {
-                //     CellPosition cellToRight = null;
-                //     CellPosition cellToLeft = null;
-                //     try
-                //     {
-                //         cellToRight = placedWall.TopLeftCell.Shifted(1, 0);
-                //         cellToLeft = placedWall.TopLeftCell.Shifted(-1, 0);
-                //     }
-                //     catch (ArgumentOutOfRangeException e){}
-                //     if (newWall.TopLeftCell == cellToLeft || newWall.TopLeftCell == cellToRight)
-                //         return true;
-                // }
                 return newWall.TopLeftCell.X switch
                 {
                     0 => PlacedWalls.Contains(new WallPosition(WallOrientation.Horizontal,
@@ -292,29 +279,15 @@ namespace Model
             }
             else
             {
-                // foreach (WallPosition placedWall in PlacedWalls)
-                // {
-                //     CellPosition cellAbove = null;
-                //     CellPosition cellBelow = null;
-                //     try
-                //     {
-                //         cellAbove = placedWall.TopLeftCell.Shifted(0, 1);
-                //         cellBelow = placedWall.TopLeftCell.Shifted(0, -1);
-                //     }
-                //     catch (ArgumentOutOfRangeException e){}
-                //
-                //     if (newWall.TopLeftCell == cellAbove || newWall.TopLeftCell == cellBelow)
-                //         return true;
-                // }
                 return newWall.TopLeftCell.Y switch
                 {
-                    0 => PlacedWalls.Contains(new WallPosition(WallOrientation.Horizontal,
+                    0 => PlacedWalls.Contains(new WallPosition(WallOrientation.Vertical,
                         new CellPosition(newWall.TopLeftCell.X, newWall.TopLeftCell.Y + 1))),
-                    7 => PlacedWalls.Contains(new WallPosition(WallOrientation.Horizontal,
+                    7 => PlacedWalls.Contains(new WallPosition(WallOrientation.Vertical,
                         new CellPosition(newWall.TopLeftCell.X, newWall.TopLeftCell.Y - 1))),
-                    _ => PlacedWalls.Contains(new WallPosition(WallOrientation.Horizontal,
+                    _ => PlacedWalls.Contains(new WallPosition(WallOrientation.Vertical,
                              new CellPosition(newWall.TopLeftCell.X, newWall.TopLeftCell.Y - 1))) ||
-                         PlacedWalls.Contains(new WallPosition(WallOrientation.Horizontal,
+                         PlacedWalls.Contains(new WallPosition(WallOrientation.Vertical,
                              new CellPosition(newWall.TopLeftCell.X, newWall.TopLeftCell.Y + 1)))
                 };
             }
