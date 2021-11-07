@@ -70,16 +70,18 @@ namespace AIProject
         {
             PlayerNumber currentPlayer = color == 1 ? PlayerNumber.First : PlayerNumber.Second;
             LinkedList<Field> possiblePositions = new LinkedList<Field>();
-            
-            foreach (var availablePositions in position.GetCellsForMove(currentPlayer))
-            {
-                Field newPosition = new Field(position);
-                newPosition.MovePlayer(currentPlayer, availablePositions);
-                newPosition.Move = new MovePlayer(availablePositions);
-                possiblePositions.AddLast(newPosition);
-            }
 
-            if (depth == _startDepth) return possiblePositions;
+            if (depth == _startDepth)
+            {
+                foreach (var availablePositions in position.GetCellsForMove(currentPlayer))
+                {
+                    Field newPosition = new Field(position);
+                    newPosition.MovePlayer(currentPlayer, availablePositions);
+                    newPosition.Move = new MovePlayer(availablePositions);
+                    possiblePositions.AddLast(newPosition);
+                }
+                return possiblePositions;
+            }
             for (int i = 0; i < 8; i++)
             {
                 for (int j = 0; j < 8; j++)
@@ -111,6 +113,13 @@ namespace AIProject
                     }
 
                 }
+            }
+            foreach (var availablePositions in position.GetCellsForMove(currentPlayer))
+            {
+                Field newPosition = new Field(position);
+                newPosition.MovePlayer(currentPlayer, availablePositions);
+                newPosition.Move = new MovePlayer(availablePositions);
+                possiblePositions.AddLast(newPosition);
             }
             return possiblePositions;
         }
@@ -146,19 +155,24 @@ namespace AIProject
                   }
             }
             
+            // if (color == 1)
+            // {
+            //     if (player2MinLenght == 0)
+            //     { return -999;}
+            //     if (player1MinLenght == 0)
+            //     { return 999; }
+            //     return (position.Player1WallAmount + (8 - player1MinLenght)) - (position.Player2WallAmount + (8 - player2MinLenght)*2); //need theory testing
+            // }
+            // if (player2MinLenght == 0)
+            // { return 999;}
+            // if (player1MinLenght == 0)
+            // { return -999; }
+            // return (position.Player2WallAmount + (8 - player2MinLenght)*2) - (position.Player1WallAmount + (8 - player1MinLenght));
             if (color == 1)
             {
-                if (player1MinLenght == 0)
-                { return 999; } 
-                if (player2MinLenght == 0)
-                { return -999;}
-                return (position.Player1WallAmount + (8 - player1MinLenght)) - (position.Player2WallAmount + (8 - player2MinLenght)*2); //need theory testing
+                return ((8 - player1MinLenght)); //need theory testing
             }
-            if (player1MinLenght == 0)
-            { return -999; } 
-            if (player2MinLenght == 0)
-            { return 999;}
-            return (position.Player2WallAmount + (8 - player2MinLenght)*2) - (position.Player1WallAmount + (8 - player1MinLenght));
+            return ((8 - player2MinLenght));
         }
     }
 }

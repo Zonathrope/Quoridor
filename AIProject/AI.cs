@@ -37,16 +37,25 @@ namespace AIProject
             var childPositions = GeneratePositions(position, color, depth);
             var value = -99;
             
-            foreach (Field childPosition in childPositions)
+            foreach (Move childPosition in childPositions)
             {
-                int negamaxRes = -(Negamax(childPosition, depth - 1, -beta, -alpha, -color).MoveValue);
+                int negamaxRes = 0;
+                try
+                {
+                    var playerCurrenPosition = color == 1 ? position.Player1Position : position.Player2Position;
+                    ExecuteMove(childPosition,position, color);
+                    negamaxRes = -(Negamax(position, depth - 1, -beta, -alpha, -color).MoveValue);
+                    position.Move = childPosition;
+                    UndoMove(childPosition,position, playerCurrenPosition, color);
+                }
+                catch (Exception e) { }
                 
                 if (negamaxRes > value && depth == _startDepth)
                 {
-                    if (childPosition.Move is MovePlayer move)
+                    if (position.Move is MovePlayer move)
                     {
                         position.Move = new MovePlayer(move);
-                    } else position.Move = new PlaceWall((PlaceWall) childPosition.Move);
+                    } else position.Move = new PlaceWall((PlaceWall) position.Move);
                 }
                 value = Math.Max(value, negamaxRes);
                 position.Move.MoveValue = value;
@@ -56,45 +65,55 @@ namespace AIProject
             }
             return position.Move;
         }
-        private LinkedList<Field> GeneratePositions(Field position, int color, int depth)
+        private LinkedList<Move> GeneratePositions(Field position, int color, int depth)
         {
             PlayerNumber currentPlayer = color == 1 ? PlayerNumber.First : PlayerNumber.Second;
-            LinkedList<Field> possiblePositions = new LinkedList<Field>();
+            LinkedList<Move> possiblePositions = new LinkedList<Move>();
             
             foreach (var availablePositions in position.GetCellsForMove(currentPlayer))
             {
-                Field newPosition = new Field(position);
-                newPosition.MovePlayer(currentPlayer, availablePositions);
-                newPosition.Move = new MovePlayer(availablePositions);
+                Move newPosition = new MovePlayer(availablePositions);
                 possiblePositions.AddLast(newPosition);
             }
 
-            if (depth != _startDepth) return possiblePositions;
+            if (depth == _startDepth) return possiblePositions;
             for (int i = 0; i < 8; i++)
             {
                 for (int j = 0; j < 8; j++)
                 {
                     WallPosition newWallPosition = new WallPosition(WallOrientation.Horizontal, new CellPosition(i, j));
+                    WallPosition newWallPosition2 = new WallPosition(WallOrientation.Vertical, new CellPosition(i, j));
                     if (!position.PlacedWalls.Contains(newWallPosition))
                     {
-                        Field newPosition1 = new Field(position);
-                        WallPosition wall1Position =
-                            new WallPosition(WallOrientation.Vertical, new CellPosition(i, j));
-                        newPosition1.PlaceWall(wall1Position, currentPlayer);
-                        newPosition1.Move = new PlaceWall(wall1Position);
-                        possiblePositions.AddLast(newPosition1);
-
-                        Field newPosition2 = new Field(position);
-                        WallPosition wall2Position =
-                            new WallPosition(WallOrientation.Horizontal, new CellPosition(i, j));
-                        newPosition2.PlaceWall(wall2Position, currentPlayer);
-                        newPosition2.Move = new PlaceWall(wall2Position);
-                        possiblePositions.AddLast(newPosition2);
+                        possiblePositions.AddLast(new PlaceWall(newWallPosition));
+                        possiblePositions.AddLast(new PlaceWall(newWallPosition2));
                     }
-
                 }
             }
             return possiblePositions;
+        }
+
+        public void ExecuteMove(Move move, Field field, int color)
+        {
+            PlayerNumber player = color == 1 ? PlayerNumber.First : PlayerNumber.Second;
+            if (move is MovePlayer movePlayer)
+                field.MovePlayer(player, movePlayer.Position);
+            else if (move is PlaceWall placeWall)
+                field.PlaceWall(placeWall.Position, player);
+        }
+        
+        public void UndoMove(Move move, Field field, CellPosition playerPosition, int color)
+        {
+            PlayerNumber player = color == 1 ? PlayerNumber.First : PlayerNumber.Second;
+            switch (move)
+            {
+                case MovePlayer:
+                    field.MovePlayer(player, playerPosition);
+                    break;
+                case PlaceWall placeWall:
+                    field.RemoveWall(placeWall.Position);
+                    break;
+            }
         }
 
         bool CheckWin(Field position, int color)
@@ -127,10 +146,30 @@ namespace AIProject
                       player2MinLenght = lenght;
                   }
             }  
+            // if (color == 1)
+            // {
+            //     return (position.Player1WallAmount + (8 - player1MinLenght)) - (position.Player2WallAmount + (8 - player2MinLenght)); //need theory testing
+            // } 
+            // return (position.Player2WallAmount + (8 - player2MinLenght)) - (position.Player1WallAmount + (8 - player1MinLenght));
+            
+            // if (color == 1)
+            // {
+            //     return ((8 - player1MinLenght)) - ((8 - player2MinLenght)); //need theory testing
+            // } 
+            // return ((8 - player2MinLenght)) - ((8 - player1MinLenght));
+            
             if (color == 1)
             {
+                if (player2MinLenght == 0)
+                { return -999;}
+                if (player1MinLenght == 0)
+                { return 999; }
                 return (position.Player1WallAmount + (8 - player1MinLenght)) - (position.Player2WallAmount + (8 - player2MinLenght)); //need theory testing
-            } 
+            }
+            if (player2MinLenght == 0)
+            { return 999;}
+            if (player1MinLenght == 0)
+            { return -999; }
             return (position.Player2WallAmount + (8 - player2MinLenght)) - (position.Player1WallAmount + (8 - player1MinLenght));
         }
     }
