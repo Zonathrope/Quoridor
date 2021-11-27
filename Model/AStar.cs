@@ -11,6 +11,10 @@ namespace Model
 
         public List<CellPosition> FindPath(CellPosition startPos, CellPosition targetPos, Field field)
         {
+            if (startPos.Y == targetPos.Y && startPos.X == targetPos.X){
+                return new List<CellPosition>();
+            }
+            ClearFieldCosts(field);
             FieldCell startNode = field.FieldMatrix[startPos.Y, startPos.X];
             FieldCell targetNode = field.FieldMatrix[targetPos.Y, targetPos.X];
 
@@ -59,6 +63,15 @@ namespace Model
 
             return _path;
         }
+        public void ClearFieldCosts(Field field)
+        {
+            foreach (var cell in field.FieldMatrix)
+            {
+                cell.HCost = 0;
+                cell.GCost = 0;
+                cell.Parent = null;
+            }
+        }
         void RetracePath(FieldCell startNode, FieldCell endNode)
         {
             List<CellPosition> path = new List<CellPosition>();
@@ -87,7 +100,7 @@ namespace Model
             HashSet<FieldCell> closedSet = new HashSet<FieldCell>();
             if (start == end)
             {
-                throw new Exception("They are the same nodes");
+                return true;
             }
 
             openSet.Add(startCell);

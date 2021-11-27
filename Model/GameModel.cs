@@ -10,8 +10,6 @@ namespace Model
         public bool GameEnded { get; private set; }
         public CellPosition Player1Position => _field.Player1Position;
         public CellPosition Player2Position => _field.Player2Position;
-        public int Player1WallAmount { get; private set; }
-        public int Player2WallAmount { get; private set; }
         public Field GetField()
         {
             return _field;
@@ -29,15 +27,11 @@ namespace Model
         {
             _view = null;
             _field = new Field();
-            Player1WallAmount = GameConstants.StartWallAmount;
-            Player2WallAmount = GameConstants.StartWallAmount;
         }
         public GameModel(IView view)
         {
             _view = view;
             _field = new Field();
-            Player1WallAmount = GameConstants.StartWallAmount;
-            Player2WallAmount = GameConstants.StartWallAmount;
         }
 
         public void StartNewGame(DrawInView drawInView = DrawInView.Yes)
@@ -45,8 +39,6 @@ namespace Model
             GameEnded = false;
             _field = new Field();
             _currentPlayer = PlayerNumber.First;
-            Player1WallAmount = GameConstants.StartWallAmount;
-            Player2WallAmount = GameConstants.StartWallAmount;
             if (drawInView == DrawInView.Yes)
                 _view.HandleGameStartedEvent();
         }
@@ -152,7 +144,7 @@ namespace Model
 
         private bool PlayerHasWalls(PlayerNumber playerNumber)
         {
-            int wallAmount = playerNumber == PlayerNumber.First ? Player1WallAmount : Player2WallAmount;
+            int wallAmount = playerNumber == PlayerNumber.First ? _field.Player1WallAmount : _field.Player2WallAmount;
             return wallAmount != 0;
         }
     }

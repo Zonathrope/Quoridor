@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Model;
 using Model.DataTypes;
 
@@ -15,8 +16,10 @@ namespace AIProject
         private readonly int _startDepth;
         private const int StartAlpha = -999;
         private const int StartBeta = 999;
-        public Move GetMove(Field position, PlayerNumber playerNumber)
+        private bool _firstTurn;
+        public Move GetMove(Field position, PlayerNumber playerNumber, bool firstTurn)
         {
+            _firstTurn = firstTurn;
             int color = PlayerToColor(playerNumber);
             return Negascout(position, _startDepth, StartAlpha, StartBeta, color);
         }
@@ -31,93 +34,221 @@ namespace AIProject
                 position.Move.MoveValue = Sev(position, color);
                 return position.Move;
             }
-            var childPositions = GeneratePositions(position, color, depth);
+            var childPositions = GeneratePositions(position, color);
             var counter = 0;
-            foreach (Field childPosition in childPositions)
+            foreach (Move childPosition in childPositions)
             {
                 int negamaxRes;
+                var playerCurrenPosition = color == 1 ? position.Player1Position : position.Player2Position;
+                var succeeded = position.ExecuteMove(childPosition, color);
+                if (!succeeded) break;
+                
                 if (counter == 0)
                 {
-                    negamaxRes = -(Negascout(childPosition, depth - 1, -beta, -alpha, -color).MoveValue); 
+                    negamaxRes = -(Negascout(position, depth - 1, -beta, -alpha, -color).MoveValue); 
                 }
                 else
                 {
-                    negamaxRes = -(Negascout(childPosition, depth - 1, -alpha - 1, -alpha, -color).MoveValue);
+                    negamaxRes = -(Negascout(position, depth - 1, -alpha - 1, -alpha, -color).MoveValue);
                     if (negamaxRes > alpha && negamaxRes < beta)
                     {
-                        negamaxRes = -(Negascout(childPosition, depth - 1, -beta, -negamaxRes, -color).MoveValue); 
+                        negamaxRes = -(Negascout(position, depth - 1, -beta, -negamaxRes, -color).MoveValue); 
                     }
                 }
+                position.UndoMove(childPosition, playerCurrenPosition, color);
+                
                 if (negamaxRes > alpha && depth == _startDepth)
                 {
-                    if (childPosition.Move is MovePlayer move)
+                    if (childPosition is MovePlayer move)
                     {
                         position.Move = new MovePlayer(move);
-                    } else position.Move = new PlaceWall((PlaceWall) childPosition.Move);
+                    } else position.Move = new PlaceWall((PlaceWall) childPosition);
                 }
+                //Console.WriteLine("d:" + (depth - 1) + " v:" + negamaxRes + " m:" + childPosition);
+                
+                counter++;
                 alpha = Math.Max(alpha, negamaxRes);
                 position.Move.MoveValue = alpha;
-                
-                //Console.WriteLine("d:" + (depth - 1) + " v:" + negamaxRes + " m:" + childPosition.Move);
-                counter++;
-                
-                alpha = Math.Max(alpha, negamaxRes);
                 if (alpha >= beta) break;
             }
             return position.Move;
         }
-        private LinkedList<Field> GeneratePositions(Field position, int color, int depth)
+        
+        private LinkedList<Move> GeneratePositions(Field position, int color)
         {
             PlayerNumber currentPlayer = color == 1 ? PlayerNumber.First : PlayerNumber.Second;
-            LinkedList<Field> possiblePositions = new LinkedList<Field>();
+            LinkedList<Move> possiblePositions = new LinkedList<Move>();
             
-            foreach (var availablePositions in position.GetCellsForMove(currentPlayer))
+            foreach (var newPosition in 
+                position.GetCellsForMove(currentPlayer).Select(availablePositions => new MovePlayer(availablePositions)))
             {
-                Field newPosition = new Field(position);
-                newPosition.MovePlayer(currentPlayer, availablePositions);
-                newPosition.Move = new MovePlayer(availablePositions);
                 possiblePositions.AddLast(newPosition);
             }
 
-            //if (depth == _startDepth) return possiblePositions;
+            if (_firstTurn) return possiblePositions;
             if ((currentPlayer != PlayerNumber.First || position.Player1WallAmount <= 0) &&
                 (currentPlayer != PlayerNumber.Second || position.Player2WallAmount <= 0)) return possiblePositions;
-            for (int i = 0; i < 8; i++)
+            
+            var aroundPlayer1Position = 
+                new WallPosition(WallOrientation.Horizontal, 
+                    new CellPosition(position.Player1Position.X, position.Player1Position.Y));
+            var aroundPlayer1Position1 =
+                new WallPosition(WallOrientation.Horizontal, 
+                    new CellPosition(position.Player1Position.X -1, position.Player1Position.Y));
+            var aroundPlayer1Position2 =
+                new WallPosition(WallOrientation.Horizontal, 
+                    new CellPosition(position.Player1Position.X, position.Player1Position.Y -1));
+            var aroundPlayer1Position3 =
+                new WallPosition(WallOrientation.Horizontal, 
+                    new CellPosition(position.Player1Position.X -1, position.Player1Position.Y-1));
+            var aroundPlayer1Position4 =
+                new WallPosition(WallOrientation.Vertical, 
+                    new CellPosition(position.Player1Position.X, position.Player1Position.Y));
+            var aroundPlayer1Position5 =
+                new WallPosition(WallOrientation.Vertical, 
+                    new CellPosition(position.Player1Position.X -1, position.Player1Position.Y));
+            var aroundPlayer1Position6 =
+                new WallPosition(WallOrientation.Vertical, 
+                    new CellPosition(position.Player1Position.X, position.Player1Position.Y -1));
+            var aroundPlayer1Position7 =
+                new WallPosition(WallOrientation.Vertical, 
+                    new CellPosition(position.Player1Position.X -1, position.Player1Position.Y-1));
+            
+            var aroundPlayer2Position =
+                new WallPosition(WallOrientation.Horizontal, 
+                    new CellPosition(position.Player2Position.X, position.Player2Position.Y));
+            var aroundPlayer2Position1 =
+                new WallPosition(WallOrientation.Horizontal, 
+                    new CellPosition(position.Player2Position.X -1, position.Player2Position.Y));
+            var aroundPlayer2Position2 =
+                new WallPosition(WallOrientation.Horizontal, 
+                    new CellPosition(position.Player2Position.X, position.Player2Position.Y -1));
+            var aroundPlayer2Position3 =
+                new WallPosition(WallOrientation.Horizontal, 
+                    new CellPosition(position.Player2Position.X -1, position.Player2Position.Y-1));
+            var aroundPlayer2Position4 =
+                new WallPosition(WallOrientation.Vertical, 
+                    new CellPosition(position.Player2Position.X, position.Player2Position.Y));
+            var aroundPlayer2Position5 =
+                new WallPosition(WallOrientation.Vertical, 
+                    new CellPosition(position.Player2Position.X -1, position.Player2Position.Y));
+            var aroundPlayer2Position6 =
+                new WallPosition(WallOrientation.Vertical, 
+                    new CellPosition(position.Player2Position.X, position.Player2Position.Y -1));
+            var aroundPlayer2Position7 =
+                new WallPosition(WallOrientation.Vertical, 
+                    new CellPosition(position.Player2Position.X -1, position.Player2Position.Y-1));
+            
+            if (currentPlayer == PlayerNumber.First)
             {
-                for (int j = 0; j < 8; j++)
+                if (position.ValidateWall(aroundPlayer2Position) && position.ValidateWall(aroundPlayer2Position4))
                 {
-                    WallPosition newWallPosition =
-                        new WallPosition(WallOrientation.Horizontal, new CellPosition(i, j));
-                    if (position.PlacedWalls.Contains(newWallPosition)) continue;
-                    try
-                    {
-                        Field newPosition1 = new Field(position);
-                        WallPosition wall1Position =
-                            new WallPosition(WallOrientation.Vertical, new CellPosition(i, j));
-                        newPosition1.PlaceWall(wall1Position, currentPlayer);
-                        newPosition1.Move = new PlaceWall(wall1Position);
-                        possiblePositions.AddLast(newPosition1);
-                    }
-                    catch (Exception e)
-                    {
-                    }
-
-                    try
-                    {
-                        Field newPosition2 = new Field(position);
-                        WallPosition wall2Position =
-                            new WallPosition(WallOrientation.Horizontal, new CellPosition(i, j));
-                        newPosition2.PlaceWall(wall2Position, currentPlayer);
-                        newPosition2.Move = new PlaceWall(wall2Position);
-                        possiblePositions.AddLast(newPosition2);
-                    }
-                    catch (Exception e)
-                    {
-                    }
-
+                    possiblePositions.AddLast(new PlaceWall(aroundPlayer2Position));
+                    possiblePositions.AddLast(new PlaceWall(aroundPlayer2Position4));
+                }
+                if (position.ValidateWall(aroundPlayer2Position1) && position.ValidateWall(aroundPlayer2Position5))
+                {
+                    possiblePositions.AddLast(new PlaceWall(aroundPlayer2Position1));
+                    possiblePositions.AddLast(new PlaceWall(aroundPlayer2Position5));
+                }
+                if (position.ValidateWall(aroundPlayer2Position2) && position.ValidateWall(aroundPlayer2Position6))
+                {
+                    possiblePositions.AddLast(new PlaceWall(aroundPlayer2Position2)); 
+                    possiblePositions.AddLast(new PlaceWall(aroundPlayer2Position6));
+                }
+                if (position.ValidateWall(aroundPlayer2Position3) && position.ValidateWall(aroundPlayer2Position7))
+                {
+                    possiblePositions.AddLast(new PlaceWall(aroundPlayer2Position3));
+                    possiblePositions.AddLast(new PlaceWall(aroundPlayer2Position7));
+                }
+                
+                if (position.ValidateWall(aroundPlayer1Position) && position.ValidateWall(aroundPlayer1Position4))
+                {
+                    possiblePositions.AddLast(new PlaceWall(aroundPlayer1Position));
+                    possiblePositions.AddLast(new PlaceWall(aroundPlayer1Position4));
+                }
+                if (position.ValidateWall(aroundPlayer1Position1) && position.ValidateWall(aroundPlayer1Position5))
+                {
+                    possiblePositions.AddLast(new PlaceWall(aroundPlayer1Position1));
+                    possiblePositions.AddLast(new PlaceWall(aroundPlayer1Position5));
+                }
+                if (position.ValidateWall(aroundPlayer1Position2) && position.ValidateWall(aroundPlayer1Position6))
+                {
+                    possiblePositions.AddLast(new PlaceWall(aroundPlayer1Position2)); 
+                    possiblePositions.AddLast(new PlaceWall(aroundPlayer1Position6));
+                }
+                if (position.ValidateWall(aroundPlayer1Position3) && position.ValidateWall(aroundPlayer1Position7))
+                {
+                    possiblePositions.AddLast(new PlaceWall(aroundPlayer1Position3));
+                    possiblePositions.AddLast(new PlaceWall(aroundPlayer1Position7));
+                }
+            } else {
+                if (position.ValidateWall(aroundPlayer1Position) && position.ValidateWall(aroundPlayer1Position4))
+                {
+                    possiblePositions.AddLast(new PlaceWall(aroundPlayer1Position));
+                    possiblePositions.AddLast(new PlaceWall(aroundPlayer1Position4));
+                }
+                if (position.ValidateWall(aroundPlayer1Position1) && position.ValidateWall(aroundPlayer1Position5))
+                {
+                    possiblePositions.AddLast(new PlaceWall(aroundPlayer1Position1));
+                    possiblePositions.AddLast(new PlaceWall(aroundPlayer1Position5));
+                }
+                if (position.ValidateWall(aroundPlayer1Position2) && position.ValidateWall(aroundPlayer1Position6))
+                {
+                    possiblePositions.AddLast(new PlaceWall(aroundPlayer1Position2)); 
+                    possiblePositions.AddLast(new PlaceWall(aroundPlayer1Position6));
+                }
+                if (position.ValidateWall(aroundPlayer1Position3) && position.ValidateWall(aroundPlayer1Position7))
+                {
+                    possiblePositions.AddLast(new PlaceWall(aroundPlayer1Position3));
+                    possiblePositions.AddLast(new PlaceWall(aroundPlayer1Position7));
+                }
+                
+                if (position.ValidateWall(aroundPlayer2Position) && position.ValidateWall(aroundPlayer2Position4))
+                {
+                    possiblePositions.AddLast(new PlaceWall(aroundPlayer2Position));
+                    possiblePositions.AddLast(new PlaceWall(aroundPlayer2Position4));
+                }
+                if (position.ValidateWall(aroundPlayer2Position1) && position.ValidateWall(aroundPlayer2Position5))
+                {
+                    possiblePositions.AddLast(new PlaceWall(aroundPlayer2Position1));
+                    possiblePositions.AddLast(new PlaceWall(aroundPlayer2Position5));
+                }
+                if (position.ValidateWall(aroundPlayer2Position2) && position.ValidateWall(aroundPlayer2Position6))
+                {
+                    possiblePositions.AddLast(new PlaceWall(aroundPlayer2Position2)); 
+                    possiblePositions.AddLast(new PlaceWall(aroundPlayer2Position6));
+                }
+                if (position.ValidateWall(aroundPlayer2Position3) && position.ValidateWall(aroundPlayer2Position7))
+                {
+                    possiblePositions.AddLast(new PlaceWall(aroundPlayer2Position3));
+                    possiblePositions.AddLast(new PlaceWall(aroundPlayer2Position7));
                 }
             }
 
+            foreach (var placedWall in position.PlacedWalls)
+            {
+                
+            }
+
+            for (var i = 0; i < 8; i++)
+            {
+                for (var j = 0; j < 8; j++)
+                {
+                    var newWallPosition = new WallPosition(WallOrientation.Horizontal, new CellPosition(i, j));
+                    var newWallPosition2 = new WallPosition(WallOrientation.Vertical, new CellPosition(i, j));
+
+                    var newWall = new PlaceWall(newWallPosition);
+                    var newWall2 = new PlaceWall(newWallPosition2);
+                    if (position.ValidateWall(newWallPosition) && position.ValidateWall(newWallPosition2) &&
+                        !possiblePositions.Contains(newWall) && 
+                        !possiblePositions.Contains(newWall2)) 
+                    {
+                        possiblePositions.AddLast(newWall);
+                        possiblePositions.AddLast(newWall2); 
+                    }
+                }
+            }
             return possiblePositions;
         }
 
@@ -133,28 +264,31 @@ namespace AIProject
 
         private int Sev(Field position, int color)
         {
-            int player1MinLenght = 999;
-            int player2MinLenght = 999;
-            foreach (CellPosition winCell in GameConstants.Player1WinLine)
+            var player1MinLenght = GameConstants.Player1WinLine.Select(winCell => 
+                _aStar.FindPath(position.Player1Position, winCell, position).Count).Prepend(999).Min();
+
+            var player2MinLenght = GameConstants.Player2WinLine.Select(winCell => 
+                _aStar.FindPath(position.Player2Position, winCell, position).Count).Prepend(999).Min();
+            
+            switch (player1MinLenght)
             {
-                int lenght = _aStar.FindPath(position.Player1Position, winCell, position).Count;
-                if (lenght < player1MinLenght)
+                case 0 when player2MinLenght == 0:
+                    return 0;
+                case 0:
+                    return color * 999;
+                default:
                 {
-                    player1MinLenght = lenght;
+                    if (player2MinLenght == 0)
+                    {
+                        return color * -999;
+                    }
+                    break;
                 }
-            }   
-            foreach (CellPosition winCell in GameConstants.Player2WinLine)
-            {
-                  int lenght = _aStar.FindPath(position.Player2Position, winCell, position).Count;
-                  if (lenght < player2MinLenght)
-                  {
-                      player2MinLenght = lenght;
-                  }
             }
             
             if (color == 1)
             {
-                return (position.Player1WallAmount + (8 - player1MinLenght)*2) - (position.Player2WallAmount + (8 - player2MinLenght)*2); //need theory testing
+                return (position.Player1WallAmount + (8 - player1MinLenght)*2) - (position.Player2WallAmount + (8 - player2MinLenght)*2);
             }
             return (position.Player2WallAmount + (8 - player2MinLenght)*2) - (position.Player1WallAmount + (8 - player1MinLenght)*2);
         }

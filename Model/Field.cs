@@ -35,6 +35,41 @@ namespace Model
             Player1WallAmount = GameConstants.StartWallAmount;
             Player2WallAmount = GameConstants.StartWallAmount;
         }
+        
+        public bool ExecuteMove(Move move, int color)
+        {
+            var success = true;
+            PlayerNumber player = color == 1 ? PlayerNumber.First : PlayerNumber.Second;
+            switch (move)
+            {
+                case MovePlayer movePlayer:
+                    MovePlayer(player, movePlayer.Position);
+                    break;
+                case PlaceWall placeWall:
+                    success = PlaceWall(placeWall.Position, player);
+                    break;
+            }
+            return success;
+        }
+        public void UndoMove(Move move, CellPosition playerOldPosition, int color)
+        {
+            PlayerNumber player = color == 1 ? PlayerNumber.First : PlayerNumber.Second;
+            switch (move)
+            {
+                case MovePlayer movePlayer:
+                    MovePlayer(player, playerOldPosition);
+                    break;
+                case PlaceWall placeWall:
+                    RemoveWall(placeWall.Position);
+                    IncrementPlayerWallAmount(player);
+                    break;
+            }
+        }
+        
+        public bool ValidateWall(WallPosition wallPosition)
+        {
+            return !PlacedWalls.Contains(wallPosition) && !OverlapsWithPlacedWalls(wallPosition);
+        }
 
         private void InitFieldMatrix()
         {
@@ -143,30 +178,35 @@ namespace Model
 
         /// <exception cref="IncorrectWallPositionException">Caller pass invalid position.</exception>
         /// <exception cref="WallPlaceTakenException">Caller tries to place wall over existing wall.</exception>
-        public void PlaceWall(WallPosition newWallPosition, PlayerNumber playerPlacing)
+        public bool PlaceWall(WallPosition newWallPosition, PlayerNumber playerPlacing)
         {
             if (!IsValidWallPosition(newWallPosition))
             {
-                throw new IncorrectWallPositionException(
-                    $"({newWallPosition.TopLeftCell} is not correct wall position");
+                return false;
+                // throw new IncorrectWallPositionException(
+                //     $"({newWallPosition.TopLeftCell} is not correct wall position");
             }
             if (OverlapsWithPlacedWalls(newWallPosition))
             {
-                throw new WallPlaceTakenException(
-                    $"There is already wall at {newWallPosition.TopLeftCell}");
+                return false;
+                // throw new WallPlaceTakenException(
+                //     $"There is already wall at {newWallPosition.TopLeftCell}");
             }
+            
             BlockWays(newWallPosition);
+            PlacedWalls.Add(newWallPosition);
+            
             if (!BothPlayersHaveWayToLastLine())
             {
                 RemoveWall(newWallPosition);
-                throw new WallBlocksPathForPlayerException(
-                    $"Wall at {newWallPosition.TopLeftCell} blocks way for players");
+                return false;
+                // throw new WallBlocksPathForPlayerException(
+                //     $"Wall at {newWallPosition.TopLeftCell} blocks way for players");
             }
-            
             DecrementPlayerWallAmount(playerPlacing);
-            PlacedWalls.Add(newWallPosition);
+            return true;
         }
-        private bool BothPlayersHaveWayToLastLine()
+        public bool BothPlayersHaveWayToLastLine()
         {
         IAStar aStar = new AStar();
             CellPosition[] winLine1 = GetPlayerWinLine(PlayerNumber.First);
@@ -259,7 +299,7 @@ namespace Model
             return cell == Player1Position || cell == Player2Position;
         }
         
-        private bool OverlapsWithPlacedWalls(WallPosition newWall)
+        public bool OverlapsWithPlacedWalls(WallPosition newWall)
         {
             if (PlacedWalls.Any(newWall.IsEqualByPlace))
                 return true;
@@ -370,6 +410,13 @@ namespace Model
                 Player1WallAmount--;
             else
                 Player2WallAmount--;
+        }
+        private void IncrementPlayerWallAmount(PlayerNumber playerNumber)
+        {
+            if (playerNumber == PlayerNumber.First)
+                Player1WallAmount++;
+            else
+                Player2WallAmount++;
         }
     }
 }   

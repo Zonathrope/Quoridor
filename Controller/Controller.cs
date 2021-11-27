@@ -8,11 +8,12 @@ namespace QuoridorWithAIController
 {
     public class Controller
     {
-        private const int AiSearchDepth = 2;
+        private const int AiSearchDepth = 3;
         private AI2 _ai = new AI2(AiSearchDepth);
         private IView _view = new View.View();
         private IGameModel _gameModel;
         private PlayerNumber _aiPlayerNumber;
+        private bool firstAiTurn;
 
         private readonly Dictionary<char, int> _letterToXCoordinate = new()
         {
@@ -37,7 +38,8 @@ namespace QuoridorWithAIController
 
             while (!_gameModel.GameEnded)
             {
-                var move = _ai.GetMove(_gameModel.GetField(), _aiPlayerNumber);
+                var move = _ai.GetMove(_gameModel.GetField(), _aiPlayerNumber, firstAiTurn);
+                firstAiTurn = false;
                 HandleAIMove(move);
                 string opponentInput = Console.ReadLine();
                 if (opponentInput is "Win" or "Loss")

@@ -3,7 +3,6 @@
     public abstract class Move
     {
         public int MoveValue;
-        
     }
 
     public class MovePlayer : Move
