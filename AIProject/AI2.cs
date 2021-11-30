@@ -228,7 +228,14 @@ namespace AIProject
 
             foreach (var placedWall in position.PlacedWalls)
             {
-                
+                foreach (var wall in GenerateNearbyWalls(placedWall))
+                {
+                    var newWall = new PlaceWall(wall);
+                    if (position.ValidateWall(wall) && !possiblePositions.Contains(newWall))
+                    {
+                        possiblePositions.AddLast(newWall);
+                    }
+                }
             }
 
             for (var i = 0; i < 8; i++)
@@ -252,6 +259,80 @@ namespace AIProject
             return possiblePositions;
         }
 
+        LinkedList<WallPosition> GenerateNearbyWalls(WallPosition wallPosition)
+        {
+            LinkedList<WallPosition> wallPositions = new LinkedList<WallPosition>();
+            if (wallPosition.Orientation == WallOrientation.Horizontal)
+            {
+                var nearbyWall =
+                    new WallPosition(WallOrientation.Horizontal, 
+                        new CellPosition(wallPosition.TopLeftCell.X - 2, wallPosition.TopLeftCell.Y));
+                var nearbyWall1 =
+                    new WallPosition(WallOrientation.Horizontal, 
+                        new CellPosition(wallPosition.TopLeftCell.X + 2, wallPosition.TopLeftCell.Y));
+                var nearbyWall2 =
+                    new WallPosition(WallOrientation.Vertical, 
+                        new CellPosition(wallPosition.TopLeftCell.X - 1, wallPosition.TopLeftCell.Y - 1));
+                var nearbyWall3 =
+                    new WallPosition(WallOrientation.Vertical, 
+                        new CellPosition(wallPosition.TopLeftCell.X + 1, wallPosition.TopLeftCell.Y + 1));
+                var nearbyWall4 =
+                    new WallPosition(WallOrientation.Vertical, 
+                        new CellPosition(wallPosition.TopLeftCell.X - 1, wallPosition.TopLeftCell.Y + 1));
+                var nearbyWall5 =
+                    new WallPosition(WallOrientation.Vertical, 
+                        new CellPosition(wallPosition.TopLeftCell.X + 1, wallPosition.TopLeftCell.Y - 1));
+                var nearbyWall6 =
+                    new WallPosition(WallOrientation.Vertical, 
+                        new CellPosition(wallPosition.TopLeftCell.X - 1, wallPosition.TopLeftCell.Y));
+                var nearbyWall7 =
+                    new WallPosition(WallOrientation.Vertical, 
+                        new CellPosition(wallPosition.TopLeftCell.X, wallPosition.TopLeftCell.Y - 1));
+                wallPositions.AddLast(nearbyWall);
+                wallPositions.AddLast(nearbyWall1);
+                wallPositions.AddLast(nearbyWall2);
+                wallPositions.AddLast(nearbyWall3);
+                wallPositions.AddLast(nearbyWall4);
+                wallPositions.AddLast(nearbyWall5);
+                wallPositions.AddLast(nearbyWall6);
+                wallPositions.AddLast(nearbyWall7);
+            } else {
+                var nearbyWall =
+                    new WallPosition(WallOrientation.Vertical, 
+                        new CellPosition(wallPosition.TopLeftCell.X - 2, wallPosition.TopLeftCell.Y));
+                var nearbyWall1 =
+                    new WallPosition(WallOrientation.Vertical, 
+                        new CellPosition(wallPosition.TopLeftCell.X + 2, wallPosition.TopLeftCell.Y));
+                var nearbyWall2 =
+                    new WallPosition(WallOrientation.Horizontal, 
+                        new CellPosition(wallPosition.TopLeftCell.X - 1, wallPosition.TopLeftCell.Y - 1));
+                var nearbyWall3 =
+                    new WallPosition(WallOrientation.Horizontal, 
+                        new CellPosition(wallPosition.TopLeftCell.X + 1, wallPosition.TopLeftCell.Y + 1));
+                var nearbyWall4 =
+                    new WallPosition(WallOrientation.Horizontal, 
+                        new CellPosition(wallPosition.TopLeftCell.X - 1, wallPosition.TopLeftCell.Y + 1));
+                var nearbyWall5 =
+                    new WallPosition(WallOrientation.Horizontal, 
+                        new CellPosition(wallPosition.TopLeftCell.X + 1, wallPosition.TopLeftCell.Y - 1));
+                var nearbyWall6 =
+                    new WallPosition(WallOrientation.Horizontal, 
+                        new CellPosition(wallPosition.TopLeftCell.X - 1, wallPosition.TopLeftCell.Y));
+                var nearbyWall7 =
+                    new WallPosition(WallOrientation.Horizontal, 
+                        new CellPosition(wallPosition.TopLeftCell.X, wallPosition.TopLeftCell.Y - 1));
+                wallPositions.AddLast(nearbyWall);
+                wallPositions.AddLast(nearbyWall1);
+                wallPositions.AddLast(nearbyWall2);
+                wallPositions.AddLast(nearbyWall3);
+                wallPositions.AddLast(nearbyWall4);
+                wallPositions.AddLast(nearbyWall5);
+                wallPositions.AddLast(nearbyWall6);
+                wallPositions.AddLast(nearbyWall7);
+            }
+            return wallPositions;
+        }
+
         bool CheckWin(Field position, int color)
         {
             CellPosition playerPosition = color == 1 ? position.Player1Position : position.Player2Position;
@@ -269,26 +350,41 @@ namespace AIProject
 
             var player2MinLenght = GameConstants.Player2WinLine.Select(winCell => 
                 _aStar.FindPath(position.Player2Position, winCell, position).Count).Prepend(999).Min();
+
+            if (color == 1)
+            {
+                switch (player1MinLenght)
+                {
+                    case 0 when player2MinLenght == 0:
+                        return 0;
+                    case 0:
+                        return 99;
+                    default:
+                    {
+                        if (player2MinLenght == 0)
+                        {
+                            return -99;
+                        }
+                        break;
+                    }
+                }
+                return (position.Player1WallAmount + (8 - player1MinLenght)*2) - (position.Player2WallAmount + (8 - player2MinLenght)*2);
+            }
             
             switch (player1MinLenght)
             {
                 case 0 when player2MinLenght == 0:
                     return 0;
                 case 0:
-                    return color * 999;
+                    return -99;
                 default:
                 {
                     if (player2MinLenght == 0)
                     {
-                        return color * -999;
+                        return 99;
                     }
                     break;
                 }
-            }
-            
-            if (color == 1)
-            {
-                return (position.Player1WallAmount + (8 - player1MinLenght)*2) - (position.Player2WallAmount + (8 - player2MinLenght)*2);
             }
             return (position.Player2WallAmount + (8 - player2MinLenght)*2) - (position.Player1WallAmount + (8 - player1MinLenght)*2);
         }

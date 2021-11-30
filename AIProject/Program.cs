@@ -10,32 +10,46 @@ namespace AIProject
         {
             IGameModel gameModel = new GameModel();
             AI2 skynet2 = new AI2(2);
-            //gameModel.GetField().ExecuteMove(new PlaceWall(new WallPosition(WallOrientation.Vertical, new CellPosition(2,7))), 1);
-            //gameModel.GetField().UndoMove(new PlaceWall(new WallPosition(WallOrientation.Vertical, new CellPosition(2,7))), new CellPosition(4,8), 1);
             
             // System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
             
-             // gameModel.PlaceWall(PlayerNumber.First, new WallPosition(WallOrientation.Vertical, new CellPosition(2,7)), DrawInView.No);
-             // gameModel.MovePlayer(PlayerNumber.Second, new CellPosition(4,1), DrawInView.No);
-             // gameModel.PlaceWall(PlayerNumber.First, new WallPosition(WallOrientation.Vertical, new CellPosition(5,7)), DrawInView.No);
-             // gameModel.MovePlayer(PlayerNumber.Second, new CellPosition(4,2), DrawInView.No);
-             // gameModel.PlaceWall(PlayerNumber.First, new WallPosition(WallOrientation.Horizontal, new CellPosition(4,5)), DrawInView.No);
-             // gameModel.MovePlayer(PlayerNumber.Second, new CellPosition(3,2), DrawInView.No);
-             // gameModel.MovePlayer(PlayerNumber.First, new CellPosition(4,7), DrawInView.No);
-             // gameModel.MovePlayer(PlayerNumber.Second, new CellPosition(3,3), DrawInView.No);
-             // gameModel.PlaceWall(PlayerNumber.First, new WallPosition(WallOrientation.Vertical, new CellPosition(3,7)), DrawInView.No);
-             // gameModel.MovePlayer(PlayerNumber.First, new CellPosition(4,4), DrawInView.No);
-             // gameModel.MovePlayer(PlayerNumber.Second, new CellPosition(3,0), DrawInView.No);
-             // gameModel.MovePlayer(PlayerNumber.First, new CellPosition(4,3), DrawInView.No);
-             // gameModel.MovePlayer(PlayerNumber.Second, new CellPosition(3,1), DrawInView.No);
-             // gameModel.PlaceWall(PlayerNumber.First, new WallPosition(WallOrientation.Vertical, new CellPosition(3,0)));
+            gameModel.GetField().Player1Position = new CellPosition(8, 1);
+            gameModel.GetField().Player2Position = new CellPosition(4, 5);
+            
+             gameModel.PlaceWall(PlayerNumber.First, 
+                 new WallPosition(WallOrientation.Vertical, new CellPosition(2,7)), DrawInView.No);
+             gameModel.PlaceWall(PlayerNumber.Second, 
+                 new WallPosition(WallOrientation.Vertical, new CellPosition(5,7)), DrawInView.No);
+             gameModel.PlaceWall(PlayerNumber.First, 
+                 new WallPosition(WallOrientation.Horizontal, new CellPosition(4,5)), DrawInView.No);
+             gameModel.PlaceWall(PlayerNumber.Second, 
+                 new WallPosition(WallOrientation.Horizontal, new CellPosition(2,5)), DrawInView.No);
+             gameModel.PlaceWall(PlayerNumber.First, 
+                 new WallPosition(WallOrientation.Vertical, new CellPosition(1,6)), DrawInView.No);
+             gameModel.PlaceWall(PlayerNumber.Second, 
+                 new WallPosition(WallOrientation.Horizontal, new CellPosition(2,6)), DrawInView.No);
+             gameModel.PlaceWall(PlayerNumber.First, 
+                 new WallPosition(WallOrientation.Vertical, new CellPosition(4,6)), DrawInView.No);
+             gameModel.PlaceWall(PlayerNumber.Second, 
+                 new WallPosition(WallOrientation.Horizontal, new CellPosition(5,6)), DrawInView.No);
+             gameModel.PlaceWall(PlayerNumber.First, 
+                 new WallPosition(WallOrientation.Horizontal, new CellPosition(3,4)), DrawInView.No);
+             gameModel.PlaceWall(PlayerNumber.Second, 
+                 new WallPosition(WallOrientation.Horizontal, new CellPosition(6,5)), DrawInView.No);
+             gameModel.PlaceWall(PlayerNumber.First, 
+                 new WallPosition(WallOrientation.Vertical, new CellPosition(7,6)), DrawInView.No);
+             gameModel.PlaceWall(PlayerNumber.Second, 
+                 new WallPosition(WallOrientation.Horizontal, new CellPosition(6,7)), DrawInView.No);
+             gameModel.PlaceWall(PlayerNumber.First, 
+                 new WallPosition(WallOrientation.Horizontal, new CellPosition(7,3)), DrawInView.No);
 
-             Console.WriteLine(skynet2.Negascout(gameModel.GetField(), 2,-999, +999, 1).ToString());
-            // sw.Stop();
-            // Console.WriteLine(       sw.Elapsed.TotalSeconds + " Sec    / " +
-            //                          ((float)sw.Elapsed.TotalSeconds / (float)60).ToString("N2") + 
-            //                          " min" );
-            //
+             Console.WriteLine(skynet2.Negascout(gameModel.GetField(), 2,-999, +999, -1).ToString());
+             //Console.WriteLine(skynet2.GetMove(gameModel.GetField(), PlayerNumber.Second, false).ToString());
+             // sw.Stop();
+             // Console.WriteLine(       sw.Elapsed.TotalSeconds + " Sec    / " +
+             //                          ((float)sw.Elapsed.TotalSeconds / (float)60).ToString("N2") + 
+             //                          " min" );
+             //
         }
     }
 }

@@ -8,8 +8,8 @@ namespace Model
     public class Field
     {
         public Move Move = new PlaceWall(new WallPosition(WallOrientation.Vertical, new CellPosition(99,99)));
-        public CellPosition Player1Position { get; private set; }
-        public CellPosition Player2Position { get; private set; }
+        public CellPosition Player1Position { get; set; }
+        public CellPosition Player2Position { get; set; }
         internal FieldCell[,] FieldMatrix => _fieldMatrix;
         private readonly FieldCell[,] _fieldMatrix = new FieldCell[GameConstants.FieldSize,GameConstants.FieldSize];
         public List<WallPosition> PlacedWalls { get; } = new ();
