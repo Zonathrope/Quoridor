@@ -7,6 +7,8 @@ namespace Model
 {
     public class GameModel : IGameModel
     {
+        public bool GameEnded { get; private set; }
+        public PlayerNumber Winner { get; private set; }
         public CellPosition Player1Position => _field.Player1Position;
         public CellPosition Player2Position => _field.Player2Position;
         public int Player1WallAmount { get; private set; }
@@ -142,6 +144,8 @@ namespace Model
 
         private void HandleWin(PlayerNumber winner)
         {
+            GameEnded = true;
+            Winner = winner;
         }
 
         public void PlaceWall(PlayerNumber playerPlacing, WallPosition wallPosition)
