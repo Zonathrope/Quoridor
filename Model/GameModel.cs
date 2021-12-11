@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Model.DataTypes;
 using Model.Internal;
@@ -25,12 +24,6 @@ namespace Model
         private IAStar _aStar = new AStar();
         private PlayerNumber _currentPlayer;
 
-        private event Action GameStartedEvent;
-        private event Action GameEndedEvent;
-        private event Action<PlayerNumber> PlayerWonEvent;
-        private event Action<PlayerMovedEventArgs> PlayerMovedEvent;
-        private event Action<PlayerPlacedWallEventArgs> PlayerPlacedWallEvent;
-
 
         public GameModel()
         {
@@ -41,27 +34,16 @@ namespace Model
             Player2WallAmount = GameConstants.StartWallAmount;
         }
 
-        private void AttachEventsToPlayer(IPlayerView player)
-        {
-            this.GameStartedEvent += player.HandleGameStartedEvent;
-            this.GameEndedEvent += player.HandleGameEndedEvent;
-            this.PlayerWonEvent += player.HandlePlayerWonEvent;
-            this.PlayerMovedEvent += player.HandlePlayerMovedEvent;
-            this.PlayerPlacedWallEvent += player.HandlePlayerPlacedWallEvent;
-        }
-
         public void StartNewGame()
         {
             _field = new Field();
             _currentPlayer = PlayerNumber.First;
             Player1WallAmount = GameConstants.StartWallAmount;
             Player2WallAmount = GameConstants.StartWallAmount;
-            GameStartedEvent?.Invoke();
         }
 
         public void EndGame()
         {
-            GameEndedEvent?.Invoke();
         }
 
         public void MovePlayer(PlayerNumber playerNumber, CellPosition newPosition)
@@ -76,7 +58,6 @@ namespace Model
             }
 
             _field.MovePlayer(playerNumber, newPosition);
-            PlayerMovedEvent?.Invoke(new PlayerMovedEventArgs(playerNumber, newPosition));
             if (IsOnWinningPosition(playerNumber))
             {
                 HandleWin(playerNumber);
@@ -167,7 +148,6 @@ namespace Model
 
         private void HandleWin(PlayerNumber winner)
         {
-            PlayerWonEvent?.Invoke(winner);
         }
 
         public void PlaceWall(PlayerNumber playerPlacing, WallPosition wallPosition)
@@ -188,7 +168,6 @@ namespace Model
             }
 
             DecrementPlayerWallAmount(playerPlacing);
-            PlayerPlacedWallEvent?.Invoke(new PlayerPlacedWallEventArgs(playerPlacing, wallPosition));
             SwitchCurrentPlayer();
         }
 
