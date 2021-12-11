@@ -44,8 +44,8 @@ namespace Server
         private void AcceptCallback(IAsyncResult asyncResult)
         {
             AllDone.Set();
-            var listener = (Socket) asyncResult.AsyncState;
-            Socket handler = listener.EndAccept(asyncResult);
+            var socket = (Socket) asyncResult.AsyncState;
+            Socket handler = socket.EndAccept(asyncResult);
             var state = new State {ClientSocket = handler};
             handler.BeginReceive(state.Buffer, 0, State.BufferSize,
                 0, ReadCallback, state);
@@ -53,7 +53,6 @@ namespace Server
 
         private void ReadCallback(IAsyncResult asyncResult)
         {
-            var content = String.Empty;
             var state = (State) asyncResult.AsyncState;
             Socket socket = state.ClientSocket;
             int bytesRead = socket.EndReceive(asyncResult);
@@ -61,7 +60,7 @@ namespace Server
                 return;
             state.StrBuilder.Append(
                 Encoding.ASCII.GetString(state.Buffer, 0, bytesRead));
-            content = state.StrBuilder.ToString();
+            string content = state.StrBuilder.ToString();
             if (content.Contains("<EOF>"))
             {
                 content = content.Replace("<EOF>", "");
@@ -90,8 +89,6 @@ namespace Server
                 var state = new State {ClientSocket = socket};
                 socket.BeginReceive(state.Buffer, 0, State.BufferSize,
                     0, ReadCallback, state);
-                // handler.Shutdown(SocketShutdown.Both);
-                // handler.Close();
             }
             catch (Exception e)
             {
@@ -103,8 +100,8 @@ namespace Server
     public class State
     {
         public const int BufferSize = 1024;
-        public byte[] Buffer = new byte[BufferSize];
-        public StringBuilder StrBuilder = new();
+        public readonly byte[] Buffer = new byte[BufferSize];
+        public readonly StringBuilder StrBuilder = new();
         public Socket ClientSocket;
     }  
 }
