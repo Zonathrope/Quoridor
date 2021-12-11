@@ -27,8 +27,6 @@ namespace Model
 
         public GameModel()
         {
-            //AttachEventsToPlayer(player1);
-            //AttachEventsToPlayer(player2);
             _field = new Field();
             Player1WallAmount = GameConstants.StartWallAmount;
             Player2WallAmount = GameConstants.StartWallAmount;
@@ -40,10 +38,6 @@ namespace Model
             _currentPlayer = PlayerNumber.First;
             Player1WallAmount = GameConstants.StartWallAmount;
             Player2WallAmount = GameConstants.StartWallAmount;
-        }
-
-        public void EndGame()
-        {
         }
 
         public void MovePlayer(PlayerNumber playerNumber, CellPosition newPosition)

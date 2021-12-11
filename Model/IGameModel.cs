@@ -7,7 +7,6 @@ namespace Model
     public interface IGameModel
     {
         void StartNewGame();
-        void EndGame();
         /// <exception cref="IncorrectPlayerPositionException">Caller pass invalid position.</exception>
         /// <exception cref="CellAlreadyTakenException">Caller tries to move to taken cell.</exception>
         /// <exception cref="AnotherPlayerTurnException">Caller tries to move to taken cell.</exception>
