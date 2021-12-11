@@ -24,10 +24,8 @@ namespace Server
             {
                 listener.Bind(localEndPoint);
                 listener.Listen(100);
-                while (true)
+                while (_currentPlayerAmount != 2)
                 {
-                    if (_currentPlayerAmount == 2)
-                        break;
                     AcceptDone.Reset();
                     Console.WriteLine("Waiting for connection");
                     listener.BeginAccept(AcceptCallback, listener);
