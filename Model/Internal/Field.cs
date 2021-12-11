@@ -5,7 +5,7 @@ using Model.DataTypes;
 
 namespace Model.Internal
 {
-    public class Field
+    internal class Field
     {
         private record CellsAroundWall(FieldCell TopLeftCell, FieldCell TopRightCell,
             FieldCell BottomRightCell, FieldCell BottomLeftCell);

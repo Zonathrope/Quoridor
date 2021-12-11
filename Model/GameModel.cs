@@ -17,11 +17,6 @@ namespace Model
 
         private Field _field;
 
-        public Field GetField()
-        {
-            return _field;
-        }
-        
         //TODO replace with actual implementation
         private IAStar _aStar = new AStar();
         private PlayerNumber _currentPlayer;
