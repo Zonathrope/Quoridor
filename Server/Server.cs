@@ -13,26 +13,24 @@ namespace Server
         private int _currentPlayerAmount = 0;
         private static readonly IPAddress IpAddress = IPAddress.Parse("127.0.0.1");
         private const int Port = 11000;
-        private static ManualResetEvent AllDone = new (false);
+        private static ManualResetEvent AcceptDone = new (false);
         private Controller _controller;
         public void Start()
         {
             _controller = new Controller();
             IPEndPoint localEndPoint = new IPEndPoint(IpAddress, Port);
-            Socket listener = new(IpAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            var listener = new Socket(IpAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             try
             {
                 listener.Bind(localEndPoint);
                 listener.Listen(100);
-                while (true)
+                while (_currentPlayerAmount != 2)
                 {
-                    if (_currentPlayerAmount == 2)
-                        break;
-                    AllDone.Reset();
+                    AcceptDone.Reset();
                     Console.WriteLine("Waiting for connection");
                     listener.BeginAccept(AcceptCallback, listener);
                     _currentPlayerAmount++;
-                    AllDone.WaitOne();
+                    AcceptDone.WaitOne();
                 }
             }
             catch (Exception e)
@@ -43,9 +41,9 @@ namespace Server
 
         private void AcceptCallback(IAsyncResult asyncResult)
         {
-            AllDone.Set();
-            var listener = (Socket) asyncResult.AsyncState;
-            Socket handler = listener.EndAccept(asyncResult);
+            AcceptDone.Set();
+            var socket = (Socket) asyncResult.AsyncState;
+            Socket handler = socket.EndAccept(asyncResult);
             var state = new State {ClientSocket = handler};
             handler.BeginReceive(state.Buffer, 0, State.BufferSize,
                 0, ReadCallback, state);
@@ -53,7 +51,6 @@ namespace Server
 
         private void ReadCallback(IAsyncResult asyncResult)
         {
-            var content = String.Empty;
             var state = (State) asyncResult.AsyncState;
             Socket socket = state.ClientSocket;
             int bytesRead = socket.EndReceive(asyncResult);
@@ -61,7 +58,7 @@ namespace Server
                 return;
             state.StrBuilder.Append(
                 Encoding.ASCII.GetString(state.Buffer, 0, bytesRead));
-            content = state.StrBuilder.ToString();
+            string content = state.StrBuilder.ToString();
             if (content.Contains("<EOF>"))
             {
                 content = content.Replace("<EOF>", "");
@@ -90,8 +87,6 @@ namespace Server
                 var state = new State {ClientSocket = socket};
                 socket.BeginReceive(state.Buffer, 0, State.BufferSize,
                     0, ReadCallback, state);
-                // handler.Shutdown(SocketShutdown.Both);
-                // handler.Close();
             }
             catch (Exception e)
             {
@@ -103,8 +98,8 @@ namespace Server
     public class State
     {
         public const int BufferSize = 1024;
-        public byte[] Buffer = new byte[BufferSize];
-        public StringBuilder StrBuilder = new();
+        public readonly byte[] Buffer = new byte[BufferSize];
+        public readonly StringBuilder StrBuilder = new();
         public Socket ClientSocket;
     }  
 }
