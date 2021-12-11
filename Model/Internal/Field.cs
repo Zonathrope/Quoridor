@@ -5,14 +5,13 @@ using Model.DataTypes;
 
 namespace Model.Internal
 {
-    public class Field
+    internal class Field
     {
         private record CellsAroundWall(FieldCell TopLeftCell, FieldCell TopRightCell,
             FieldCell BottomRightCell, FieldCell BottomLeftCell);
 
         public CellPosition Player1Position { get; private set; }
         public CellPosition Player2Position { get; private set; }
-        internal FieldCell[,] FieldMatrix => _fieldMatrix;
         private FieldCell[,] _fieldMatrix = new FieldCell[GameConstants.FieldSize,GameConstants.FieldSize];
         public List<WallPosition> PlacedWalls { get; } = new ();
 

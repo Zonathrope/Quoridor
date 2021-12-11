@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Model.DataTypes;
 using Model.Internal;
@@ -8,6 +7,8 @@ namespace Model
 {
     public class GameModel : IGameModel
     {
+        private bool GameEnded { get; set; }
+        private PlayerNumber Winner { get; set; }
         public CellPosition Player1Position => _field.Player1Position;
         public CellPosition Player2Position => _field.Player2Position;
         public int Player1WallAmount { get; private set; }
@@ -16,38 +17,20 @@ namespace Model
 
         private Field _field;
 
-        public Field GetField()
-        {
-            return _field;
-        }
-        
         //TODO replace with actual implementation
         private IAStar _aStar = new AStar();
         private PlayerNumber _currentPlayer;
 
-        private event Action GameStartedEvent;
-        private event Action GameEndedEvent;
-        private event Action<PlayerNumber> PlayerWonEvent;
-        private event Action<PlayerMovedEventArgs> PlayerMovedEvent;
-        private event Action<PlayerPlacedWallEventArgs> PlayerPlacedWallEvent;
-
-
         public GameModel()
         {
-            //AttachEventsToPlayer(player1);
-            //AttachEventsToPlayer(player2);
             _field = new Field();
             Player1WallAmount = GameConstants.StartWallAmount;
             Player2WallAmount = GameConstants.StartWallAmount;
         }
 
-        private void AttachEventsToPlayer(IPlayerView player)
+        public GameState GetGameState()
         {
-            this.GameStartedEvent += player.HandleGameStartedEvent;
-            this.GameEndedEvent += player.HandleGameEndedEvent;
-            this.PlayerWonEvent += player.HandlePlayerWonEvent;
-            this.PlayerMovedEvent += player.HandlePlayerMovedEvent;
-            this.PlayerPlacedWallEvent += player.HandlePlayerPlacedWallEvent;
+            return new GameState(Player1Position, Player2Position, PlacedWalls.ToArray(), GameEnded, Winner);
         }
 
         public void StartNewGame()
@@ -56,12 +39,6 @@ namespace Model
             _currentPlayer = PlayerNumber.First;
             Player1WallAmount = GameConstants.StartWallAmount;
             Player2WallAmount = GameConstants.StartWallAmount;
-            GameStartedEvent?.Invoke();
-        }
-
-        public void EndGame()
-        {
-            GameEndedEvent?.Invoke();
         }
 
         public void MovePlayer(PlayerNumber playerNumber, CellPosition newPosition)
@@ -76,7 +53,6 @@ namespace Model
             }
 
             _field.MovePlayer(playerNumber, newPosition);
-            PlayerMovedEvent?.Invoke(new PlayerMovedEventArgs(playerNumber, newPosition));
             if (IsOnWinningPosition(playerNumber))
             {
                 HandleWin(playerNumber);
@@ -167,7 +143,8 @@ namespace Model
 
         private void HandleWin(PlayerNumber winner)
         {
-            PlayerWonEvent?.Invoke(winner);
+            GameEnded = true;
+            Winner = winner;
         }
 
         public void PlaceWall(PlayerNumber playerPlacing, WallPosition wallPosition)
@@ -188,7 +165,6 @@ namespace Model
             }
 
             DecrementPlayerWallAmount(playerPlacing);
-            PlayerPlacedWallEvent?.Invoke(new PlayerPlacedWallEventArgs(playerPlacing, wallPosition));
             SwitchCurrentPlayer();
         }
 
@@ -224,24 +200,6 @@ namespace Model
                 Player1WallAmount--;
             else
                 Player2WallAmount--;
-        }
-
-        internal List<FieldCell> TestFindPath(CellPosition startPos, CellPosition endPos)
-        {
-            var aStar = (AStar) _aStar;
-            if (TestIsReachable(startPos, endPos))
-            {
-                return aStar.FindPath(_field.FieldMatrix[startPos.X, startPos.Y],
-                    _field.FieldMatrix[endPos.X, endPos.Y]);
-            }
-        
-            return null;
-        }
-        
-        internal bool TestIsReachable(CellPosition startPos, CellPosition endPos)
-        {
-            return _aStar.WayExists(_field.FieldMatrix[startPos.X, startPos.Y].Position,
-                _field.FieldMatrix[endPos.X, endPos.Y].Position, _field);
         }
     }
 }

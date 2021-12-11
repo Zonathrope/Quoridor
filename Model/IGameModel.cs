@@ -1,13 +1,11 @@
 ﻿using System.Collections.Generic;
 using Model.DataTypes;
-using Model.Internal;
 
 namespace Model
 {
     public interface IGameModel
     {
         void StartNewGame();
-        void EndGame();
         /// <exception cref="IncorrectPlayerPositionException">Caller pass invalid position.</exception>
         /// <exception cref="CellAlreadyTakenException">Caller tries to move to taken cell.</exception>
         /// <exception cref="AnotherPlayerTurnException">Caller tries to move to taken cell.</exception>
@@ -23,7 +21,6 @@ namespace Model
         CellPosition Player2Position{ get; }
         int Player1WallAmount { get; }
         int Player2WallAmount { get; }
-        Field GetField();
         List<WallPosition> PlacedWalls { get; }
     }
 }
