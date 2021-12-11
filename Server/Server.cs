@@ -13,7 +13,7 @@ namespace Server
         private int _currentPlayerAmount = 0;
         private static readonly IPAddress IpAddress = IPAddress.Parse("127.0.0.1");
         private const int Port = 11000;
-        private static ManualResetEvent AllDone = new (false);
+        private static ManualResetEvent AcceptDone = new (false);
         private Controller _controller;
         public void Start()
         {
@@ -28,11 +28,11 @@ namespace Server
                 {
                     if (_currentPlayerAmount == 2)
                         break;
-                    AllDone.Reset();
+                    AcceptDone.Reset();
                     Console.WriteLine("Waiting for connection");
                     listener.BeginAccept(AcceptCallback, listener);
                     _currentPlayerAmount++;
-                    AllDone.WaitOne();
+                    AcceptDone.WaitOne();
                 }
             }
             catch (Exception e)
@@ -43,7 +43,7 @@ namespace Server
 
         private void AcceptCallback(IAsyncResult asyncResult)
         {
-            AllDone.Set();
+            AcceptDone.Set();
             var socket = (Socket) asyncResult.AsyncState;
             Socket handler = socket.EndAccept(asyncResult);
             var state = new State {ClientSocket = handler};
