@@ -7,8 +7,8 @@ namespace Model
 {
     public class GameModel : IGameModel
     {
-        public bool GameEnded { get; private set; }
-        public PlayerNumber Winner { get; private set; }
+        private bool GameEnded { get; set; }
+        private PlayerNumber Winner { get; set; }
         public CellPosition Player1Position => _field.Player1Position;
         public CellPosition Player2Position => _field.Player2Position;
         public int Player1WallAmount { get; private set; }
@@ -27,6 +27,11 @@ namespace Model
             _field = new Field();
             Player1WallAmount = GameConstants.StartWallAmount;
             Player2WallAmount = GameConstants.StartWallAmount;
+        }
+
+        public GameState GetGameState()
+        {
+            return new GameState(Player1Position, Player2Position, PlacedWalls.ToArray(), GameEnded, Winner);
         }
 
         public void StartNewGame()
