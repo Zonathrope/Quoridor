@@ -127,11 +127,14 @@ namespace Server
         {
             try
             {
-                var handler = (Socket) asyncResult.AsyncState;
-                int bytesSent = handler.EndSend(asyncResult);
+                var socket = (Socket) asyncResult.AsyncState;
+                int bytesSent = socket.EndSend(asyncResult);
                 Console.WriteLine($"Sent {bytesSent} to client");
-                handler.Shutdown(SocketShutdown.Both);
-                handler.Close();
+                var state = new State {ClientSocket = socket};
+                socket.BeginReceive(state.Buffer, 0, State.BufferSize,
+                    0, ReadCallback, state);
+                // handler.Shutdown(SocketShutdown.Both);
+                // handler.Close();
             }
             catch (Exception e)
             {
