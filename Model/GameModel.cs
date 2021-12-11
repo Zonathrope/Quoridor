@@ -21,7 +21,6 @@ namespace Model
         private IAStar _aStar = new AStar();
         private PlayerNumber _currentPlayer;
 
-
         public GameModel()
         {
             _field = new Field();
