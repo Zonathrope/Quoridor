@@ -19,7 +19,7 @@ namespace Server
         {
             _controller = new Controller();
             IPEndPoint localEndPoint = new IPEndPoint(IpAddress, Port);
-            Socket listener = new(IpAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            var listener = new Socket(IpAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             try
             {
                 listener.Bind(localEndPoint);
