@@ -65,7 +65,6 @@ namespace AIProject
                     } else position.Move = new PlaceWall((PlaceWall) childPosition);
                 }
                 //Console.WriteLine("d:" + (depth - 1) + " v:" + negamaxRes + " m:" + childPosition);
-                
                 counter++;
                 alpha = Math.Max(alpha, negamaxRes);
                 position.Move.MoveValue = alpha;
@@ -368,7 +367,7 @@ namespace AIProject
                         break;
                     }
                 }
-                return (position.Player1WallAmount + (8 - player1MinLenght)*2) - (position.Player2WallAmount + (8 - player2MinLenght)*2);
+                return (position.Player1WallAmount + (16 - player1MinLenght)*2) - (position.Player2WallAmount + (16 - player2MinLenght)*2);
             }
             
             switch (player1MinLenght)
@@ -386,7 +385,7 @@ namespace AIProject
                     break;
                 }
             }
-            return (position.Player2WallAmount + (8 - player2MinLenght)*2) - (position.Player1WallAmount + (8 - player1MinLenght)*2);
+            return (position.Player2WallAmount + (16 - player2MinLenght)*2) - (position.Player1WallAmount + (16 - player1MinLenght)*2);
         }
     }
 }
