@@ -7,14 +7,15 @@
             X = x;
             Y = y;
         }
-        public int X { get; } 
-        public int Y { get; }
-        public override string ToString() => $"({X}, {Y})";
 
         public bool Equals(CellPosition position)
         {
             return this.X == position.X && this.Y == position.Y;
         }
+        public int X { get; }
+        public int Y { get; }
+
+        public override string ToString() => $"({X}, {Y})";
 
         public CellPosition Shifted(int shiftX, int shiftY)
         {

@@ -16,10 +16,10 @@ namespace AIProject
         private readonly int _startDepth;
         private const int StartAlpha = -999;
         private const int StartBeta = 999;
-        private bool _botTurnCounter;
+        private bool _firstTurn;
         public Move GetMove(Field position, PlayerNumber playerNumber, bool firstTurn)
         {
-            _botTurnCounter = firstTurn;
+            _firstTurn = firstTurn;
             int color = PlayerToColor(playerNumber);
             return Negascout(position, _startDepth, StartAlpha, StartBeta, color);
         }
@@ -65,6 +65,7 @@ namespace AIProject
                     } else position.Move = new PlaceWall((PlaceWall) childPosition);
                 }
                 //Console.WriteLine("d:" + (depth - 1) + " v:" + negamaxRes + " m:" + childPosition);
+                
                 counter++;
                 alpha = Math.Max(alpha, negamaxRes);
                 position.Move.MoveValue = alpha;
@@ -84,7 +85,7 @@ namespace AIProject
                 possiblePositions.AddLast(newPosition);
             }
 
-            if (_botTurnCounter) return possiblePositions;
+            if (_firstTurn) return possiblePositions;
             if ((currentPlayer != PlayerNumber.First || position.Player1WallAmount <= 0) &&
                 (currentPlayer != PlayerNumber.Second || position.Player2WallAmount <= 0)) return possiblePositions;
             
@@ -225,14 +226,18 @@ namespace AIProject
                 }
             }
 
-            foreach (var newWall in from placedWall in position.PlacedWalls from wall in 
-                GenerateNearbyWalls(placedWall) let newWall = new PlaceWall(wall) where 
-                position.ValidateWall(wall) && !possiblePositions.Contains(newWall) select newWall)
+            foreach (var placedWall in position.PlacedWalls)
             {
-                possiblePositions.AddLast(newWall);
+                foreach (var wall in GenerateNearbyWalls(placedWall))
+                {
+                    var newWall = new PlaceWall(wall);
+                    if (position.ValidateWall(wall) && !possiblePositions.Contains(newWall))
+                    {
+                        possiblePositions.AddLast(newWall);
+                    }
+                }
             }
 
-            
             for (var i = 0; i < 8; i++)
             {
                 for (var j = 0; j < 8; j++)
@@ -363,7 +368,7 @@ namespace AIProject
                         break;
                     }
                 }
-                return ( (16 - player1MinLenght)) - ( (16 - player2MinLenght));
+                return (position.Player1WallAmount + (16 - player1MinLenght)*2) - (position.Player2WallAmount + (16 - player2MinLenght)*2);
             }
             
             switch (player1MinLenght)
@@ -381,7 +386,7 @@ namespace AIProject
                     break;
                 }
             }
-            return ((16 - player2MinLenght)) - ((16 - player1MinLenght));
+            return (position.Player2WallAmount + (16 - player2MinLenght)*2) - (position.Player1WallAmount + (16 - player1MinLenght)*2);
         }
     }
 }
