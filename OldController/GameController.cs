@@ -194,8 +194,8 @@ namespace OldController
         {
             var pos = _gameModel.Player1Position;
             var pos2 = _gameModel.Player2Position;
-            return GameConstants.Player1WinLine.Any(winingPos => winingPos == pos) 
-                   || GameConstants.Player2WinLine.Any(winingPos => winingPos == pos2);
+            return GameConstants.Player1WinLine.Any(winingPos => winingPos.Equals(pos)) 
+                   || GameConstants.Player2WinLine.Any(winingPos => winingPos.Equals(pos2));
         }
 
         private string[] ValidateInput()

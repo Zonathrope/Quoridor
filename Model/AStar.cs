@@ -98,7 +98,7 @@ namespace Model
             FieldCell endCell = field.FieldMatrix[end.Y, end.X];
             HashSet<FieldCell> openSet = new HashSet<FieldCell>();
             HashSet<FieldCell> closedSet = new HashSet<FieldCell>();
-            if (start == end)
+            if (start.Equals(end))
             {
                 return true;
             }

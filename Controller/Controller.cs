@@ -8,17 +8,19 @@ namespace QuoridorWithAIController
 {
     public class Controller
     {
-        private const int AiSearchDepth = 3;
+        private const int AiSearchDepth = 4;
         private AI2 _ai = new AI2(AiSearchDepth);
         private IView _view = new View.View();
         private IGameModel _gameModel;
         private PlayerNumber _aiPlayerNumber;
-        private bool firstAiTurn;
+        private bool _botTurnCounter = false;
 
         private readonly Dictionary<char, int> _letterToXCoordinate = new()
         {
             {'A', 0}, {'B', 1}, {'C', 2}, {'D', 3}, {'E', 4}, {'F', 5}, {'G', 6}, {'H', 7}, {'I', 8},
-            {'S', 0}, {'T', 1}, {'U', 2}, {'V', 3}, {'W', 4}, {'X', 5}, {'Y', 6}, {'Z', 7}
+            {'S', 0}, {'T', 1}, {'U', 2}, {'V', 3}, {'W', 4}, {'X', 5}, {'Y', 6}, {'Z', 7},
+            {'a', 0}, {'b', 1}, {'c', 2}, {'d', 3}, {'e', 4}, {'f', 5}, {'g', 6}, {'h', 7}, {'i', 8},
+            {'s', 0}, {'t', 1}, {'u', 2}, {'v', 3}, {'w', 4}, {'x', 5}, {'y', 6}, {'z', 7}
         };
 
         public Controller()
@@ -38,8 +40,8 @@ namespace QuoridorWithAIController
 
             while (!_gameModel.GameEnded)
             {
-                var move = _ai.GetMove(_gameModel.GetField(), _aiPlayerNumber, firstAiTurn);
-                firstAiTurn = false;
+                var move = _ai.GetMove(_gameModel.GetField(), _aiPlayerNumber, _botTurnCounter);
+                _botTurnCounter = true;
                 HandleAIMove(move);
                 string opponentInput = Console.ReadLine();
                 if (opponentInput is "Win" or "Loss")

@@ -296,7 +296,7 @@ namespace Model
 
         private bool IsCellTaken(CellPosition cell)
         {
-            return cell == Player1Position || cell == Player2Position;
+            return cell.Equals(Player1Position) || cell.Equals(Player2Position);
         }
         
         public bool OverlapsWithPlacedWalls(WallPosition newWall)
