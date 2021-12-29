@@ -13,19 +13,20 @@ namespace AIProject
             _startDepth = startDepth;
         }
         private readonly AStar _aStar = new AStar();
-        private readonly int _startDepth;
+        private int _startDepth;
         private const int StartAlpha = -999;
         private const int StartBeta = 999;
         private bool _firstTurn;
         public Move GetMove(Field position, PlayerNumber playerNumber, bool firstTurn)
         {
             _firstTurn = firstTurn;
-            int color = PlayerToColor(playerNumber);
+            int color = playerNumber == PlayerNumber.First ? 1 : -1;
+            // if (color == 1)
+            // {
+            //     _startDepth = 2;
+            // }
+            // else _startDepth = 3;
             return Negascout(position, _startDepth, StartAlpha, StartBeta, color);
-        }
-        private int PlayerToColor(PlayerNumber playerNumber)
-        {
-            return playerNumber == PlayerNumber.First ? 1 : -1;
         }
         public Move Negascout(Field position, int depth, int alpha, int beta, int color)
         {
